@@ -1,9 +1,11 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { LoginService } from './../service/login.service';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { SnackBarService } from '../service/snack-bar.service';
+import { FunctionLoginService } from '../service/function-login.service';
 
 @Component({
   selector: 'app-login',
@@ -19,19 +21,10 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
-    private _snackBar: MatSnackBar,
+    private functions_login: FunctionLoginService,
+    private _snackBar: SnackBarService,
     private router: Router
   ) { }
-
-  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
-  openSnackBar(message: string) {
-    this._snackBar.open(message, 'Close', {
-      duration: 2000,
-      horizontalPosition: this.horizontalPosition,
-      verticalPosition: this.verticalPosition,
-    });
-  }
 
   ngOnInit(): void {
     if (localStorage.getItem('username') != null) {
@@ -45,24 +38,36 @@ export class LoginComponent implements OnInit {
   }
 
   public onLogin(loginForm: NgForm): void {
-    console.log(loginForm.value);
+    // console.log(loginForm.value);
     // let dataLogin = loginForm.value;
     // console.log(dataLogin.username);
     // console.log(dataLogin.password);
-    console.log(this.username);
-    console.log(this.password);
+    // console.log(this.username);
+    // console.log(this.password);
     let dataLogin1 = {
       username: this.username,
       password: this.password
     }
     console.log(dataLogin1);
     this.loginService.login(loginForm.value).subscribe(
-      (response: any) => {
+      (response: HttpResponse<any>) => {
         console.log(response);
-        let accessToken = response.accessToken;
-        let token = response.token;
+        if (response.status == 200) {
+          this._snackBar.openSnackBarSuccess("Đăng nhập thành công!")
+        }
+        let accessToken = response.body.accessToken;
+        let token = response.body.token;
         console.log(accessToken);
         console.log(token);
+        if (localStorage.getItem('token') != null ){
+          localStorage.removeItem('token');
+        }
+        localStorage.setItem('token', token);
+        if (sessionStorage.getItem('accessToken') != null ){
+          sessionStorage.removeItem('accessToken');
+        }
+        sessionStorage.setItem('accessToken', accessToken);
+        this.router.navigate(['/manage']);
         // this.userLogin = response;
         // if (this.userLogin.idUser != null){
         //   this.openSnackBar("Đăng nhập thành công.");
@@ -86,10 +91,10 @@ export class LoginComponent implements OnInit {
         // }
       },
       (error: HttpErrorResponse) => {
+        console.log(error);
         if (error.status == 403) {
-          this.openSnackBar("Đăng nhập không thành công!!!");
+          this._snackBar.openSnackBarWarning("Đăng nhập không thành công!!!");
         }
-        else console.log(error.message);
       }
     );
   }
@@ -100,6 +105,8 @@ export class LoginComponent implements OnInit {
       document.getElementById('button-hiden').innerHTML = '<i class="fa fa-eye-slash" style="font-size: 20px"></i>';
     else
       document.getElementById('button-hiden').innerHTML = '<i class="fa fa-eye" style="font-size: 20px"></i>';
+
+    // this.functions_login.logout();
   }
 
   public getTypePass(): string{

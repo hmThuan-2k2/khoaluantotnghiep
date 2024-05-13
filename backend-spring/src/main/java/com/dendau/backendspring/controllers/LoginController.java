@@ -3,12 +3,12 @@ package com.dendau.backendspring.controllers;
 import com.dendau.backendspring.dtos.auth.AuthRequestDTO;
 import com.dendau.backendspring.dtos.jwt.JwtResponseDTO;
 import com.dendau.backendspring.dtos.jwt.JwtResponseLogin1DTO;
+import com.dendau.backendspring.dtos.jwt.LogoutResponseDTO;
 import com.dendau.backendspring.dtos.jwt.RefreshTokenRequestDTO;
 import com.dendau.backendspring.models.RefreshToken;
 import com.dendau.backendspring.services.jwt.JwtService;
 import com.dendau.backendspring.services.jwt.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +28,7 @@ public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @CrossOrigin(origins = "http://localhost:4200")
+//    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/login")
     public JwtResponseDTO AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
@@ -70,12 +70,13 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logoutDeleteToken(@RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO){
+    public LogoutResponseDTO logoutDeleteToken(@RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO){
         return refreshTokenService.findByToken(refreshTokenRequestDTO.getToken())
                 .map(refreshTokenService::delete)
-                .map(message ->
-                    ResponseEntity.ok().body(message)
-                ).orElseThrow(() -> 
+                .map(message -> {
+                    return LogoutResponseDTO.builder()
+                            .message(message).build();
+                }).orElseThrow(() ->
                         new RuntimeException("Token is not in DB..!! Logout thành công!")
                 );
     }

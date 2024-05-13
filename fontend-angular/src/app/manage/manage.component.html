@@ -1,0 +1,81 @@
+<div class="container-fluid" >
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="">
+      <span class="navbar-brand mb-0 h1" style="font-size: 30px ;font-weight: bold;color: black;font-family: 'Dancing Script';">
+        Đèn Dầu
+      </span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto navbar-nav-scroll">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Trang Chủ <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+            Nhà Hàng
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Màn Hình Thu Ngân</a>
+            <a class="dropdown-item" href="#">Màn Hình Bếp</a>
+            <a class="dropdown-item" href="#">Danh Sách Bàn</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+            Hàng Hoá
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Thực Đơn</a>
+            <a class="dropdown-item" href="#">Kiểm Kê</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+            Giao Dịch
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Danh Sách Đơn Hàng</a>
+            <a class="dropdown-item" href="#">Nhập Hàng</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+            Đối Tác
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Khách Hàng</a>
+            <a class="dropdown-item" href="#">Nhà Cung Cấp</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Thu & Chi</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">Báo Cáo</a>
+        </li>
+      </ul>
+      <div class="form-inline my-2 my-lg-0">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search</button>
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+            Thiếp Lập
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="#">Thông Tin Tài Khoản</a>
+            <a class="dropdown-item" href="#">
+              Đang Xuất ({{userLogin?.employee.name}})
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>

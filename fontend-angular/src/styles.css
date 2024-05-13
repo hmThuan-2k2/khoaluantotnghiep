@@ -16,3 +16,16 @@ body {
   background-color: #17a2b8;
   /* height: 100vh; */
 }
+
+
+.success-snackbar .mat-simple-snackbar-action  {
+  color: white;
+}
+
+.warning-snackbar .mat-simple-snackbar-action  {
+  color: black;
+}
+
+.danger-snackbar .mat-simple-snackbar-action  {
+  color: black;
+}
