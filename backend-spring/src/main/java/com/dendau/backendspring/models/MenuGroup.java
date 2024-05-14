@@ -1,6 +1,5 @@
 package com.dendau.backendspring.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,21 +14,12 @@ import java.util.Set;
 @AllArgsConstructor // dùng để khai báo constructor với tất cả các properties
 @NoArgsConstructor // dùng để khai báo constructor rỗng không có param
 @ToString
-@Table(name = "USERS")
-public class UserInfo {
-
+@Table(name = "MENUS_GROUP")
+public class MenuGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private long id;
-    private String username;
-    @JsonIgnore
-    private String password;
+    private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<UserRole> roles = new HashSet<>();
-
-    @OneToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    private EmployeeInfo employee;
 }

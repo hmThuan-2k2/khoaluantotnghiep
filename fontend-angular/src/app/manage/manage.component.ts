@@ -1,10 +1,10 @@
+import { Employee } from './../model/employee.model';
 import { Component, OnInit } from '@angular/core';
 import { SnackBarService } from '../service/snack-bar.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../service/login.service';
 import { FunctionLoginService } from '../service/function-login.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Employee } from '../model/Employee.model';
 import { User } from '../model/user.model';
 
 @Component({
@@ -34,6 +34,7 @@ export class ManageComponent implements OnInit {
         (response: HttpResponse<any>) => {
           console.log(response);
           this.userLogin = response.body;
+          this.employeeLogin = response.body.employee;
           console.log(this.userLogin);
         },
         (error: HttpErrorResponse) => {

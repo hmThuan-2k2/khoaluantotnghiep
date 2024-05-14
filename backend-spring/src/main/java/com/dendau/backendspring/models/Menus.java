@@ -1,13 +1,11 @@
 package com.dendau.backendspring.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity // dùng để khai báo với Spring Boot rằng đây là 1 entity biểu diễn table trong db
@@ -15,21 +13,23 @@ import java.util.Set;
 @AllArgsConstructor // dùng để khai báo constructor với tất cả các properties
 @NoArgsConstructor // dùng để khai báo constructor rỗng không có param
 @ToString
-@Table(name = "USERS")
-public class UserInfo {
-
+@Table(name = "MENUS")
+public class Menus {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private long id;
-    private String username;
-    @JsonIgnore
-    private String password;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<UserRole> roles = new HashSet<>();
+    private String name;
+    private long giaBan;
+    private long giaVon;
+    private String dvt;
+    private String imgUrl;
+    private long tonKho;
 
     @OneToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    private EmployeeInfo employee;
+    @JoinColumn(name = "menus_group_id", referencedColumnName = "id")
+    private MenuGroup menu_group;
+
+    @OneToMany(mappedBy = "menu")
+    Set<TableMenu> table_menu;
 }
