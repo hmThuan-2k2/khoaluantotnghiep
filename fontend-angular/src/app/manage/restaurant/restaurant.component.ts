@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { SnackBarService } from '../../service/snack-bar.service';
 import { Router } from '@angular/router';
 import { FunctionLoginService } from 'src/app/service/function-login.service';
+import { SnackBarService } from 'src/app/service/snack-bar.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-restaurant',
+  templateUrl: './restaurant.component.html',
+  styleUrls: ['./restaurant.component.css']
 })
-export class HomeComponent implements OnInit {
+export class RestaurantComponent implements OnInit {
 
   constructor(
     private functions_login: FunctionLoginService,
@@ -17,7 +17,6 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    document.getElementById('home').classList.add('active');
   }
 
 }

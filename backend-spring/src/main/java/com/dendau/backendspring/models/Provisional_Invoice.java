@@ -6,25 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Set;
-
 @Entity // dùng để khai báo với Spring Boot rằng đây là 1 entity biểu diễn table trong db
 @Data // annotation này sẽ tự động khai báo getter và setter cho class
 @AllArgsConstructor // dùng để khai báo constructor với tất cả các properties
 @NoArgsConstructor // dùng để khai báo constructor rỗng không có param
 @ToString
-@Table(name = "TABLES")
-public class Tables {
+@Table(name = "Provisional_Invoice")
+public class Provisional_Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ID")
     private long id;
-    private String name;
-    private Boolean isEmpty;
-    private Boolean isTemporaryInvoice;
-    private Boolean isProcessingNewspaper;
-    private long totalInvoice;
+    private String timeIn;
+    private String timeOut;
+    private String timePrintInvoice;
+    private Long totalMoney;
+    private int discount;
+    private int surcharge;
+    private long idCustomer;
 
-    @OneToMany(mappedBy = "table")
-    private Set<TableMenu> table_menu;
+    @OneToOne
+    @JoinColumn(name = "tables_id", referencedColumnName = "id")
+    private Tables tables;
 }

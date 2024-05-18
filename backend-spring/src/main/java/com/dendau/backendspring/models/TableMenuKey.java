@@ -23,23 +23,6 @@ public class TableMenuKey implements Serializable {
     @Column(name = "menu_id")
     long menuId;
 
-
-    public long getTableId() {
-        return tableId;
-    }
-
-    public void setTableId(long tableId) {
-        this.tableId = tableId;
-    }
-
-    public long getMenuId() {
-        return menuId;
-    }
-
-    public void setMenuId(long menuId) {
-        this.menuId = menuId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

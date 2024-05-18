@@ -12,15 +12,33 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto navbar-nav-scroll">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Trang Chủ <span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="home"
+            (click)="goToRouterManageHome()"
+          >
+            Trang Chủ <span class="sr-only">(current)</span>
+          </a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-toggle="dropdown"
+            aria-expanded="false"
+            id="restaurant"
+          >
             Nhà Hàng
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Màn Hình Thu Ngân</a>
+            <a
+              class="dropdown-item"
+              style="cursor: pointer;"
+              (click)="goToRouterManageRestaurantCashier()"
+            >
+              Màn Hình Thu Ngân
+            </a>
             <a class="dropdown-item" href="#">Màn Hình Bếp</a>
             <a class="dropdown-item" href="#">Danh Sách Bàn</a>
           </div>
@@ -66,8 +84,11 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="#">Thông Tin Tài Khoản</a>
-            <a class="dropdown-item" href="#">
-              Đang Xuất ({{userLogin?.employee.name}})
+            <a
+              class="dropdown-item"
+              (click)="goToRouterLogin()"
+            >
+              Đăng xuất ({{userLogin?.employee.name}})
             </a>
           </div>
         </div>

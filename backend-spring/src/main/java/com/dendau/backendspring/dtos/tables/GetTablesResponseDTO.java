@@ -1,11 +1,14 @@
 package com.dendau.backendspring.dtos.tables;
 
+import com.dendau.backendspring.dtos.table_menu.GetTable_TableMenuDTO;
+import com.dendau.backendspring.dtos.table_menu.PostTableMenuDTO;
 import com.dendau.backendspring.models.TableMenu;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Set;
 
 @Data // annotation này sẽ tự động khai báo getter và setter cho class
@@ -15,9 +18,9 @@ import java.util.Set;
 public class GetTablesResponseDTO {
     private long id;
     private String name;
-    private boolean isTrong;
-    private boolean isTamTinh;
-    private boolean isBaoCheBien;
-    private long total;
-    private Set<TableMenu> table_menu;
+    private Boolean isEmpty;
+    private Boolean isTemporaryInvoice;
+    private Boolean isProcessingNewspaper;
+    private long totalInvoice;
+    private List<GetTable_TableMenuDTO> table_menu;
 }

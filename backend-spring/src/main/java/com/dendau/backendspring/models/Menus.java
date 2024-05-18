@@ -19,14 +19,14 @@ public class Menus {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private long id;
-    private String name;
-    private long giaBan;
-    private long giaVon;
-    private String dvt;
-    private String imgUrl;
-    private long tonKho;
+    private String name_menu;
+    private long price_sale;
+    private long price_cost;
+    private String unit;
+    private String image_Url;
+    private long inventory;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "menus_group_id", referencedColumnName = "id")
     private MenuGroup menu_group;
 

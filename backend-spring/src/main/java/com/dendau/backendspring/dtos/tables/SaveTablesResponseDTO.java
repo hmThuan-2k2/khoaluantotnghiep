@@ -15,9 +15,10 @@ import java.util.Set;
 public class SaveTablesResponseDTO {
     private Long id;
     private String name;
-    private boolean isTrong;
-    private boolean isTamTinh;
-    private boolean isBaoCheBien;
-    private long total;
+    private Boolean isEmpty;
+    private Boolean isTemporaryInvoice;
+    private Boolean isProcessingNewspaper;
+    private long totalInvoice;
+
     private Set<TableMenu> table_menu;
 }

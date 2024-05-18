@@ -6,6 +6,7 @@ import { LoginService } from '../service/login.service';
 import { FunctionLoginService } from '../service/function-login.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { User } from '../model/user.model';
+import { style } from '@angular/animations';
 
 @Component({
   selector: 'app-manage',
@@ -15,6 +16,7 @@ import { User } from '../model/user.model';
 export class ManageComponent implements OnInit {
   public employeeLogin: Employee;
   public userLogin: User = null;
+  public roles: Array<String> = [];
 
   constructor(
     private loginService: LoginService,
@@ -36,6 +38,10 @@ export class ManageComponent implements OnInit {
           this.userLogin = response.body;
           this.employeeLogin = response.body.employee;
           console.log(this.userLogin);
+          this.userLogin.roles.forEach(element => {
+            this.roles.push(element.name);
+          });
+          console.log(this.roles);
         },
         (error: HttpErrorResponse) => {
           console.log(error);
@@ -46,5 +52,27 @@ export class ManageComponent implements OnInit {
         }
       );
     }
+  }
+
+  goToRouterManageHome(): void {
+    this.router.navigate(['/manage', 'home']);
+    document.getElementById('home').classList.add('active');
+    document.getElementById('restaurant').classList.remove('active');
+  }
+
+  goToRouterManageRestaurantCashier(): void {
+    this.router.navigate(['/manage', 'restaurant', 'cashier']);
+    document.getElementById('home').classList.remove('active');
+    document.getElementById('restaurant').classList.add('active');
+  }
+
+  goToRouterLogin(): void {
+    // var routers = "/login";
+    // sessionStorage.clear();
+    sessionStorage.removeItem('accessToken');
+    // localStorage.clear();
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+    // return routers;
   }
 }

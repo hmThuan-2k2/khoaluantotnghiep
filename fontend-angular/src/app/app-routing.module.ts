@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './manage/home/home.component';
 import { ManageComponent } from './manage/manage.component';
+import { RestaurantComponent } from './manage/restaurant/restaurant.component';
 
 
 const routes: Routes = [
@@ -19,10 +20,21 @@ const routes: Routes = [
         path: 'home',
         component: HomeComponent
       },
-
-
-
-
+      {
+        path: 'restaurant',
+        component: RestaurantComponent,
+        children: [
+          {
+            path: 'cashier',
+            component: RestaurantComponent,
+          },
+          {
+            path: '',
+            redirectTo: '/manage/restaurant/cashier',
+            pathMatch: 'full'
+          }
+        ]
+      },
       {
         path: '',
         redirectTo: '/manage/home',
