@@ -17,6 +17,7 @@ export class RestaurantComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    document.getElementById('restaurant').classList.add('active');
   }
 
 }

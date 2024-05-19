@@ -1,7 +1,10 @@
 package com.dendau.backendspring.services.menus;
 
+import com.dendau.backendspring.dtos.menus.GetFindMenusGroupDTO;
 import com.dendau.backendspring.dtos.menus.GetMenusDTO;
 import com.dendau.backendspring.dtos.menus.IdMenusDTO;
+import com.dendau.backendspring.dtos.menus_group.GetMenusGroupDTO;
+import com.dendau.backendspring.models.MenuGroup;
 import com.dendau.backendspring.models.Menus;
 import com.dendau.backendspring.repositories.MenusRepository;
 import org.modelmapper.ModelMapper;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -68,6 +72,20 @@ public class MenusServiceImpl implements  MenusService{
     @Override
     public List<GetMenusDTO> getAllMenus() {
         List<Menus> menus = (List<Menus>) menusRepository.findAll();
+        Type setOfDTOsType = new TypeToken<List<GetMenusDTO>>(){}.getType();
+        List<GetMenusDTO> response = modelMapper.map(menus, setOfDTOsType);
+        return response;
+    }
+
+    @Override
+    public List<GetMenusDTO> getAllMenusGroup(GetFindMenusGroupDTO request) {
+        Long idMenuGroup = request.getId();
+        List<Menus> menusAll = (List<Menus>) menusRepository.findAll();
+        List<Menus> menus = new ArrayList<Menus>(){};
+        menusAll.forEach(menu -> {
+            if (menu.getMenu_group().getId() == idMenuGroup)
+                menus.add(menu);
+        });
         Type setOfDTOsType = new TypeToken<List<GetMenusDTO>>(){}.getType();
         List<GetMenusDTO> response = modelMapper.map(menus, setOfDTOsType);
         return response;

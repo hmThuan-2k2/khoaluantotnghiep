@@ -1,4 +1,5 @@
-import { Employee } from "./Employee.model";
+
+import { Employee } from "./employee.model";
 import { Roles } from "./roles.model";
 
 export class User {

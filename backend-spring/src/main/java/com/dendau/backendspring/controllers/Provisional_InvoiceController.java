@@ -43,7 +43,7 @@ public class Provisional_InvoiceController {
     }
 
 
-    @GetMapping("/detail")
+    @PostMapping("/detail")
     public ResponseEntity<GetProvisionalInvoiceDTO> getProvisional_InvoiceService(@RequestBody GetIdProvisionalInvoiceDTO request) {
         try {
             GetProvisionalInvoiceDTO response = provisionalInvoiceService.getProvisional_InvoiceService(request);

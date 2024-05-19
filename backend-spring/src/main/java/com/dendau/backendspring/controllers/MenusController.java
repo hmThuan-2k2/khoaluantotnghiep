@@ -1,7 +1,9 @@
 package com.dendau.backendspring.controllers;
 
+import com.dendau.backendspring.dtos.menus.GetFindMenusGroupDTO;
 import com.dendau.backendspring.dtos.menus.GetMenusDTO;
 import com.dendau.backendspring.dtos.menus.IdMenusDTO;
+import com.dendau.backendspring.dtos.menus_group.GetMenusGroupDTO;
 import com.dendau.backendspring.dtos.tables.GetTablesRequestDTO;
 import com.dendau.backendspring.dtos.tables.GetTablesResponseDTO;
 import com.dendau.backendspring.dtos.tables.SaveTablesRequestDTO;
@@ -35,6 +37,16 @@ public class MenusController {
     public ResponseEntity<List<GetMenusDTO>> getAllMenus() {
         try {
             List<GetMenusDTO> response = menusService.getAllMenus();
+            return ResponseEntity.ok(response);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/all_find_menus_group")
+    public ResponseEntity<List<GetMenusDTO>> getAllMenusGroup(@RequestBody GetFindMenusGroupDTO request) {
+        try {
+            List<GetMenusDTO> response = menusService.getAllMenusGroup(request);
             return ResponseEntity.ok(response);
         } catch (Exception e){
             throw new RuntimeException(e);

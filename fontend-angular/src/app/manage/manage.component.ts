@@ -67,12 +67,13 @@ export class ManageComponent implements OnInit {
   }
 
   goToRouterLogin(): void {
+    this.functions_login.logout();
     // var routers = "/login";
     // sessionStorage.clear();
-    sessionStorage.removeItem('accessToken');
+    // sessionStorage.removeItem('accessToken');
     // localStorage.clear();
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    // localStorage.removeItem('token');
+    // this.router.navigate(['/login']);
     // return routers;
   }
 }

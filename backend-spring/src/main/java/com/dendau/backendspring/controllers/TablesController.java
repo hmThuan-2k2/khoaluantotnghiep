@@ -42,7 +42,7 @@ public class TablesController {
     }
 
 
-    @GetMapping("/detail")
+    @PostMapping("/detail")
     public ResponseEntity<GetTablesResponseDTO> getTablesDetail(@RequestBody GetTablesRequestDTO requestDTO) {
         try {
             GetTablesResponseDTO responseDTO = tablesService.getTables(requestDTO);

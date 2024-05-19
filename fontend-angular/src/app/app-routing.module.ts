@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './manage/home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { RestaurantComponent } from './manage/restaurant/restaurant.component';
+import { CashierComponent } from './manage/restaurant/cashier/cashier.component';
 
 
 const routes: Routes = [
@@ -26,7 +27,7 @@ const routes: Routes = [
         children: [
           {
             path: 'cashier',
-            component: RestaurantComponent,
+            component: CashierComponent,
           },
           {
             path: '',
@@ -44,7 +45,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/home',
+    redirectTo: '/manage/home',
     pathMatch: 'full'
   },
   {

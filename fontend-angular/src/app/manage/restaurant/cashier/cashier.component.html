@@ -1,1 +1,247 @@
-<p>cashier works!</p>
+<div class="container-fuid" style="background-color: white;margin-left: 10px;margin-right: 10px;padding-left: 20px;" >
+  <h3 style="text-align: start;font-weight: bold;">
+    Nhà Hàng
+    <i class="fa fa-chevron-right" style="font-size:14px"></i>
+    Màn Hình Thu Ngân
+  </h3>
+</div>
+
+<div class="container-fuid row " style="margin-left: 10px;margin-right: 10px;" >
+  <div class="col-sm-12 col-md-5 ">
+    <div class="row" style="width: 100%;"   id="ban_menu" >
+      <div class="col-6"  style="height: 100%;width: 100%;" >
+        <button
+          style="height: 80px;width: 100%;"
+          type="button" class="btn btn-info"
+          (click)="onBan()"
+        >
+          <h2 style="margin: 0px;text-align: center;" >
+            Bàn [{{lengthTableNotEmpty}}/{{lengthTableAll}}]
+            <br>
+            {{selectTable!=null?selectTable.name:""}}
+          </h2>
+        </button>
+      </div>
+      <div class="col-6"  style="height: 100%;width: 100%;" >
+        <button
+          style="height: 80px;width: 100%;"
+          type="button" class="btn btn-info"
+          (click)="onMenu()"
+        >
+          <h2 style="text-align: center;margin: 0px;" >Menu</h2>
+          <select
+            class="custom-select custom-select-sm bg-info"
+            style="color: white;"
+            [ngModel]="selectMenuGroup"
+            (ngModelChange)="onChangeSelectMenuGroup($event)"
+            name="id"
+            #idMenuGroup="ngModel"
+          >
+            <option selected value="0">Tất cả</option>
+            <option *ngFor="let item of menuGroupAll" [value]="item.id">{{item.name_menu_group}}</option>
+          </select>
+        </button>
+      </div>
+      <div class="col-12" style="width: 100%;" style="background-color: azure;padding-left: 0px;padding-right: 0px;margin-top: 10px;overflow-y: auto;overflow-x: hidden;" >
+        <div *ngIf="isBan" class="container-fuid row "  style="margin: 0px;height: 450px;width: 100%;" >
+          <div *ngFor="let item of tableAll"  class="col-6 col-md-4 col-lg-2 " style="height: 70px;width: 100%;padding: 5px;"  >
+            <button
+              *ngIf="item.isEmpty && item.id != selectTable?.id"
+              style="height: 100%;width: 100%;"
+              type="button"
+              class="btn btn-secondary"
+              id="table-btn-{{item.id}}"
+              (click)="selectTableButton(item)"
+            >
+              <h3 style="text-align: center;margin: 0px;" >
+                {{item.name}}
+              </h3>
+              <h6  style="text-align: center;margin: 0px;"
+              >
+
+              </h6>
+            </button>
+            <button
+              *ngIf="!item.isEmpty && item.id != selectTable?.id"
+              style="height: 100%;width: 100%;"
+              type="button"
+              class="btn btn-danger"
+              id="table-btn-{{item.id}}"
+              (click)="selectTableButton(item)"
+            >
+              <h3 style="text-align: center;margin: 0px;" >
+                {{item.name}}
+              </h3>
+              <h6  style="text-align: center;margin: 0px;"
+              >
+                <p
+                >
+                  {{item.totalInvoice | currency : "VND" : "symbol" }}
+                </p>
+
+              </h6>
+            </button>
+            <button
+              *ngIf="selectTable != null && item.isEmpty && item.id == selectTable?.id"
+              style="height: 100%;width: 100%;"
+              type="button"
+              class="btn btn-primary"
+              id="table-btn-{{item.id}}"
+              (click)="selectTableButton(item)"
+            >
+              <h3 style="text-align: center;margin: 0px;" >
+                {{item.name}}
+              </h3>
+              <h6  style="text-align: center;margin: 0px;"
+              >
+
+              </h6>
+            </button>
+            <button
+              *ngIf="selectTable != null && !item.isEmpty && item.id == selectTable?.id"
+              style="height: 100%;width: 100%;"
+              type="button"
+              class="btn btn-primary"
+              id="table-btn-{{item.id}}"
+              (click)="selectTableButton(item)"
+            >
+              <h3 style="text-align: center;margin: 0px;" >
+                {{item.name}}
+              </h3>
+              <h6  style="text-align: center;margin: 0px;"
+              >
+                <p
+                >
+                  {{item.totalInvoice | currency : "VND" : "symbol" }}
+                </p>
+
+              </h6>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isMenu" class="container-fuid row "  style="margin: 0px;height: 450px;width: 100%;" >
+          <div *ngFor="let item of menuDisplay"  class="col-4 col-md-4 col-lg-3 " style="width: 100%;padding: 5px;"  >
+            <div class="card" (click)="selectTableMenuByMenu(item)" style="cursor: pointer;border: 1px black solid;border-radius: 1px;" >
+              <div class="card-body row" style="padding: 0px;margin: 0px;background-color: azure;" >
+                <p class="card-text col-6" style="color: black;text-align: left;font-size: 13px;padding-left: 5px;padding-right: 0px;margin-bottom: 0px;">
+                  {{item.price_sale}}
+                </p>
+                <p class="card-text col-6" style="color: black;text-align: right;font-size: 13px;padding-left: 0px;padding-right: 5px;margin-bottom: 0px;">
+                  {{item.inventory}}
+                </p>
+              </div>
+              <img [src]="item.image_Url" class="card-img-top" [alt]="item.name_menu" width="100%" height="70px" >
+              <div class="card-body row" style="padding: 0px;margin: 0px;background-color: azure;height: 50px;">
+                <h5 class="card-title col-12" style="font-weight: bold;color: black;text-align: center;margin-bottom: 0px;">
+                  {{item.name_menu}}
+                </h5>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-md-7 "   >
+    <div class="row"  id="hoadon" >
+      <div class="col-12 col-sm-5"  style="height: 100%;width: 100%;padding-left: 0px;padding-right: 0px;" >
+        <button
+          style="height: 80px;width: 100%;border-radius: 0px;"
+          type="button"
+          class="btn btn-light"
+          (click)="getAllTable()"
+        >
+          <h2 style="margin: 0px;text-align: center;" >
+            Thông Tin Hoá Đơn
+            <br>
+            {{(selectTable?.totalInvoice!=0?selectTable?.totalInvoice:"") | currency : "VND" : "symbol" }}
+          </h2>
+        </button>
+      </div>
+      <div class="col-12 col-sm-7 row"  style="height: 100%;width: 100%;padding-left: 0px;padding-right: 0px;margin-left: 0px;margin-right: 0px;" >
+        <div class="col-12 col-sm-6 row" style="height: 100%;width: 100%;padding-left: 0px;padding-right: 0px;margin-left: 0px;margin-right: 0px;" >
+          <div class="col-12" style="height: 100%;width: 100%;padding-left: 0px;padding-right: 0px;" >
+            <button
+              style="height: 40px;width: 100%;border-radius: 0px;"
+              type="button" class="btn btn-primary"
+            >
+              <h2 style="text-align: center;margin: 0px;" >Báo Chế Biến</h2>
+            </button>
+          </div>
+          <div class="col-12" style="height: 100%;width: 100%;padding-left: 0px;padding-right: 0px;" >
+            <button
+              style="height: 40px;width: 100%;border-radius: 0px;"
+              type="button" class="btn btn-warning"
+            >
+              <h2 style="text-align: center;margin: 0px;" >Tạm Tính</h2>
+            </button>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6" style="height: 100%;width: 100%;padding-left: 0px;padding-right: 0px;">
+          <button
+            style="height: 80px;width: 100%;border-radius: 0px;"
+            type="button" class="btn btn-danger"
+          >
+            <h2 style="text-align: center;margin: 0px;" >Thanh Toán</h2>
+          </button>
+        </div>
+      </div>
+      <div class="col-12" style="background-color: aliceblue;height: 450px;width: 100%;padding-left: 0px;padding-right: 0px;margin-top: 10px;overflow-y: auto;overflow-x: hidden;" >
+        <div class="table-responsive" >
+          <table class="table table-bordered table-hover table-sm">
+            <thead class="thead-light">
+              <tr style="width: 100%;text-align: center;">
+                <th scope="col" style="width: 3%;" >#</th>
+                <th scope="col" style="width: 45%;">Tên Thực Đơn</th>
+                <th scope="col" style="width: 5%;">ĐVT</th>
+                <th scope="col" style="width: 5%;">SL</th>
+                <th scope="col" style="width: 15%;">Đơn Giá</th>
+                <th scope="col" style="width: 15%;">Thành Tiền</th>
+                <th scope="col" style="width: 5%;"></th>
+                <th scope="col" style="width: 5%;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of tableMenuData">
+                <th scope="row" class="align-middle" style="text-align: center;" >
+                  {{tableMenuData.indexOf(item) + 1}}
+                </th>
+                <td class="align-middle">
+                  {{item.menu.name_menu}}
+                  <h6 style="font-size: 11px;font-style: italic;margin: 0px;" >
+                    {{item.note}}
+                  </h6>
+                </td>
+                <td class="align-middle">
+                  {{item.menu.unit}}
+                </td>
+                <td class="align-middle" style="text-align: center;" >
+                  {{item.amount}}
+                </td>
+                <td class="align-middle" style="text-align: right;" >
+                  {{item.price_unit | currency : "VND" : "symbol"  }}
+                </td>
+                <td class="align-middle" style="text-align: right;" >
+                  {{ item.price_unit * item.amount | currency : "VND" : "symbol" }}
+                </td>
+                <td class="align-middle" style="text-align: center;"  >
+                  <a (click)="1" style="padding-right: 5px;" >
+                    <i class="fa fa-edit" style="font-size:24px;color: blue;">
+                    </i>
+                  </a>
+                </td>
+                <td class="align-middle" style="text-align: center;" >
+                  <a (click)="1">
+                    <i class="fa fa-trash-o" style="font-size:24px;color: red;">
+                    </i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
