@@ -1,5 +1,6 @@
 package com.dendau.backendspring.services.table_menu;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.menus_group.GetMenusGroupDTO;
 import com.dendau.backendspring.dtos.menus_group.IdMenusGroupDTO;
 import com.dendau.backendspring.dtos.table_menu.*;
@@ -149,7 +150,7 @@ public class TableMenuServiceImpl implements TableMenuService {
     }
 
     @Override
-    public String deleteTableMenu(IdTableMenuDTO request) {
+    public MessageDTO deleteTableMenu(IdTableMenuDTO request) {
         TableMenuKeyDTO tableMenuKeyDTO = request.getId();
         if(tableMenuKeyDTO.getMenuId() == null){
             throw new RuntimeException("Parameter id menu is not found in request..!!");
@@ -182,7 +183,8 @@ public class TableMenuServiceImpl implements TableMenuService {
                 menusRepository.refresh(menu);
 
                 tableMenuRepository.delete(oldTableMenu);
-                return "Deleted data successfully!";
+                MessageDTO response = new MessageDTO("Deleted data successfully!");
+                return response;
             }
             else throw new RuntimeException("Can't find record table and menu with identifier: " + request.getId());
         }

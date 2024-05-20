@@ -1,5 +1,6 @@
 package com.dendau.backendspring.controllers;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.table_menu.GetTableMenuDTO;
 import com.dendau.backendspring.dtos.table_menu.IdTableMenuDTO;
 import com.dendau.backendspring.dtos.table_menu.PostTableMenuDTO;
@@ -59,10 +60,10 @@ public class TableMenuController {
         }
     }
 
-    @DeleteMapping("/delete")
-    public  ResponseEntity<String> deleteTableMenu(@RequestBody IdTableMenuDTO request) {
+    @PutMapping("/delete")
+    public  ResponseEntity<MessageDTO> deleteTableMenu(@RequestBody IdTableMenuDTO request) {
         try {
-            String response = tableMenuService.deleteTableMenu(request);
+            MessageDTO response = tableMenuService.deleteTableMenu(request);
             return ResponseEntity.ok().body(response);
         } catch (Exception e){
             throw new RuntimeException(e);

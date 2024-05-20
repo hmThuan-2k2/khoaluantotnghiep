@@ -69,7 +69,7 @@ export class FunctionLoginService {
     let accessToken = sessionStorage.getItem('accessToken');
     this.loginService.getUserProfile(accessToken).subscribe(
       (response: HttpResponse<any>) => {
-        console.log(response);
+        // console.log(response);
       },
       (error: HttpErrorResponse) => {
         console.log(error);

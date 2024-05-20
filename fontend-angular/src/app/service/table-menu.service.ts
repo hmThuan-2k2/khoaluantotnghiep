@@ -25,6 +25,34 @@ export class TableMenuService {
     );
   }
 
+  public saveTableMenu(data: any): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.put<HttpResponse<any>>(
+      `${this.url}/table_menu/save`,
+      data,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
+  public deleteTableMenu(data: any): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.put<HttpResponse<any>>(
+      `${this.url}/table_menu/delete`,
+      data,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
   public getAllTable(): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");

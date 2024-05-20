@@ -1,0 +1,185 @@
+<div
+  class="container-fuid"
+  style="
+    background-color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 20px;
+  "
+>
+  <h3 style="text-align: start; font-weight: bold">
+    Nhà Hàng
+    <i class="fa fa-chevron-right" style="font-size: 14px"></i>
+    Danh Sách Bàn
+  </h3>
+</div>
+
+<div class="container-fuid ">
+  <div
+    class="container"
+    style="
+      margin-top: 20px;
+      padding-top: 10px;
+      height: 100%;
+      background-color: white;
+    "
+  >
+    <div class="row align-items-center" style="margin: 0px">
+      <div
+        class="col-12 col-lg-4 align-self-center"
+        style="margin: 0px; padding: 0px"
+      >
+        <div class="container">
+          <h3 style="margin-bottom: 0px; padding-top: 10px; font-weight: bold">
+            Tìm Kiếm
+          </h3>
+          <mat-form-field
+            appearance="outline"
+            style="margin-right: 10px; width: 100%"
+          >
+            <mat-label>Tên bàn</mat-label>
+            <input matInput (keyup)="applyFilter($event)" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4" style="width: 100%; text-align: justify">
+        <mat-card class="example-card" style="border: 2px black solid">
+          <mat-card-header>
+            <div mat-card-avatar>
+              <i class="fa fa-money" style="font-size: 36px"></i>
+            </div>
+            <mat-card-title>{{tongTotalInvoice | currency : "VND" : "symbol"}}</mat-card-title>
+            <mat-card-subtitle style="font-weight: bold; font-size: 16px">
+              Tạm Tính
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+      <div class="col-12 col-lg-4" style="width: 100%; text-align: justify">
+        <mat-card class="example-card" style="border: 2px black solid">
+          <mat-card-header>
+            <div mat-card-avatar>
+              <i class="fa fa-crosshairs" style="font-size: 36px"></i>
+            </div>
+            <mat-card-title>{{lengthTableNotEmpty}} / {{lengthTableAll}}</mat-card-title>
+            <mat-card-subtitle style="font-weight: bold; font-size: 16px">
+              Bàn Sử Dụng
+            </mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="container"
+    style="width: 100%; height: 100%; padding-left: 0px; padding-right: 0px;padding-top: 20px;"
+  >
+    <div>
+      <table mat-table matSort [dataSource]="dataSource" style="width: 100%">
+        <tbody>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+            <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tên Bàn</th>
+            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="isEmpty">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Trạng Thái
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.isEmpty ? "Trống" : "Có Người" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalInvoice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Tổng Hoá Đơn
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.isEmpty ? "" : (element.totalInvoice | currency : "VND" : "symbol" ) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="isTemporaryInvoice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tạm Tính</th>
+            <td mat-cell *matCellDef="let element">
+              {{
+                element.isEmpty
+                  ? ""
+                  : element.isTemporaryInvoice
+                  ? "Đã Tạm Tính"
+                  : "Chưa Tạm Tính"
+              }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="isProcessingNewspaper">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Báo Chế Biến
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{
+                element.isEmpty
+                  ? ""
+                  : element.isProcessingNewspaper
+                  ? "Đã BCB"
+                  : "Chưa BCB"
+              }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Chức Năng</th>
+            <td mat-cell *matCellDef="let element">
+              <div class="btn-group">
+                <a
+                  (click)="(1)"
+                  class="btn btn-primary tooltips"
+                  data-placement="top"
+                  data-original-title="edit"
+                >
+                  <i class="fa fa-pencil" style="font-size: 20px"></i>
+                </a>
+                <a
+                  (click)="(1)"
+                  class="btn btn-danger tooltips"
+                  data-placement="top"
+                  data-original-title="Delete"
+                >
+                  <i class="fa fa-trash" style="font-size: 20px"></i>
+                </a>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </tbody>
+      </table>
+
+      <table>
+        <tr *ngIf="!dataSource.data.length">
+          <td
+            style="text-align: center"
+            [attr.colspan]="displayedColumns.length"
+          >
+            Không có dữ liệu được tìm thấy!
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 15]"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>

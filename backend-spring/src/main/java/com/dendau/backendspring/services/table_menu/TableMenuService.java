@@ -1,5 +1,6 @@
 package com.dendau.backendspring.services.table_menu;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.menus_group.GetMenusGroupDTO;
 import com.dendau.backendspring.dtos.menus_group.IdMenusGroupDTO;
 import com.dendau.backendspring.dtos.table_menu.GetTableMenuDTO;
@@ -18,5 +19,5 @@ public interface TableMenuService {
 
     List<GetTableMenuDTO> getAllTableMenu();
 
-    String deleteTableMenu(IdTableMenuDTO request);
+    MessageDTO deleteTableMenu(IdTableMenuDTO request);
 }

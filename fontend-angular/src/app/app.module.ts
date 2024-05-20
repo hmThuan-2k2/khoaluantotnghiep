@@ -13,6 +13,9 @@ import { HomeComponent } from './manage/home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { RestaurantComponent } from './manage/restaurant/restaurant.component';
 import { CashierComponent } from './manage/restaurant/cashier/cashier.component';
+import { TableComponent } from './manage/restaurant/table/table.component';
+import { ProductComponent } from './manage/product/product.component';
+import { MenuComponent } from './manage/product/menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,10 @@ import { CashierComponent } from './manage/restaurant/cashier/cashier.component'
     HomeComponent,
     ManageComponent,
     RestaurantComponent,
-    CashierComponent
+    CashierComponent,
+    TableComponent,
+    ProductComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,

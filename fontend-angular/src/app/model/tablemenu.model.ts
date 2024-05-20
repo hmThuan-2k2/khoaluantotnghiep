@@ -1,6 +1,6 @@
-import { Menu } from "./menu.model";
-import { Table } from "./table.model";
-import { TableMenuKey } from "./tablemenukey.model";
+import { Menu } from './menu.model';
+import { Table } from './table.model';
+import { TableMenuKey } from './tablemenukey.model';
 
 export class TableMenu {
   id: TableMenuKey;
@@ -10,4 +10,21 @@ export class TableMenu {
   note: string;
   table: Table;
   menu: Menu;
+  constructor(
+    id: TableMenuKey,
+    amount: number,
+    price_unit: number,
+    isCooking: boolean,
+    note: string,
+    table: Table,
+    menu: Menu
+  ) {
+    this.id = id;
+    this.amount = amount;
+    this.price_unit = price_unit;
+    this.isCooking = isCooking;
+    this.note = note;
+    this.table = table;
+    this.menu = menu;
+  }
 }

@@ -46,8 +46,8 @@ public class Provisional_InvoiceServiceImpl implements Provisional_InvoiceServic
                 Provisional_Invoice oldProvisional_Invoice = provisionalInvoiceRepository.findFirstById(request.getId());
                 if (oldProvisional_Invoice == null) {
                     oldProvisional_Invoice = new Provisional_Invoice();
+                    oldProvisional_Invoice.setTimeIn(request.getTimeIn());
                 }
-                oldProvisional_Invoice.setTimeIn(request.getTimeIn());
                 oldProvisional_Invoice.setTimeOut(request.getTimeOut());
                 oldProvisional_Invoice.setTimePrintInvoice(request.getTimePrintInvoice());
                 oldProvisional_Invoice.setDiscount(request.getDiscount());

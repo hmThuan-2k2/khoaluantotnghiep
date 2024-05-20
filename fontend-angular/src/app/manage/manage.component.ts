@@ -34,7 +34,7 @@ export class ManageComponent implements OnInit {
       let accessToken = sessionStorage.getItem('accessToken');
       this.loginService.getUserProfile(accessToken).subscribe(
         (response: HttpResponse<any>) => {
-          console.log(response);
+          // console.log(response);
           this.userLogin = response.body;
           this.employeeLogin = response.body.employee;
           console.log(this.userLogin);
@@ -56,14 +56,30 @@ export class ManageComponent implements OnInit {
 
   goToRouterManageHome(): void {
     this.router.navigate(['/manage', 'home']);
-    document.getElementById('home').classList.add('active');
     document.getElementById('restaurant').classList.remove('active');
+    document.getElementById('product').classList.remove('active');
+    document.getElementById('home').classList.add('active');
   }
 
   goToRouterManageRestaurantCashier(): void {
     this.router.navigate(['/manage', 'restaurant', 'cashier']);
     document.getElementById('home').classList.remove('active');
+    document.getElementById('product').classList.remove('active');
     document.getElementById('restaurant').classList.add('active');
+  }
+
+  goToRouterManageRestaurantTable(): void {
+    this.router.navigate(['/manage', 'restaurant', 'table']);
+    document.getElementById('home').classList.remove('active');
+    document.getElementById('product').classList.remove('active');
+    document.getElementById('restaurant').classList.add('active');
+  }
+
+  goToRouterManageProductMenu(): void {
+    this.router.navigate(['/manage', 'product', 'menu']);
+    document.getElementById('home').classList.remove('active');
+    document.getElementById('restaurant').classList.remove('active');
+    document.getElementById('product').classList.add('active');
   }
 
   goToRouterLogin(): void {

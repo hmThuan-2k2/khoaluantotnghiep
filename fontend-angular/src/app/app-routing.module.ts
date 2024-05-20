@@ -6,6 +6,9 @@ import { HomeComponent } from './manage/home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { RestaurantComponent } from './manage/restaurant/restaurant.component';
 import { CashierComponent } from './manage/restaurant/cashier/cashier.component';
+import { TableComponent } from './manage/restaurant/table/table.component';
+import { ProductComponent } from './manage/product/product.component';
+import { MenuComponent } from './manage/product/menu/menu.component';
 
 
 const routes: Routes = [
@@ -30,8 +33,27 @@ const routes: Routes = [
             component: CashierComponent,
           },
           {
+            path: 'table',
+            component: TableComponent,
+          },
+          {
             path: '',
             redirectTo: '/manage/restaurant/cashier',
+            pathMatch: 'full'
+          }
+        ]
+      },
+      {
+        path: 'product',
+        component: ProductComponent,
+        children: [
+          {
+            path: 'menu',
+            component: MenuComponent,
+          },
+          {
+            path: '',
+            redirectTo: '/manage/product/menu',
             pathMatch: 'full'
           }
         ]
