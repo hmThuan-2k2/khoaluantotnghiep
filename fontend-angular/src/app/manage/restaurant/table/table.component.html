@@ -1,4 +1,5 @@
 <div
+  id="main-container"
   class="container-fuid"
   style="
     background-color: white;
@@ -40,6 +41,15 @@
             <mat-label>Tên bàn</mat-label>
             <input matInput (keyup)="applyFilter($event)" />
           </mat-form-field>
+          <a
+            (click)="onOpenModal(null,'add')"
+            class="btn btn-success tooltips"
+            data-placement="top"
+            data-original-title="Add"
+            style="width: 100%;margin-bottom: 5px;"
+          >
+            <i class="fa fa-plus-square" style="font-size: 20px"></i> Thêm Bàn Mới
+          </a>
         </div>
       </div>
       <div class="col-12 col-lg-4" style="width: 100%; text-align: justify">
@@ -49,7 +59,7 @@
               <i class="fa fa-money" style="font-size: 36px"></i>
             </div>
             <mat-card-title>{{tongTotalInvoice | currency : "VND" : "symbol"}}</mat-card-title>
-            <mat-card-subtitle style="font-weight: bold; font-size: 16px">
+            <mat-card-subtitle style="font-weight: bold; font-size: 16px;margin-bottom: 0px;">
               Tạm Tính
             </mat-card-subtitle>
           </mat-card-header>
@@ -63,7 +73,7 @@
               <i class="fa fa-crosshairs" style="font-size: 36px"></i>
             </div>
             <mat-card-title>{{lengthTableNotEmpty}} / {{lengthTableAll}}</mat-card-title>
-            <mat-card-subtitle style="font-weight: bold; font-size: 16px">
+            <mat-card-subtitle style="font-weight: bold; font-size: 16px;margin-bottom: 0px;">
               Bàn Sử Dụng
             </mat-card-subtitle>
           </mat-card-header>
@@ -79,18 +89,18 @@
     <div>
       <table mat-table matSort [dataSource]="dataSource" style="width: 100%">
         <tbody>
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-            <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+          <ng-container matColumnDef="id" >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;">#</th>
+            <td mat-cell *matCellDef="let element" >{{ tableAll.indexOf(element) + 1 }}</td>
           </ng-container>
 
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tên Bàn</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 15%;" >Tên Bàn</th>
             <td mat-cell *matCellDef="let element">{{ element.name }}</td>
           </ng-container>
 
-          <ng-container matColumnDef="isEmpty">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <ng-container matColumnDef="isEmpty" >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;" >
               Trạng Thái
             </th>
             <td mat-cell *matCellDef="let element">
@@ -98,8 +108,8 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="totalInvoice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <ng-container matColumnDef="totalInvoice"  >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;" >
               Tổng Hoá Đơn
             </th>
             <td mat-cell *matCellDef="let element">
@@ -107,8 +117,8 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="isTemporaryInvoice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tạm Tính</th>
+          <ng-container matColumnDef="isTemporaryInvoice"  >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;" >Tạm Tính</th>
             <td mat-cell *matCellDef="let element">
               {{
                 element.isEmpty
@@ -121,7 +131,7 @@
           </ng-container>
 
           <ng-container matColumnDef="isProcessingNewspaper">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 15%;"  >
               Báo Chế Biến
             </th>
             <td mat-cell *matCellDef="let element">
@@ -135,26 +145,27 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef>Chức Năng</th>
+          <ng-container matColumnDef="action" >
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;"  >Chức Năng</th>
             <td mat-cell *matCellDef="let element">
               <div class="btn-group">
-                <a
-                  (click)="(1)"
+                <button
+                  (click)="onOpenModal(element,'edit')"
                   class="btn btn-primary tooltips"
                   data-placement="top"
                   data-original-title="edit"
                 >
                   <i class="fa fa-pencil" style="font-size: 20px"></i>
-                </a>
-                <a
-                  (click)="(1)"
+                </button>
+                <button
+                  (click)="onOpenModal(element,'delete')"
                   class="btn btn-danger tooltips"
                   data-placement="top"
                   data-original-title="Delete"
+                  [disabled]="!element.isEmpty"
                 >
                   <i class="fa fa-trash" style="font-size: 20px"></i>
-                </a>
+                </button>
               </div>
             </td>
           </ng-container>
@@ -181,5 +192,229 @@
       showFirstLastButtons
     >
     </mat-paginator>
+  </div>
+</div>
+
+
+<!-- Add Table Modal -->
+
+<!--
+data-backdrop="static"
+data-keyboard="false"
+-->
+
+<div
+  class="modal fade"
+  id="addTableModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addTableModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" style="margin: 0px" id="addUserModalLabel">Thêm Bàn Mới</h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          id="add-table-form"
+          aria-label="Close"
+          (click)="setDefaultAddTableForm(addTableForm)"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          #addTableForm="ngForm"
+          (ngSubmit)="onAddTable(addTableForm)"
+          id="formAdd"
+        >
+          <div class="form-group">
+            <label for="nameAdd">
+              Tên Bàn <span style="color: red">*</span>
+            </label>
+            <input
+              id="nameAdd"
+              type="text"
+              ngModel
+              name="name"
+              class="form-control"
+              required
+              #name="ngModel"
+            />
+            <div
+              *ngIf="name.invalid && name.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="name.errors.required">
+                Tên Bàn là giá trị bắt buộc.
+              </div>
+              <!-- <div *ngIf="name.errors.pattern || name.errors.minlength">
+                Tên sản phẩm không đúng định dạng.
+              </div> -->
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          *ngIf="checkIsAddTable(addTableForm)"
+          type="button"
+          class="btn btn-secondary"
+          (click)="setDefaultAddTableForm(addTableForm)"
+        >
+          Huỷ
+        </button>
+        <button
+          [disabled]="addTableForm.invalid"
+          type="submit"
+          class="btn btn-primary"
+          form="formAdd"
+        >
+          Thêm Mới
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- pattern="^(\S+)((\s{0,1}\S+){0,})$" -->
+<!-- Edit Modal -->
+<div
+  class="modal fade"
+  id="updateTableModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="userEditModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" style="margin: 0px">
+          Cập nhật thông tin bàn
+        </h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          id="edit-table-form"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          #editTableForm="ngForm"
+          (ngSubmit)="onUpdateTable(editTableForm)"
+          id="formEditProduct"
+        >
+          <div class="form-group">
+            <label for="nameEdit">
+              Tên Bàn <span style="color: red">*</span>
+            </label>
+            <input
+              id="nameEdit"
+              type="text"
+              ngModel="{{ editTable?.name }}"
+              name="name"
+              class="form-control"
+              autocomplete="off"
+              required
+              #nameEdit="ngModel"
+            />
+            <div
+              *ngIf="nameEdit.invalid && nameEdit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="nameEdit.errors.required">
+                Tên Bàn là giá trị bắt buộc.
+              </div>
+              <!-- <div *ngIf="nameEdit.errors.pattern || nameEdit.errors.minlength">
+                Tên Bàn không đúng định dạng.
+              </div> -->
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          *ngIf="checkIsUpdateTable(editTableForm)"
+          type="button"
+          (click)="setDefaultEditTableForm(editTableForm)"
+          class="btn btn-secondary"
+        >
+          Huỷ
+        </button>
+        <button
+          [disabled]="editTableForm.invalid || !checkIsUpdateTable(editTableForm)"
+          type="submit"
+          class="btn btn-primary"
+          form="formEditProduct"
+        >
+          Cập nhật
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  class="modal fade"
+  id="deleteTableModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteModelLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" style="margin: 0px" id="deleteModelLabel">Xoá Bàn</h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc chắn muốn xoá bàn {{ deleteTable?.name }}?</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          id="delete-product-form"
+        >
+          Không
+        </button>
+        <button
+          (click)="onDeleteTable(deleteTable)"
+          class="btn btn-danger"
+          data-dismiss="modal"
+        >
+          Có
+        </button>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,9 +1,11 @@
+import { MenuService } from './../../../service/menu.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Menu } from 'src/app/model/menu.model';
 import { Table } from 'src/app/model/table.model';
 import { FunctionLoginService } from 'src/app/service/function-login.service';
 import { SnackBarService } from 'src/app/service/snack-bar.service';
@@ -18,13 +20,14 @@ export class MenuComponent implements OnInit {
 
   constructor(
     private TableService: TableService,
+    private MenuService: MenuService,
     private functions_login: FunctionLoginService,
     private _snackBar: SnackBarService,
     private router: Router
   ) { }
 
-  displayedColumns: string[] = ['id','name', 'isEmpty', 'totalInvoice', 'isTemporaryInvoice', 'isProcessingNewspaper', 'action'];
-  dataSource  = new MatTableDataSource<Table>();
+  displayedColumns: string[] = ['id', 'image_Url', 'name_menu', 'price_sale', 'price_cost', 'unit', 'inventory', 'menu_group', 'action'];
+  dataSource  = new MatTableDataSource<Menu>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
@@ -34,28 +37,17 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllTable();
+    this.getAllMenu();
   }
 
-  public tableAll: Table[] = null;
-  public lengthTableAll: number = null;
-  public lengthTableNotEmpty: number = null;
-  public tongTotalInvoice: number = null;
+  public menuAll: Menu[] = null;
 
-  public getAllTable(): void {
+  public getAllMenu(): void {
     this.functions_login.getUserProfile();
-    this.TableService.getAllTable().subscribe(
+    this.MenuService.getAllMenu().subscribe(
       (response: HttpResponse<any>) => {
-        this.tableAll = response.body;
-        this.lengthTableAll = this.tableAll.length;
-        // console.log(this.tableAll);
-        this.lengthTableNotEmpty = 0;
-        this.tongTotalInvoice = 0;
-        this.tableAll.forEach((element) => {
-          if (element.isEmpty == false) this.lengthTableNotEmpty += 1;
-          this.tongTotalInvoice += element.totalInvoice;
-        });
-        this.dataSource = new MatTableDataSource<Table>(this.tableAll);
+        this.menuAll = response.body;
+        this.dataSource = new MatTableDataSource<Menu>(this.menuAll);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },

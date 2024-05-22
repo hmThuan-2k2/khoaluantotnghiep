@@ -16,7 +16,7 @@
   </div>
 
   <div class="container-fuid row" style="margin-left: 10px; margin-right: 10px">
-    <div class="col-sm-12 col-md-5">
+    <div *ngIf="!isThongTinHoaDon" class="col-sm-12 col-md-5">
       <div class="row" style="width: 100%" id="ban_menu">
         <div class="col-6" style="height: 100%; width: 100%">
           <button
@@ -231,6 +231,233 @@
         </div>
       </div>
     </div>
+    <div *ngIf="isThongTinHoaDon" class="col-sm-12 col-md-5">
+      <div class="row" style="width: 100%" id="ban_menu">
+        <div
+          class="col-12"
+          style="width: 100%"
+          style="
+            background-color: azure;
+            padding-left: 0px;
+            padding-right: 0px;
+            margin-top: 0px;
+            overflow-y: auto;
+            overflow-x: hidden;
+          "
+        >
+          <div
+            class="container-fuid row"
+            style="margin: 0px; height: 540px; width: 100%"
+          >
+            <form style="padding: 20px; width: 100%">
+              <div class="form-row align-items-center">
+                <div class="col-md-5">
+                  <h4 style="margin-bottom: 0px; font-size: 14px">
+                    Thời Gian Bàn Vào:
+                  </h4>
+                </div>
+                <div class="form-group col-md-7" style="margin-bottom: 0px">
+                  <input
+                    style="border-bottom: 1px black solid"
+                    type="text"
+                    class="form-control-plaintext"
+                    [value]="selectProvisionalInvoice?.dateTimeIn"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div
+                *ngIf="selectProvisionalInvoice?.dateTimePrintInvoice != null"
+                class="form-row align-items-center"
+                style="margin-top: 20px"
+              >
+                <div class="col-md-5">
+                  <h4 style="margin-bottom: 0px; font-size: 14px">
+                    Thời Gian Tạm Tính:
+                  </h4>
+                </div>
+                <div class="form-group col-md-7" style="margin-bottom: 0px">
+                  <input
+                    style="border-bottom: 1px black solid"
+                    type="text"
+                    class="form-control-plaintext"
+                    [value]="selectProvisionalInvoice?.dateTimePrintInvoice"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="form-row align-items-center" style="margin-top: 20px">
+                <div class="col-md-5">
+                  <h4 style="margin-bottom: 0px; font-size: 14px">
+                    Khách Hàng:
+                  </h4>
+                </div>
+                <div class="form-group col-md-7" style="margin-bottom: 0px">
+                  <select class="form-control">
+                    <option selected>Khách Lẻ</option>
+                    <option>A Bảo</option>
+                    <option>A Thịnh</option>
+                    <option>A Phú</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row align-items-center" style="margin-top: 20px">
+                <div class="col-md-5">
+                  <h4 style="margin-bottom: 0px; font-size: 14px">
+                    Phụ Thu Dịch Vụ: {{surchargeProvisionalInvoice}}%
+                  </h4>
+                </div>
+                <div class="form-group col-md-7" style="margin-bottom: 0px">
+                  <input
+                    type="range"
+                    class="form-control-range"
+                    id="formControlRange"
+                    [(ngModel)]="surchargeProvisionalInvoice"
+                    name="surcharge"
+                    min="0"
+                    max="100"
+                    step="5"
+                    value="{{surchargeProvisionalInvoice}}"
+                  />
+                </div>
+              </div>
+              <div class="form-row align-items-center" style="margin-top: 20px">
+                <div class="col-md-5">
+                  <h4 style="margin-bottom: 0px; font-size: 14px">
+                    Chiết Khấu Giảm Giá: {{discountProvisionalInvoice}}%
+                  </h4>
+                </div>
+                <div class="form-group col-md-7" style="margin-bottom: 0px">
+                  <input
+                    type="range"
+                    class="form-control-range"
+                    id="formControlRange"
+                    [(ngModel)]="discountProvisionalInvoice"
+                    name="discount"
+                    min="0"
+                    max="100"
+                    step="5"
+                    value="{{discountProvisionalInvoice}}"
+                  />
+                </div>
+              </div>
+              <div class="form-row align-items-center" style="margin-top: 20px">
+                <div class="col-8">
+                  <h4
+                    style="
+                      margin-bottom: 0px;
+                      font-size: 14px;
+                      text-align: right;
+                    "
+                  >
+                    Tổng Thành Tiền:
+                  </h4>
+                </div>
+                <div class="form-group col-4" style="margin-bottom: 0px">
+                  <input
+                    style="text-align: right"
+                    type="text"
+                    class="form-control-plaintext"
+                    value="{{
+                      selectProvisionalInvoice?.totalMoney
+                        | currency : 'VND' : 'symbol'
+                    }}"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="form-row align-items-center">
+                <div class="col-8">
+                  <h4
+                    style="
+                      margin-bottom: 0px;
+                      font-size: 14px;
+                      text-align: right;
+                    "
+                  >
+                    Phụ Thu: {{surchargeProvisionalInvoice}}%
+                  </h4>
+                </div>
+                <div class="form-group col-4" style="margin-bottom: 0px">
+                  <input
+                    style="text-align: right"
+                    type="text"
+                    class="form-control-plaintext"
+                    value="{{
+                      (selectProvisionalInvoice?.totalMoney * surchargeProvisionalInvoice / 100 )
+                        | currency : 'VND' : 'symbol'
+                    }}"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="form-row align-items-center">
+                <div class="col-8">
+                  <h4
+                    style="
+                      margin-bottom: 0px;
+                      font-size: 14px;
+                      text-align: right;
+                    "
+                  >
+                    Chiết Khấu: {{discountProvisionalInvoice}}%
+                  </h4>
+                </div>
+                <div class="form-group col-4" style="margin-bottom: 0px">
+                  <input
+                    style="border-bottom: 1px black solid; text-align: right"
+                    type="text"
+                    class="form-control-plaintext"
+                    value="{{
+                      ( selectProvisionalInvoice?.totalMoney * discountProvisionalInvoice / 100 )
+                        | currency : 'VND' : 'symbol'
+                    }}"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="form-row align-items-center">
+                <div class="col-8">
+                  <h4
+                    style="
+                      margin-bottom: 0px;
+                      font-size: 14px;
+                      text-align: right;
+                    "
+                  >
+                    Tổng Cộng:
+                  </h4>
+                </div>
+                <div class="form-group col-4" style="margin-bottom: 0px">
+                  <input
+                    style="text-align: right"
+                    type="text"
+                    class="form-control-plaintext"
+                    value="{{
+                      ( selectProvisionalInvoice?.totalMoney
+                        + (selectProvisionalInvoice?.totalMoney * surchargeProvisionalInvoice / 100 )
+                        - ( selectProvisionalInvoice?.totalMoney * discountProvisionalInvoice / 100 )
+                      )
+                        | currency : 'VND' : 'symbol'
+                    }}"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 20px">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  style="width: 100%"
+                >
+                  Cập Nhật Thông Tin Hoá Đơn
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="col-sm-12 col-md-7">
       <div class="row" id="hoadon">
         <div
@@ -246,7 +473,7 @@
             style="height: 80px; width: 100%; border-radius: 0px"
             type="button"
             class="btn btn-light"
-            (click)="getAllTable()"
+            (click)="onThongTinHoaDon()"
           >
             <h2 style="margin: 0px; text-align: center">
               Thông Tin Hoá Đơn

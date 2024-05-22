@@ -1,5 +1,6 @@
 package com.dendau.backendspring.services.tables;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.table_menu.GetTable_TableMenuDTO;
 import com.dendau.backendspring.dtos.table_menu.PostTableMenuDTO;
 import com.dendau.backendspring.dtos.tables.GetTablesRequestDTO;
@@ -96,5 +97,17 @@ public class TablesServiceImpl implements TablesService {
             index.setTable_menu(responseTableMenu);
         });
         return responseDTO;
+    }
+
+    @Override
+    public MessageDTO deleteTable(String id) {
+        Long idTable = Long.parseLong(id);
+        Tables table = tablesRepository.findFirstById(idTable);
+        if (table != null) {
+            tablesRepository.delete(table);
+            MessageDTO response = new MessageDTO("Xoá thông tin bàn thành công!");
+            return response;
+        }
+        else throw new RuntimeException("Can't find record table and menu with identifier: " + id);
     }
 }

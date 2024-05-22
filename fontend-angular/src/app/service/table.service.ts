@@ -37,4 +37,31 @@ export class TableService {
       }
     );
   }
+
+  public saveTable(data: any): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.post<HttpResponse<any>>(
+      `${this.url}/table/save`,
+      data,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
+  public deleteTable(id: number): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.delete<HttpResponse<any>>(
+      `${this.url}/table/delete/${id}`,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
 }

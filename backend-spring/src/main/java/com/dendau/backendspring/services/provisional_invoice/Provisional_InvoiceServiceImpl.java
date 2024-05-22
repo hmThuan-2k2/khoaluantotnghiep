@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -39,30 +41,27 @@ public class Provisional_InvoiceServiceImpl implements Provisional_InvoiceServic
         if(request.getIdTable() == null){
             throw new RuntimeException("Parameter id table is not found in request..!!");
         }
+        Date date = new Date();
         Provisional_Invoice saves = null;
         Tables table = tablesRepository.findFirstById(request.getIdTable());
         if (table != null) {
             if (request.getId() != null) {
                 Provisional_Invoice oldProvisional_Invoice = provisionalInvoiceRepository.findFirstById(request.getId());
-                if (oldProvisional_Invoice == null) {
-                    oldProvisional_Invoice = new Provisional_Invoice();
-                    oldProvisional_Invoice.setTimeIn(request.getTimeIn());
+                if (oldProvisional_Invoice != null) {
+                    oldProvisional_Invoice.setDiscount(request.getDiscount());
+                    oldProvisional_Invoice.setSurcharge(request.getSurcharge());
+                    oldProvisional_Invoice.setIdCustomer(request.getIdCustomer());
+                    oldProvisional_Invoice.setTotalMoney(table.getTotalInvoice());
+                    oldProvisional_Invoice.setTables(table);
+                    saves = provisionalInvoiceRepository.save(oldProvisional_Invoice);
+                    provisionalInvoiceRepository.refresh(saves);
                 }
-                oldProvisional_Invoice.setTimeOut(request.getTimeOut());
-                oldProvisional_Invoice.setTimePrintInvoice(request.getTimePrintInvoice());
-                oldProvisional_Invoice.setDiscount(request.getDiscount());
-                oldProvisional_Invoice.setSurcharge(request.getSurcharge());
-                oldProvisional_Invoice.setIdCustomer(request.getIdCustomer());
-                oldProvisional_Invoice.setTotalMoney(table.getTotalInvoice());
-                oldProvisional_Invoice.setTables(table);
-                saves = provisionalInvoiceRepository.save(oldProvisional_Invoice);
-                provisionalInvoiceRepository.refresh(saves);
+                else throw new RuntimeException("Can't find record id table menu with identifier: " + request.getId());
             }
             else {
                 Provisional_Invoice oldProvisional_Invoice = new Provisional_Invoice();
-                oldProvisional_Invoice.setTimeIn(request.getTimeIn());
-                oldProvisional_Invoice.setTimeOut(request.getTimeOut());
-                oldProvisional_Invoice.setTimePrintInvoice(request.getTimePrintInvoice());
+                oldProvisional_Invoice.setDateTimeIn(date);
+                oldProvisional_Invoice.setDateTimePrintInvoice(null);
                 oldProvisional_Invoice.setDiscount(request.getDiscount());
                 oldProvisional_Invoice.setSurcharge(request.getSurcharge());
                 oldProvisional_Invoice.setIdCustomer(request.getIdCustomer());
@@ -77,6 +76,14 @@ public class Provisional_InvoiceServiceImpl implements Provisional_InvoiceServic
             Type setOfDTOsType = new TypeToken<List<GetTable_TableMenuDTO>>(){}.getType();
             List<GetTable_TableMenuDTO> responseTableMenu = modelMapper.map(tableMenus, setOfDTOsType);
             responseDTO.setTable_menu(responseTableMenu);
+            if (saves.getDateTimeIn() != null)
+                response.setDateTimeIn(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                    .format(saves.getDateTimeIn()));
+            else response.setDateTimeIn(null);
+            if (saves.getDateTimePrintInvoice() != null)
+                response.setDateTimePrintInvoice(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                    .format(saves.getDateTimePrintInvoice()));
+            else response.setDateTimePrintInvoice(null);
             response.setTables(responseDTO);
             return response;
         }
@@ -95,6 +102,15 @@ public class Provisional_InvoiceServiceImpl implements Provisional_InvoiceServic
                 Type setOfDTOsType = new TypeToken<List<GetTable_TableMenuDTO>>(){}.getType();
                 List<GetTable_TableMenuDTO> responseTableMenu = modelMapper.map(tableMenus, setOfDTOsType);
                 responseDTO.setTable_menu(responseTableMenu);
+                if (provisional_invoice.getDateTimeIn() != null)
+                    response.setDateTimeIn(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                            .format(provisional_invoice.getDateTimeIn()));
+                else response.setDateTimeIn(null);
+                if (provisional_invoice.getDateTimePrintInvoice() != null)
+                    response.setDateTimePrintInvoice(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                            .format(provisional_invoice.getDateTimePrintInvoice()));
+                else response.setDateTimePrintInvoice(null);
+                response.setTables(responseDTO);
                 response.setTables(responseDTO);
                 return response;
             }
@@ -116,6 +132,15 @@ public class Provisional_InvoiceServiceImpl implements Provisional_InvoiceServic
             List<GetTable_TableMenuDTO> responseTableMenu = modelMapper.map(tableMenus, setOfDTOsTypeTableMenu);
             tables.setTable_menu(responseTableMenu);
             index.setTables(tables);
+            Provisional_Invoice provisional_invoice = provisionalInvoiceRepository.findFirstById(index.getId());
+            if (provisional_invoice.getDateTimeIn() != null)
+                index.setDateTimeIn(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                        .format(provisional_invoice.getDateTimeIn()));
+            else index.setDateTimeIn(null);
+            if (provisional_invoice.getDateTimePrintInvoice() != null)
+                index.setDateTimePrintInvoice(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                        .format(provisional_invoice.getDateTimePrintInvoice()));
+            else index.setDateTimePrintInvoice(null);
         });
         return response;
     }

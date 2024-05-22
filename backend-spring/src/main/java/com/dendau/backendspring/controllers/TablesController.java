@@ -1,5 +1,6 @@
 package com.dendau.backendspring.controllers;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.tables.GetTablesRequestDTO;
 import com.dendau.backendspring.dtos.tables.GetTablesResponseDTO;
 import com.dendau.backendspring.dtos.tables.SaveTablesRequestDTO;
@@ -46,6 +47,16 @@ public class TablesController {
     public ResponseEntity<GetTablesResponseDTO> getTablesDetail(@RequestBody GetTablesRequestDTO requestDTO) {
         try {
             GetTablesResponseDTO responseDTO = tablesService.getTables(requestDTO);
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/delete/{tableId}")
+    public ResponseEntity<MessageDTO> deleteTable(@PathVariable String tableId) {
+        try {
+            MessageDTO responseDTO = tablesService.deleteTable(tableId);
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e){
             throw new RuntimeException(e);

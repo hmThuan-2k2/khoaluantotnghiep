@@ -1,0 +1,118 @@
+
+<div class="invoice" *ngFor="let invoice of provisionalInvoiceIds; let i = index">
+  <div class="container" style="background-color: antiquewhite;height: 100%;max-width: 500px;" >
+    <div class="container row" style="margin-left: 0px;margin-right: 0px;padding-left: 0px;padding-right: 0px;" >
+      <div class="col-12" style="margin-top: 50px;border-bottom: 2px black solid;">
+        <h1 style="text-align: center;" >
+          Đèn Dầu
+        </h1>
+      </div>
+      <div class="col-12" style="margin-top: 50px;">
+        <h3 style="text-align: center;" >
+          Hoá Đơn Tạm Tính
+        </h3>
+        <p style="text-align: center;font-size: 24px;" >
+          Số: Phiếu Tạm Tính - Bàn {{provisionalInvoice?.tables?.name}}
+          <br>
+          {{provisionalInvoice.dateTimePrintInvoice}}
+        </p>
+      </div>
+      <div class="col-12" style="margin-top: 50px;font-size: 20px;">
+        <p style="text-align: left;font-size: 22px;word-wrap: break-word;" >
+          Khách Hàng :
+          <br>
+          Email:
+          <br>
+          SĐT:
+          <br>
+          Địa Chỉ:
+        </p>
+      </div>
+      <div class="col-12" style="margin-top: 50px;font-size: 20px;">
+        <table class="table table-hover table-sm table-borderless" style="text-align: center">
+          <thead >
+            <tr style="border-top: 2px black solid;border-bottom: 2px black solid;;" >
+              <th scope="col" style="text-align: left;width: 70%;" >Đơn Giá</th>
+              <th scope="col" style="text-align: center;width: 10%;" >SL</th>
+              <th scope="col" style="text-align: right;width: 20%;" >Thành Tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of data" style="border-bottom: 1px black solid;;">
+              <td class="align-middle" style="text-align: left;font-size: 24px;" >
+                <p style="word-wrap: break-word;" >
+                  <!-- {{ getSanPhamId(item?.idSanPham)?.name }} -->
+                  <br>
+                  {{ item?.donGia | currency : "VND" : "symbol" }}
+                </p>
+              </td>
+              <td class="align-middle" style="text-align: center;font-size: 24px;">
+                {{ item?.soLuong }}
+              </td>
+              <td class="align-middle" style="text-align: right;font-size: 24px;">
+                {{ item?.thanhTien | currency : "VND" : "symbol" }}
+              </td>
+            </tr>
+            <tr>
+              <th
+                scope="row"
+                class="align-middle"
+                colspan="2"
+                style="text-align: right;font-size: 24px;"
+              >
+                Thành Tiền:
+              </th>
+              <th scope="row" class="align-middle" style="text-align: right;font-size: 24px;">
+                <!-- {{ hoaDon?.thanhTien | currency : "VND" : "symbol" }} -->
+              </th>
+            </tr>
+            <tr>
+              <td
+                scope="row"
+                class="align-middle"
+                colspan="2"
+                style="text-align: right;font-size: 24px;"
+              >
+                Phí dịch vụ:
+              </td>
+              <td scope="row" class="align-middle" style="text-align: right;font-size: 24px;">
+                <!-- {{ hoaDon?.phiDichVu | currency : "VND" : "symbol" }} -->
+              </td>
+            </tr>
+            <tr>
+              <td
+                scope="row"
+                class="align-middle"
+                colspan="2"
+                style="text-align: right;font-size: 24px;"
+              >
+                Chiết Khấu:
+              </td>
+              <td scope="row" class="align-middle" style="text-align: right;font-size: 24px;">
+                <!-- {{ hoaDon?.chietKhau | currency : "VND" : "symbol" }} -->
+              </td>
+            </tr>
+            <tr>
+              <th
+                scope="row"
+                class="align-middle"
+                colspan="2"
+                style="text-align: right;font-size: 24px;"
+              >
+                Tổng cộng:
+              </th>
+              <th scope="row" class="align-middle" style="text-align: right;font-size: 24px;">
+                <!-- {{ hoaDon?.tongCong | currency : "VND" : "symbol" }} -->
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12" style="margin-top: 50px;font-size: 20px;">
+        <p style="text-align: center;font-size: 24px;" >
+          Cảm ơn quý khách!
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

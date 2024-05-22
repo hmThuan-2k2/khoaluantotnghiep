@@ -2,9 +2,8 @@ import { Table } from "./table.model";
 
 export class ProvisionalInvoice {
   id: number;
-  timeIn: string;
-  timeOut: string;
-  timePrintInvoice: string;
+  dateTimeIn: string;
+  dateTimePrintInvoice: string;
   totalMoney: number;
   discount: number;
   surcharge: number;
