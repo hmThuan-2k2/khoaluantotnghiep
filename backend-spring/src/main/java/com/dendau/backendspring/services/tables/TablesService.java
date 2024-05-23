@@ -17,4 +17,6 @@ public interface TablesService {
     List<GetTablesResponseDTO> getAllTables();
 
     MessageDTO deleteTable(String id);
+
+    MessageDTO processingNewspaperTable(String id);
 }

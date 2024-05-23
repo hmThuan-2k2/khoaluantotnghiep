@@ -2,15 +2,16 @@ package com.dendau.backendspring.services.tables;
 
 import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.table_menu.GetTable_TableMenuDTO;
-import com.dendau.backendspring.dtos.table_menu.PostTableMenuDTO;
 import com.dendau.backendspring.dtos.tables.GetTablesRequestDTO;
 import com.dendau.backendspring.dtos.tables.GetTablesResponseDTO;
 import com.dendau.backendspring.dtos.tables.SaveTablesRequestDTO;
 import com.dendau.backendspring.dtos.tables.SaveTablesResponseDTO;
-import com.dendau.backendspring.dtos.user.UserResponse;
+import com.dendau.backendspring.models.ProcessingNewspaper;
 import com.dendau.backendspring.models.TableMenu;
+import com.dendau.backendspring.models.TableMenuKey;
 import com.dendau.backendspring.models.Tables;
-import com.dendau.backendspring.models.UserInfo;
+import com.dendau.backendspring.repositories.ProcessingNewspaperRepository;
+import com.dendau.backendspring.repositories.ProvisionalInvoiceRepository;
 import com.dendau.backendspring.repositories.TableMenuRepository;
 import com.dendau.backendspring.repositories.TablesRepository;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +32,9 @@ public class TablesServiceImpl implements TablesService {
 
     @Autowired
     private TableMenuRepository tableMenuRepository;
+
+    @Autowired
+    private ProcessingNewspaperRepository processingNewspaperRepository;
 
 
     ModelMapper modelMapper = new ModelMapper();
@@ -70,7 +75,6 @@ public class TablesServiceImpl implements TablesService {
     public GetTablesResponseDTO getTables(GetTablesRequestDTO requestDTO) {
         if(requestDTO.getId() != null) {
             Tables tables = tablesRepository.findFirstById(requestDTO.getId());
-            System.out.println(tables.toString());
             if (tables != null) {
                 GetTablesResponseDTO responseDTO = modelMapper.map(tables, GetTablesResponseDTO.class);
                 Set<TableMenu> tableMenus = tableMenuRepository.findAllByTable(tables);
@@ -109,5 +113,45 @@ public class TablesServiceImpl implements TablesService {
             return response;
         }
         else throw new RuntimeException("Can't find record table and menu with identifier: " + id);
+    }
+
+    @Override
+    public MessageDTO processingNewspaperTable(String id) {
+        Date date = new Date();
+        Long idTable = Long.parseLong(id);
+        GetTablesRequestDTO tablesRequestDTO = new GetTablesRequestDTO(idTable);
+        GetTablesResponseDTO table = getTables(tablesRequestDTO);
+        System.out.println(table.toString());
+        Tables saveTable = new Tables(table.getId(),table.getName(),table.getIsEmpty(), table.getIsTemporaryInvoice(), true, table.getTotalInvoice(), null);
+        saveTable = tablesRepository.save(saveTable);
+        tablesRepository.refresh(saveTable);
+        List<GetTable_TableMenuDTO> ds = table.getTable_menu();
+        System.out.println(ds.toString());
+        ds.forEach(index -> {
+            Long amount_cooking = index.getAmount_cooking();
+            Long amount = index.getAmount();
+            if (amount > amount_cooking) {
+                ProcessingNewspaper data = new ProcessingNewspaper();
+                data.setIdTable(index.getId().getTableId());
+                data.setIdMenu(index.getId().getMenuId());
+                data.setDateCreate(date);
+                data.setTimeCreate(date);
+                data.setDateTimeCreate(date);
+                data.setIsConfirm(false);
+                data.setIsCooking(false);
+                data.setNote(index.getNote());
+                data.setAmount_cooking(amount - amount_cooking);
+                data = processingNewspaperRepository.save(data);
+                processingNewspaperRepository.refresh(data);
+                TableMenuKey idKeyTableMenu = modelMapper.map(index.getId(), TableMenuKey.class);
+                TableMenu tableMenu = tableMenuRepository.findFirstById(idKeyTableMenu);
+                tableMenu.setAmount_cooking(tableMenu.getAmount());
+                tableMenu.setIsCooking(true);
+                tableMenu = tableMenuRepository.save(tableMenu);
+                tableMenuRepository.refresh(tableMenu);
+            }
+        });
+        MessageDTO response = new MessageDTO("Báo chế biến thành công!");
+        return response;
     }
 }

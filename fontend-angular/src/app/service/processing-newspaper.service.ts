@@ -6,30 +6,17 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class TableService {
+export class ProcessingNewspaperService {
   private url = environment.apiServer;
 
   constructor(private http: HttpClient) { }
 
-  public getAllTable(): Observable<HttpResponse<any>> {
-    let header: HttpHeaders = new HttpHeaders();
-    let accessToken: string = sessionStorage.getItem("accessToken");
-    header = header.set('Authorization', 'Bearer ' + accessToken);
-    return this.http.get<HttpResponse<any>>(
-      `${this.url}/table/all`,
-      {
-        headers: header,
-        observe: "response",
-      }
-    );
-  }
-
-  public getTableId(data: any): Observable<HttpResponse<any>> {
+  public getAllProcessingNewspaperDateCreate(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.post<HttpResponse<any>>(
-      `${this.url}/table/detail`,
+      `${this.url}/processing_newspaper/all_date_create`,
       data,
       {
         headers: header,
@@ -38,12 +25,12 @@ export class TableService {
     );
   }
 
-  public saveTable(data: any): Observable<HttpResponse<any>> {
+  public getAllProcessingNewspaperToDateCreateAndConfirmIsNot(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.post<HttpResponse<any>>(
-      `${this.url}/table/save`,
+      `${this.url}/processing_newspaper/all_date_create_and_not_confirm`,
       data,
       {
         headers: header,
@@ -52,12 +39,13 @@ export class TableService {
     );
   }
 
-  public deleteTable(id: number): Observable<HttpResponse<any>> {
+  public getAllProcessingNewspaperToDateCreateAndConfirmAndNotCooking(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
-    return this.http.delete<HttpResponse<any>>(
-      `${this.url}/table/delete/${id}`,
+    return this.http.post<HttpResponse<any>>(
+      `${this.url}/processing_newspaper/all_date_create_and_confirm_and_not_cooking`,
+      data,
       {
         headers: header,
         observe: "response",
@@ -65,16 +53,44 @@ export class TableService {
     );
   }
 
-  public processingNewspaperTable(id: string): Observable<HttpResponse<any>> {
+  public getAllProcessingNewspaperToDateCreateAndConfirmAndCooking(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
-    return this.http.get<HttpResponse<any>>(
-      `${this.url}/table/processing_newspaper/${id}`,
+    return this.http.post<HttpResponse<any>>(
+      `${this.url}/processing_newspaper/all_date_create_and_confirm_and_cooking`,
+      data,
       {
         headers: header,
         observe: "response",
       }
     );
   }
+
+  public confirmProcessingNewspaper(id: string): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.get<HttpResponse<any>>(
+      `${this.url}/processing_newspaper/confirm/${id}`,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
+  public cookingProcessingNewspaper(id: string): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.get<HttpResponse<any>>(
+      `${this.url}/processing_newspaper/cooking/${id}`,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
 }

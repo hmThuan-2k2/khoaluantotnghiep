@@ -1,5 +1,6 @@
 package com.dendau.backendspring.services.processing_newspaper;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.processing_newspaper.GetProcessingNewspaperDTO;
 import com.dendau.backendspring.dtos.provisional_Invoice.GetIdProvisionalInvoiceDTO;
 import com.dendau.backendspring.dtos.provisional_Invoice.GetProvisionalInvoiceDTO;
@@ -16,4 +17,7 @@ public interface ProcessingNewspaperService {
 
     List<GetProcessingNewspaperDTO> getAllProcessingNewspaperToDateCreateAndConfirmAndCooking(Date dateCreate, Boolean isConfirm, Boolean isCooking);
 
+    MessageDTO confirmProcessingNewspaper(Long id);
+
+    MessageDTO cookingProcessingNewspaper(Long id);
 }

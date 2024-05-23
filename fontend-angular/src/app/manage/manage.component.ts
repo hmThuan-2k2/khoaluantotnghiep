@@ -68,6 +68,13 @@ export class ManageComponent implements OnInit {
     document.getElementById('restaurant').classList.add('active');
   }
 
+  goToRouterManageRestaurantKitchen(): void {
+    this.router.navigate(['/manage', 'restaurant', 'kitchen']);
+    document.getElementById('home').classList.remove('active');
+    document.getElementById('product').classList.remove('active');
+    document.getElementById('restaurant').classList.add('active');
+  }
+
   goToRouterManageRestaurantTable(): void {
     this.router.navigate(['/manage', 'restaurant', 'table']);
     document.getElementById('home').classList.remove('active');

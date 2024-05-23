@@ -536,7 +536,8 @@
                 style="height: 40px; width: 100%; border-radius: 0px"
                 type="button"
                 class="btn btn-primary"
-                [disabled]="true"
+                (click)="onProcessingNewspaperTable()"
+                [disabled]="selectTable?.isProcessingNewspaper || selectTable == null "
               >
                 <h2 style="text-align: center; margin: 0px">Báo Chế Biến</h2>
               </button>

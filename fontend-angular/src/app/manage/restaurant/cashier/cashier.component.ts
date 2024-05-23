@@ -65,6 +65,26 @@ export class CashierComponent implements OnInit {
   public idCutomerProvisionalInvoice: number = 0;
   public customerAll: Customer[] = null;
 
+  public onProcessingNewspaperTable(): void {
+    var id = this.selectTable?.id;
+    this.functions_login.getUserProfile();
+    this.TableService.processingNewspaperTable(id.toString()).subscribe(
+      (response: HttpResponse<any>) => {
+        this._snackBar.openSnackBarSuccess(response.body?.message)
+        this.getAllTable();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    )
+  }
+
   public saveTablePrintProvisionalInvoice() : void {
     var data = {
       id: this.selectTable.id,

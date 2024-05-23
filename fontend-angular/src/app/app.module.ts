@@ -18,6 +18,7 @@ import { ProductComponent } from './manage/product/product.component';
 import { MenuComponent } from './manage/product/menu/menu.component';
 import { PrintComponent } from './manage/restaurant/cashier/print/print.component';
 import { PrintProvisionalInvoiceComponent } from './manage/restaurant/cashier/print/print-provisional-invoice/print-provisional-invoice.component';
+import { KitchenComponent } from './manage/restaurant/kitchen/kitchen.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { PrintProvisionalInvoiceComponent } from './manage/restaurant/cashier/pr
     ProductComponent,
     MenuComponent,
     PrintComponent,
-    PrintProvisionalInvoiceComponent
+    PrintProvisionalInvoiceComponent,
+    KitchenComponent
   ],
   imports: [
     BrowserModule,
