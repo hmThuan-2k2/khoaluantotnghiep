@@ -11,25 +11,14 @@ import lombok.ToString;
 @AllArgsConstructor // dùng để khai báo constructor với tất cả các properties
 @NoArgsConstructor // dùng để khai báo constructor rỗng không có param
 @ToString
-@Table(name = "TABLES_MENU")
-public class TableMenu {
-    @EmbeddedId
-    private TableMenuKey id;
-
-    @ManyToOne
-    @MapsId("tableId")
-    @JoinColumn(name = "table_id")
-    private Tables table;
-
-    @ManyToOne
-    @MapsId("menuId")
-    @JoinColumn(name = "menu_id")
-    private Menus menu;
-
-
-    private long amount;
-    private long price_unit;
-    private long amount_cooking;
-    private Boolean isCooking;
-    private String note;
+@Table(name = "CUSTOMER")
+public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private String name_customer;
+    private String nickname;
+    private String phoneNumber;
+    private String gender;
+    private String address;
 }

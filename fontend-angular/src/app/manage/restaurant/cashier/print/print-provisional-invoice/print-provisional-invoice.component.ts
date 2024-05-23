@@ -1,3 +1,4 @@
+import { Customer } from './../../../../../model/customer.model';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ProvisionalInvoiceService } from './../../../../../service/provisional-invoice.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,6 +13,7 @@ import { MenuGroupService } from 'src/app/service/menu-group.service';
 import { MenuService } from 'src/app/service/menu.service';
 import { FunctionLoginService } from 'src/app/service/function-login.service';
 import { LoginService } from 'src/app/service/login.service';
+import { Table } from 'src/app/model/table.model';
 
 @Component({
   selector: 'app-print-provisional-invoice',
@@ -22,10 +24,10 @@ export class PrintProvisionalInvoiceComponent implements OnInit {
 
   public provisionalInvoiceIds: string[];
   public provisionalInvoiceDetails: Promise<any>[];
+  public provisionalInvoice: ProvisionalInvoice = null;
+  public customer: Customer = null;
+  public table: Table = null;
   public data: TableMenu[] = null;
-  public dataMenu: Menu[] = null;
-  // public user: User = null;
-  public provisionalInvoice: ProvisionalInvoice;
 
   constructor(
     private TableService: TableService,
@@ -39,7 +41,7 @@ export class PrintProvisionalInvoiceComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.provisionalInvoiceIds = route.snapshot.params['provisionalInvoiceIds'].split(',');
+    this.provisionalInvoiceIds = route.snapshot.params['provisionalinvoiceIds'].split(',');
   }
 
   ngOnInit() {
@@ -51,21 +53,27 @@ export class PrintProvisionalInvoiceComponent implements OnInit {
 
   getInvoiceDetails(invoiceId) {
     const amount = Math.floor((Math.random() * 100));
-    this.getHoaDon(invoiceId);
+    this.getProvisionalInvoice(invoiceId);
     return new Promise(resolve =>
       setTimeout(() => resolve({amount}), 1000)
     );
   }
 
 
-  getHoaDon(id): void {
+  getProvisionalInvoice(id): void {
     const dataId = {
       id: id,
     };
-    this.ProvisionalInvoiceService.getProvisionalInvoiceId(dataId).subscribe(
+    this.ProvisionalInvoiceService.printProvisionalInvoiceId(dataId).subscribe(
       (response: HttpResponse<any>) => {
         this.provisionalInvoice = response.body;
-        // console.log(provisionalInvoice);
+        this.customer = this.provisionalInvoice?.customer;
+        this.table = this.provisionalInvoice?.tables;
+        this.data = this.table?.table_menu;
+        console.log(this.provisionalInvoice);
+        console.log(this.customer);
+        console.log(this.table);
+        console.log(this.data);
       },
       (error: HttpErrorResponse) => {
         console.log(error);
@@ -78,50 +86,5 @@ export class PrintProvisionalInvoiceComponent implements OnInit {
       }
     );
   }
-
-  // getAllChiTietHoaDon(id): void {
-  //   this.hoadonService.getAllChiTietHoaDonId(id).subscribe(
-  //     (response: ChiTietHoaDon[]) => {
-  //       console.log(response);
-  //       this.data = response;
-  //     },
-  //     (error: HttpErrorResponse) => {
-  //       this._snackBar.openSnackBarDanger("Lỗi hệ thống!!!");
-  //       console.log(error.message)
-  //     }
-  //   );
-  // }
-
-  // getUser(id): void {
-  //   this.userService.getUserId(id).subscribe(
-  //     (response: User) => {
-  //       this.user = response;
-  //     },
-  //     (error: HttpErrorResponse) => {
-  //       this._snackBar.openSnackBarDanger("Lỗi hệ thống!!!");
-  //       console.log(error.message)
-  //     }
-  //   );
-  // }
-
-  // getSanPham(): void {
-  //   this.productService.getProduct().subscribe(
-  //     (response: Product[]) => {
-  //       this.dataProduct = response;
-  //     },
-  //     (error: HttpErrorResponse) => {
-  //       this._snackBar.openSnackBarDanger("Lỗi hệ thống!!!");
-  //       console.log(error.message)
-  //     }
-  //   );
-  // }
-
-  // getSanPhamId(id: number): Product {
-  //   for (let index = 0; index < this.dataProduct?.length; index++) {
-  //     const element = this.dataProduct[index];
-  //     if (id == element.id) return element;
-  //   }
-  //   return null;
-  // }
 
 }

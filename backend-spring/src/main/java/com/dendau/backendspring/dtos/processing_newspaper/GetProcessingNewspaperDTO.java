@@ -1,35 +1,35 @@
-package com.dendau.backendspring.models;
+package com.dendau.backendspring.dtos.processing_newspaper;
 
+import com.dendau.backendspring.dtos.tables.GetTablesResponseDTO;
+import com.dendau.backendspring.models.Customer;
+import com.dendau.backendspring.models.Menus;
+import com.dendau.backendspring.models.Tables;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity // dùng để khai báo với Spring Boot rằng đây là 1 entity biểu diễn table trong db
+import java.util.Date;
+
 @Data // annotation này sẽ tự động khai báo getter và setter cho class
 @AllArgsConstructor // dùng để khai báo constructor với tất cả các properties
 @NoArgsConstructor // dùng để khai báo constructor rỗng không có param
 @ToString
-@Table(name = "TABLES_MENU")
-public class TableMenu {
-    @EmbeddedId
-    private TableMenuKey id;
+public class GetProcessingNewspaperDTO {
+    private long id;
 
-    @ManyToOne
-    @MapsId("tableId")
-    @JoinColumn(name = "table_id")
     private Tables table;
-
-    @ManyToOne
-    @MapsId("menuId")
-    @JoinColumn(name = "menu_id")
     private Menus menu;
 
+    private String dateCreate;
+    private String timeCreate;
+    private String dateTimeCreate;
+    private String dateTimeCompleted;
 
-    private long amount;
-    private long price_unit;
+    private Boolean isConfirm;
     private long amount_cooking;
     private Boolean isCooking;
+
     private String note;
 }

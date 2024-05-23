@@ -1,3 +1,4 @@
+import { CustomerService } from './../../../service/customer.service';
 import { PrintService } from './../../../service/print.service';
 import { TableMenuService } from './../../../service/table-menu.service';
 import { ProvisionalInvoiceService } from './../../../service/provisional-invoice.service';
@@ -16,6 +17,7 @@ import { MenuGroupService } from 'src/app/service/menu-group.service';
 import { Menu } from 'src/app/model/menu.model';
 import { TableMenu } from 'src/app/model/tablemenu.model';
 import { NgForm } from '@angular/forms';
+import { Customer } from 'src/app/model/customer.model';
 
 @Component({
   selector: 'app-cashier',
@@ -29,6 +31,7 @@ export class CashierComponent implements OnInit {
     private MenuService: MenuService,
     private ProvisionalInvoiceService: ProvisionalInvoiceService,
     private TableMenuService: TableMenuService,
+    private CustomerService: CustomerService,
     private printService: PrintService,
     private loginService: LoginService,
     private functions_login: FunctionLoginService,
@@ -59,16 +62,111 @@ export class CashierComponent implements OnInit {
   public editTableMenuDefault: TableMenu = null;
   public surchargeProvisionalInvoice: number = 0;
   public discountProvisionalInvoice: number = 0;
+  public idCutomerProvisionalInvoice: number = 0;
+  public customerAll: Customer[] = null;
 
+  public saveTablePrintProvisionalInvoice() : void {
+    var data = {
+      id: this.selectTable.id,
+      name: this.selectTable.name,
+      isEmpty: this.selectTable.isEmpty,
+      isTemporaryInvoice: 1,
+      isProcessingNewspaper: this.selectTable.isProcessingNewspaper,
+      totalInvoice: this.selectTable.totalInvoice,
+      table_menu: this.selectTable.table_menu
+    }
+    this.functions_login.getUserProfile();
+    this.TableService.saveTable(data).subscribe(
+      (response: HttpResponse<any>) => {
+        console.log(response);
+        this.getAllTable();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
+  }
 
+  public async onPrintProvisionalInvoice(){
+    this.isThongTinHoaDon = false;
+    this.isBan = true;
+    this.isMenu = false;
+    this.printProvisionalInvoice(this.selectProvisionalInvoice?.id);
+    await this.saveProvisionalInvoice();
+    this.saveTablePrintProvisionalInvoice();
+  }
 
+  public onUpdateProvisionalInvoice(): void {
+    let provisionalInvoice: ProvisionalInvoice = null;
+    const data = {
+      id: this.selectProvisionalInvoice?.id,
+      discount: this.discountProvisionalInvoice,
+      surcharge: this.surchargeProvisionalInvoice,
+      idCustomer: this.idCutomerProvisionalInvoice,
+      idTable: this.selectTable?.id,
+    };
+    this.functions_login.getUserProfile();
+    this.ProvisionalInvoiceService.saveProvisionalInvoice(data).subscribe(
+      (response: HttpResponse<any>) => {
+        console.log(response.body);
+        provisionalInvoice = response.body;
+        this.selectProvisionalInvoice = provisionalInvoice;
+        this.surchargeProvisionalInvoice = this.selectProvisionalInvoice.surcharge;
+        this.discountProvisionalInvoice = this.selectProvisionalInvoice.discount;
+        if (this.selectProvisionalInvoice?.customer?.id == null)
+          this.idCutomerProvisionalInvoice = 0;
+        else this.idCutomerProvisionalInvoice = this.selectProvisionalInvoice?.customer?.id;
+        this._snackBar.openSnackBarSuccess("Cập nhật hoá đơn thành công!");
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
+  }
+
+  public onChangeSelectCustomer(newValue) {
+    console.log(newValue);
+    this.idCutomerProvisionalInvoice = newValue;
+  }
+
+  public getAllCustomer(): void {
+    this.functions_login.getUserProfile();
+    this.CustomerService.getAllCustomer().subscribe(
+      (response: HttpResponse<any>) => {
+        this.customerAll = response.body;
+        console.log(this.customerAll);
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
+  }
   public getSurchargeProvisionalInvoice(): void {
 
   }
 
-  public onThongTinHoaDon(): void {
+  public async onThongTinHoaDon(): Promise<void> {
     if (this.selectTable != null) {
       if (this.selectTable.isEmpty == false) {
+        await this.saveProvisionalInvoice();
         this.isThongTinHoaDon = !this.isThongTinHoaDon;
         this.isBan = true;
         this.isMenu = false;
@@ -104,6 +202,7 @@ export class CashierComponent implements OnInit {
         menuId: item.id.menuId,
       },
     };
+    this.functions_login.getUserProfile();
     this.TableMenuService.deleteTableMenu(data).subscribe(
       (response: HttpResponse<any>) => {
         console.log(response);
@@ -136,6 +235,7 @@ export class CashierComponent implements OnInit {
       note: item.note,
     };
     // console.log(data);
+    this.functions_login.getUserProfile();
     this.TableMenuService.saveTableMenu(data).subscribe(
       (response: HttpResponse<any>) => {
         tableMenu = response.body;
@@ -216,6 +316,7 @@ export class CashierComponent implements OnInit {
           menuId: menu.id,
         },
       };
+      this.functions_login.getUserProfile();
       this.TableMenuService.selectTableMenuId(data).subscribe(
         (response: HttpResponse<any>) => {
           tableMenu = response.body;
@@ -239,11 +340,12 @@ export class CashierComponent implements OnInit {
   }
 
   public getAllProvisionalInvoice(): void {
+    this.functions_login.getUserProfile();
     this.ProvisionalInvoiceService.getAllProvisionalInvoice().subscribe(
       (response: HttpResponse<any>) => {
         this.provisionalInvoiceAll = response.body;
-        // console.log(response);
-        // console.log(this.provisionalInvoiceAll);
+        console.log(response);
+        console.log(this.provisionalInvoiceAll);
       },
       (error: HttpErrorResponse) => {
         console.log(error);
@@ -280,12 +382,16 @@ export class CashierComponent implements OnInit {
         idCustomer: 0,
         idTable: this.selectTable.id,
       };
+      this.functions_login.getUserProfile();
       this.ProvisionalInvoiceService.saveProvisionalInvoice(data).subscribe(
         (response: HttpResponse<any>) => {
           provisionalInvoice = response.body;
           this.selectProvisionalInvoice = provisionalInvoice;
           this.surchargeProvisionalInvoice = this.selectProvisionalInvoice.surcharge;
           this.discountProvisionalInvoice = this.selectProvisionalInvoice.discount;
+          if (this.selectProvisionalInvoice?.customer?.id == null)
+            this.idCutomerProvisionalInvoice = 0;
+          else this.idCutomerProvisionalInvoice = this.selectProvisionalInvoice?.customer?.id;
           console.log('post 1');
           console.log(provisionalInvoice);
         },
@@ -337,15 +443,19 @@ export class CashierComponent implements OnInit {
         id: idProvisionalInvoice,
         discount: provisionalInvoice?.discount,
         surcharge: provisionalInvoice?.surcharge,
-        idCustomer: provisionalInvoice?.idCustomer,
+        idCustomer: provisionalInvoice?.customer?.id,
         idTable: this.selectTable?.id,
       };
+      this.functions_login.getUserProfile();
       this.ProvisionalInvoiceService.saveProvisionalInvoice(data).subscribe(
         (response: HttpResponse<any>) => {
           provisionalInvoice = response.body;
           this.selectProvisionalInvoice = provisionalInvoice;
           this.surchargeProvisionalInvoice = this.selectProvisionalInvoice.surcharge;
           this.discountProvisionalInvoice = this.selectProvisionalInvoice.discount;
+          if (this.selectProvisionalInvoice?.customer?.id == null)
+            this.idCutomerProvisionalInvoice = 0;
+          else this.idCutomerProvisionalInvoice = this.selectProvisionalInvoice?.customer?.id;
           // console.log(this.selectProvisionalInvoice);
           console.log('save 2');
           console.log(provisionalInvoice);
@@ -380,6 +490,7 @@ export class CashierComponent implements OnInit {
   }
 
   public getMenuDisplay(): void {
+    this.functions_login.getUserProfile();
     if (this.selectMenuGroup == 0) {
       this.MenuService.getAllMenu().subscribe(
         (response: HttpResponse<any>) => {
@@ -419,6 +530,7 @@ export class CashierComponent implements OnInit {
   }
 
   public getAllMenuGroup(): void {
+    this.functions_login.getUserProfile();
     this.MenuGroupService.getAllMenuGroup().subscribe(
       (response: HttpResponse<any>) => {
         this.menuGroupAll = response.body;
@@ -449,6 +561,7 @@ export class CashierComponent implements OnInit {
           if (element.isEmpty == false) this.lengthTableNotEmpty += 1;
         });
         // console.log(this.lengthTableNotEmpty);
+        this.getAllCustomer();
         this.getAllProvisionalInvoice();
         this.getAllMenuGroup();
         this.getMenuDisplay();

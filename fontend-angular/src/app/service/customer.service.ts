@@ -6,17 +6,17 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ProvisionalInvoiceService {
+export class CustomerService {
   private url = environment.apiServer;
 
   constructor(private http: HttpClient) { }
 
-  public getAllProvisionalInvoice(): Observable<HttpResponse<any>> {
+  public getAllCustomer(): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.get<HttpResponse<any>>(
-      `${this.url}/provisional_invoice/all`,
+      `${this.url}/customer/all`,
       {
         headers: header,
         observe: "response",
@@ -24,13 +24,12 @@ export class ProvisionalInvoiceService {
     );
   }
 
-  public getProvisionalInvoiceId(data: any): Observable<HttpResponse<any>> {
+  public getCustomerId(id: number): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
-    return this.http.post<HttpResponse<any>>(
-      `${this.url}/provisional_invoice/detail`,
-      data,
+    return this.http.get<HttpResponse<any>>(
+      `${this.url}/customer/get/${id}`,
       {
         headers: header,
         observe: "response",
@@ -38,26 +37,12 @@ export class ProvisionalInvoiceService {
     );
   }
 
-  public printProvisionalInvoiceId(data: any): Observable<HttpResponse<any>> {
+  public saveCustomer(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.post<HttpResponse<any>>(
-      `${this.url}/provisional_invoice/print_invoice`,
-      data,
-      {
-        headers: header,
-        observe: "response",
-      }
-    );
-  }
-
-  public saveProvisionalInvoice(data: any): Observable<HttpResponse<any>> {
-    let header: HttpHeaders = new HttpHeaders();
-    let accessToken: string = sessionStorage.getItem("accessToken");
-    header = header.set('Authorization', 'Bearer ' + accessToken);
-    return this.http.post<HttpResponse<any>>(
-      `${this.url}/provisional_invoice/save`,
+      `${this.url}/customer/save`,
       data,
       {
         headers: header,

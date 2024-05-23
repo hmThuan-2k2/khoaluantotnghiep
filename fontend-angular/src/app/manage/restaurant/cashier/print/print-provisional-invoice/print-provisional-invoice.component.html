@@ -4,34 +4,49 @@
     <div class="container row" style="margin-left: 0px;margin-right: 0px;padding-left: 0px;padding-right: 0px;" >
       <div class="col-12" style="margin-top: 50px;border-bottom: 2px black solid;">
         <h1 style="text-align: center;" >
-          Đèn Dầu
+          <span
+            class="navbar-brand mb-0 h1"
+            style="
+              font-size: 50px;
+              font-weight: bold;
+              color: black;
+              font-family: 'Dancing Script';
+            "
+          >
+            Đèn Dầu
+          </span>
         </h1>
       </div>
       <div class="col-12" style="margin-top: 50px;">
-        <h3 style="text-align: center;" >
+        <h3 style="text-align: center;font-size: 24px;font-weight: bold;" >
           Hoá Đơn Tạm Tính
         </h3>
-        <p style="text-align: center;font-size: 24px;" >
+        <p style="text-align: center;font-size: 16px;" >
           Số: Phiếu Tạm Tính - Bàn {{provisionalInvoice?.tables?.name}}
           <br>
-          {{provisionalInvoice.dateTimePrintInvoice}}
+          {{provisionalInvoice?.dateTimePrintInvoice}}
         </p>
       </div>
-      <div class="col-12" style="margin-top: 50px;font-size: 20px;">
-        <p style="text-align: left;font-size: 22px;word-wrap: break-word;" >
-          Khách Hàng :
+      <div class="col-12" style="margin-top: 30px;">
+        <p *ngIf="customer != null" style="text-align: left;font-size: 16px;word-wrap: break-word;" >
+          Khách Hàng : {{customer?.name_customer}}
           <br>
-          Email:
+          SĐT: {{customer?.phoneNumber}}
+          <br>
+          Địa Chỉ: {{customer?.address}}
+        </p>
+        <p *ngIf="customer == null" style="text-align: left;font-size: 16px;word-wrap: break-word;" >
+          Khách Hàng :
           <br>
           SĐT:
           <br>
           Địa Chỉ:
         </p>
       </div>
-      <div class="col-12" style="margin-top: 50px;font-size: 20px;">
+      <div class="col-12" style="margin-top: 20px;">
         <table class="table table-hover table-sm table-borderless" style="text-align: center">
           <thead >
-            <tr style="border-top: 2px black solid;border-bottom: 2px black solid;;" >
+            <tr style="border-top: 2px black solid;border-bottom: 2px black solid;font-size: 20px;" >
               <th scope="col" style="text-align: left;width: 70%;" >Đơn Giá</th>
               <th scope="col" style="text-align: center;width: 10%;" >SL</th>
               <th scope="col" style="text-align: right;width: 20%;" >Thành Tiền</th>
@@ -39,18 +54,18 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of data" style="border-bottom: 1px black solid;;">
-              <td class="align-middle" style="text-align: left;font-size: 24px;" >
+              <td class="align-middle" style="text-align: left;font-size: 16px;" >
                 <p style="word-wrap: break-word;" >
-                  <!-- {{ getSanPhamId(item?.idSanPham)?.name }} -->
+                  {{ item?.menu.name_menu }}
                   <br>
-                  {{ item?.donGia | currency : "VND" : "symbol" }}
+                  {{ item?.price_unit | currency : "VND" : "symbol" }}
                 </p>
               </td>
-              <td class="align-middle" style="text-align: center;font-size: 24px;">
-                {{ item?.soLuong }}
+              <td class="align-middle" style="text-align: center;font-size: 16px;">
+                {{ item?.amount }}
               </td>
-              <td class="align-middle" style="text-align: right;font-size: 24px;">
-                {{ item?.thanhTien | currency : "VND" : "symbol" }}
+              <td class="align-middle" style="text-align: right;font-size: 16px;">
+                {{ item?.amount * item?.price_unit | currency : "VND" : "symbol" }}
               </td>
             </tr>
             <tr>
@@ -58,12 +73,12 @@
                 scope="row"
                 class="align-middle"
                 colspan="2"
-                style="text-align: right;font-size: 24px;"
+                style="text-align: right;font-size: 16px;"
               >
                 Thành Tiền:
               </th>
-              <th scope="row" class="align-middle" style="text-align: right;font-size: 24px;">
-                <!-- {{ hoaDon?.thanhTien | currency : "VND" : "symbol" }} -->
+              <th scope="row" class="align-middle" style="text-align: right;font-size: 16px;">
+                {{ provisionalInvoice?.totalMoney| currency : "VND" : "symbol" }}
               </th>
             </tr>
             <tr>
@@ -71,12 +86,12 @@
                 scope="row"
                 class="align-middle"
                 colspan="2"
-                style="text-align: right;font-size: 24px;"
+                style="text-align: right;font-size: 16px;"
               >
-                Phí dịch vụ:
+                Phụ thu {{provisionalInvoice?.surcharge}}% :
               </td>
-              <td scope="row" class="align-middle" style="text-align: right;font-size: 24px;">
-                <!-- {{ hoaDon?.phiDichVu | currency : "VND" : "symbol" }} -->
+              <td scope="row" class="align-middle" style="text-align: right;font-size: 16px;">
+                {{ (provisionalInvoice?.totalMoney * provisionalInvoice?.surcharge / 100 ) | currency : "VND" : "symbol" }}
               </td>
             </tr>
             <tr>
@@ -84,12 +99,12 @@
                 scope="row"
                 class="align-middle"
                 colspan="2"
-                style="text-align: right;font-size: 24px;"
+                style="text-align: right;font-size: 16px;"
               >
-                Chiết Khấu:
+                Chiết Khấu {{provisionalInvoice?.discount}}% :
               </td>
-              <td scope="row" class="align-middle" style="text-align: right;font-size: 24px;">
-                <!-- {{ hoaDon?.chietKhau | currency : "VND" : "symbol" }} -->
+              <td scope="row" class="align-middle" style="text-align: right;font-size: 16px;">
+                {{ (provisionalInvoice?.discount * provisionalInvoice?.discount / 100 ) | currency : "VND" : "symbol" }}
               </td>
             </tr>
             <tr>
@@ -97,12 +112,15 @@
                 scope="row"
                 class="align-middle"
                 colspan="2"
-                style="text-align: right;font-size: 24px;"
+                style="text-align: right;font-size: 16px;"
               >
                 Tổng cộng:
               </th>
-              <th scope="row" class="align-middle" style="text-align: right;font-size: 24px;">
-                <!-- {{ hoaDon?.tongCong | currency : "VND" : "symbol" }} -->
+              <th scope="row" class="align-middle" style="text-align: right;font-size: 16px;">
+                {{ ( provisionalInvoice?.totalMoney
+                  + (provisionalInvoice?.totalMoney * provisionalInvoice?.surcharge / 100 )
+                  - ( provisionalInvoice?.totalMoney * provisionalInvoice?.discount / 100 )
+                ) | currency : "VND" : "symbol" }}
               </th>
             </tr>
           </tbody>
@@ -110,7 +128,7 @@
       </div>
       <div class="col-12" style="margin-top: 50px;font-size: 20px;">
         <p style="text-align: center;font-size: 24px;" >
-          Cảm ơn quý khách!
+          Cảm ơn và hẹn gặp lại quý khách!
         </p>
       </div>
     </div>

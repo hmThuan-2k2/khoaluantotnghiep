@@ -88,7 +88,7 @@
                 <h3 style="text-align: center; margin: 0px">
                   {{ item.name }}
                 </h3>
-                <h6 style="text-align: center; margin: 0px"></h6>
+                <!-- <h6 style="text-align: center; margin: 0px"></h6> -->
               </button>
               <button
                 *ngIf="!item.isEmpty && item.id != selectTable?.id"
@@ -101,11 +101,11 @@
                 <h3 style="text-align: center; margin: 0px">
                   {{ item.name }}
                 </h3>
-                <h6 style="text-align: center; margin: 0px">
+                <!-- <h6 style="text-align: center; margin: 0px">
                   <p>
                     {{ item.totalInvoice | currency : "VND" : "symbol" }}
                   </p>
-                </h6>
+                </h6> -->
               </button>
               <button
                 *ngIf="
@@ -122,7 +122,7 @@
                 <h3 style="text-align: center; margin: 0px">
                   {{ item.name }}
                 </h3>
-                <h6 style="text-align: center; margin: 0px"></h6>
+                <!-- <h6 style="text-align: center; margin: 0px"></h6> -->
               </button>
               <button
                 *ngIf="
@@ -139,11 +139,11 @@
                 <h3 style="text-align: center; margin: 0px">
                   {{ item.name }}
                 </h3>
-                <h6 style="text-align: center; margin: 0px">
+                <!-- <h6 style="text-align: center; margin: 0px">
                   <p>
                     {{ item.totalInvoice | currency : "VND" : "symbol" }}
                   </p>
-                </h6>
+                </h6> -->
               </button>
             </div>
           </div>
@@ -293,11 +293,21 @@
                   </h4>
                 </div>
                 <div class="form-group col-md-7" style="margin-bottom: 0px">
-                  <select class="form-control">
-                    <option selected>Khách Lẻ</option>
-                    <option>A Bảo</option>
-                    <option>A Thịnh</option>
-                    <option>A Phú</option>
+                  <select
+                    class="form-control"
+                    [(ngModel)]="idCutomerProvisionalInvoice"
+                    (ngModelChange)="onChangeSelectCustomer($event)"
+                    name="id"
+                    #idMenuGroup="ngModel"
+                  >
+                    <option selected value="0" >Khách Lẻ</option>
+                    <option
+                      *ngFor="let item of customerAll"
+                      [value]="item.id"
+
+                    >
+                      {{item.nickname}}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -449,6 +459,7 @@
                   type="submit"
                   class="btn btn-primary"
                   style="width: 100%"
+                  (click)="onUpdateProvisionalInvoice()"
                 >
                   Cập Nhật Thông Tin Hoá Đơn
                 </button>
@@ -479,8 +490,11 @@
               Thông Tin Hoá Đơn
               <br />
               {{
-                (selectTable?.totalInvoice != 0
-                  ? selectTable?.totalInvoice
+                (( selectTable?.totalInvoice != 0 && selectTable?.totalInvoice != null)
+                  ? ( selectProvisionalInvoice?.totalMoney
+                        + (selectProvisionalInvoice?.totalMoney * surchargeProvisionalInvoice / 100 )
+                        - ( selectProvisionalInvoice?.totalMoney * discountProvisionalInvoice / 100 )
+                      )
                   : ""
                 ) | currency : "VND" : "symbol"
               }}
@@ -522,6 +536,7 @@
                 style="height: 40px; width: 100%; border-radius: 0px"
                 type="button"
                 class="btn btn-primary"
+                [disabled]="true"
               >
                 <h2 style="text-align: center; margin: 0px">Báo Chế Biến</h2>
               </button>
@@ -539,6 +554,8 @@
                 style="height: 40px; width: 100%; border-radius: 0px"
                 type="button"
                 class="btn btn-warning"
+                (click)="onPrintProvisionalInvoice()"
+                [disabled]="selectProvisionalInvoice ==  null"
               >
                 <h2 style="text-align: center; margin: 0px">Tạm Tính</h2>
               </button>
@@ -557,6 +574,7 @@
               style="height: 80px; width: 100%; border-radius: 0px"
               type="button"
               class="btn btn-danger"
+              [disabled]="!selectTable?.isTemporaryInvoice"
             >
               <h2 style="text-align: center; margin: 0px">Thanh Toán</h2>
             </button>

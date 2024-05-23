@@ -29,3 +29,8 @@ body {
 .danger-snackbar .mat-simple-snackbar-action  {
   color: black;
 }
+
+@media print {
+  app-root > * { display: none; }
+  app-root app-print { display: block; }
+}

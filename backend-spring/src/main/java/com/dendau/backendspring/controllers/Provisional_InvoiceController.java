@@ -52,4 +52,14 @@ public class Provisional_InvoiceController {
             throw new RuntimeException(e);
         }
     }
+
+    @PostMapping("/print_invoice")
+    public ResponseEntity<GetProvisionalInvoiceDTO> printInvoiceProvisional_InvoiceService(@RequestBody GetIdProvisionalInvoiceDTO request) {
+        try {
+            GetProvisionalInvoiceDTO response = provisionalInvoiceService.printInvoiceProvisional_InvoiceService(request);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
 }

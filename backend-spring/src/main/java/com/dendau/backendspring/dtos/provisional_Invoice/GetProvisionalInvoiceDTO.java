@@ -1,6 +1,7 @@
 package com.dendau.backendspring.dtos.provisional_Invoice;
 
 import com.dendau.backendspring.dtos.tables.GetTablesResponseDTO;
+import com.dendau.backendspring.models.Customer;
 import com.dendau.backendspring.models.Tables;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,8 @@ public class GetProvisionalInvoiceDTO {
     private Long totalMoney;
     private int discount;
     private int surcharge;
-    private long idCustomer;
+
+    private Customer customer;
 
     private GetTablesResponseDTO tables;
 }

@@ -16,6 +16,7 @@ public class PostTableMenuDTO {
     private TableMenuKeyDTO id;
     private long amount;
     private long price_unit;
+    private long amount_cooking;
     private Boolean isCooking;
     private String note;
 }

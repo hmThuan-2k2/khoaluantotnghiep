@@ -50,13 +50,14 @@ public class TableMenuServiceImpl implements TableMenuService {
                     oldTableMenu.setTable(table);
                     oldTableMenu.setMenu(menu);
                     oldTableMenu.setAmount(oldTableMenu.getAmount() + 1);
+                    oldTableMenu.setAmount_cooking(oldTableMenu.getAmount_cooking());
                     oldTableMenu.setPrice_unit(oldTableMenu.getPrice_unit());
                     oldTableMenu.setIsCooking(false);
                     oldTableMenu.setNote(oldTableMenu.getNote());
                     select = tableMenuRepository.save(oldTableMenu);
                     tableMenuRepository.refresh(select);
                 } else {
-                    oldTableMenu = new TableMenu(tableMenuKey, table, menu, 1, menu.getPrice_sale(), false, null);
+                    oldTableMenu = new TableMenu(tableMenuKey, table, menu, 1, menu.getPrice_sale(), 0, false, null);
                     select = tableMenuRepository.save(oldTableMenu);
                     tableMenuRepository.refresh(select);
                 }
@@ -107,9 +108,24 @@ public class TableMenuServiceImpl implements TableMenuService {
                 oldTableMenu.setId(tableMenuKey);
                 oldTableMenu.setTable(table);
                 oldTableMenu.setMenu(menu);
+                if (oldTableMenu.getAmount() <= tableMenu.getAmount()) {
+                    oldTableMenu.setAmount_cooking(oldTableMenu.getAmount_cooking());
+                    if (oldTableMenu.getAmount_cooking() == tableMenu.getAmount())
+                        oldTableMenu.setIsCooking(true);
+                    else oldTableMenu.setIsCooking(false);
+                }
+                else {
+                    if (oldTableMenu.getAmount_cooking() >= tableMenu.getAmount()) {
+                        oldTableMenu.setAmount_cooking(tableMenu.getAmount());
+                        oldTableMenu.setIsCooking(true);
+                    }
+                    else {
+                        oldTableMenu.setAmount_cooking(oldTableMenu.getAmount_cooking());
+                        oldTableMenu.setIsCooking(false);
+                    }
+                }
                 oldTableMenu.setAmount(tableMenu.getAmount());
                 oldTableMenu.setPrice_unit(tableMenu.getPrice_unit());
-                oldTableMenu.setIsCooking(tableMenu.getIsCooking());
                 oldTableMenu.setNote(tableMenu.getNote());
                 saves = tableMenuRepository.save(oldTableMenu);
                 tableMenuRepository.refresh(saves);

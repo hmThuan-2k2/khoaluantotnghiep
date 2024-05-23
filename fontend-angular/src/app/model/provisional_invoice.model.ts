@@ -1,3 +1,4 @@
+import { Customer } from "./customer.model";
 import { Table } from "./table.model";
 
 export class ProvisionalInvoice {
@@ -7,6 +8,6 @@ export class ProvisionalInvoice {
   totalMoney: number;
   discount: number;
   surcharge: number;
-  idCustomer: number;
+  customer: Customer;
   tables: Table;
 }

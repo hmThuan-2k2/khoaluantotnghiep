@@ -15,6 +15,7 @@ public class GetTable_TableMenuDTO {
     private long amount;
     private long price_unit;
     private Boolean isCooking;
+    private long amount_cooking;
     private String note;
 
     private Menus menu;

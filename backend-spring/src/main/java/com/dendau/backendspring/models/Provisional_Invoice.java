@@ -30,9 +30,11 @@ public class Provisional_Invoice {
     private int discount;
     private int surcharge;
 
-    private long idCustomer;
-
     @OneToOne
     @JoinColumn(name = "tables_id", referencedColumnName = "id")
     private Tables tables;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    private Customer customer;
 }

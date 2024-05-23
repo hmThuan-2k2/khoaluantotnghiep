@@ -12,6 +12,8 @@ public interface Provisional_InvoiceService {
 
     GetProvisionalInvoiceDTO getProvisional_InvoiceService(GetIdProvisionalInvoiceDTO request);
 
+    GetProvisionalInvoiceDTO printInvoiceProvisional_InvoiceService(GetIdProvisionalInvoiceDTO request);
+
     List<GetProvisionalInvoiceDTO> getAllProvisional_InvoiceService();
 
 }
