@@ -12,6 +12,7 @@ import { MenuComponent } from './manage/product/menu/menu.component';
 import { PrintComponent } from './manage/restaurant/cashier/print/print.component';
 import { PrintProvisionalInvoiceComponent } from './manage/restaurant/cashier/print/print-provisional-invoice/print-provisional-invoice.component';
 import { KitchenComponent } from './manage/restaurant/kitchen/kitchen.component';
+import { CustomerComponent } from './manage/restaurant/customer/customer.component';
 
 
 const routes: Routes = [
@@ -42,6 +43,10 @@ const routes: Routes = [
           {
             path: 'table',
             component: TableComponent,
+          },
+          {
+            path: 'customer',
+            component: CustomerComponent,
           },
           {
             path: '',
