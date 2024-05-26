@@ -6,6 +6,7 @@ export class Employee {
   address: string;
   phoneNumber: string;
   idCard: string;
+  note: string;
   constructor(
     id: number,
     name: string,

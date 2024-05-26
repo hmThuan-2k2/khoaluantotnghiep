@@ -16,7 +16,7 @@ export class ProductComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    document.getElementById('product').classList.add('active');
+    // document.getElementById('product').classList.add('active');
   }
 
 }

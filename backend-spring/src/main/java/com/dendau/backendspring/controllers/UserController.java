@@ -50,33 +50,4 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'RESTAURANT_MANAGER')")
-    @GetMapping("/hello")
-    public String hello() {
-        try {
-            return "Hello World!";
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
-    }
-    @PreAuthorize("hasAuthority('RESTAURANT_MANAGER')")
-    @GetMapping("/test1")
-    public String test1() {
-        try {
-            return "Welcome Restaurant Manager!";
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/test")
-    public String test() {
-        try {
-            return "Welcome Admin!";
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
-    }
-
 }

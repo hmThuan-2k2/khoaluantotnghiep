@@ -17,6 +17,7 @@ export class ManageComponent implements OnInit {
   public employeeLogin: Employee;
   public userLogin: User = null;
   public roles: Array<String> = [];
+  public isHiddenPass: boolean = true;
 
   constructor(
     private loginService: LoginService,
@@ -57,43 +58,73 @@ export class ManageComponent implements OnInit {
   goToRouterManageHome(): void {
     this.router.navigate(['/manage', 'home']);
     document.getElementById('restaurant').classList.remove('active');
-    document.getElementById('product').classList.remove('active');
+    document.getElementById('table').classList.remove('active');
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('customer').classList.remove('active');
+    document.getElementById('employee').classList.remove('active');
     document.getElementById('home').classList.add('active');
   }
 
   goToRouterManageRestaurantCashier(): void {
     this.router.navigate(['/manage', 'restaurant', 'cashier']);
     document.getElementById('home').classList.remove('active');
-    document.getElementById('product').classList.remove('active');
+    document.getElementById('table').classList.remove('active');
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('customer').classList.remove('active');
+    document.getElementById('employee').classList.remove('active');
     document.getElementById('restaurant').classList.add('active');
   }
 
   goToRouterManageRestaurantKitchen(): void {
     this.router.navigate(['/manage', 'restaurant', 'kitchen']);
     document.getElementById('home').classList.remove('active');
-    document.getElementById('product').classList.remove('active');
+    document.getElementById('table').classList.remove('active');
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('customer').classList.remove('active');
+    document.getElementById('employee').classList.remove('active');
     document.getElementById('restaurant').classList.add('active');
   }
 
   goToRouterManageRestaurantTable(): void {
     this.router.navigate(['/manage', 'restaurant', 'table']);
     document.getElementById('home').classList.remove('active');
-    document.getElementById('product').classList.remove('active');
-    document.getElementById('restaurant').classList.add('active');
+    document.getElementById('restaurant').classList.remove('active');
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('customer').classList.remove('active');
+    document.getElementById('employee').classList.remove('active');
+    document.getElementById('table').classList.add('active');
   }
 
-  goToRouterManageRestaurantCustomer(): void {
-    this.router.navigate(['/manage', 'restaurant', 'customer']);
-    document.getElementById('home').classList.remove('active');
-    document.getElementById('product').classList.remove('active');
-    document.getElementById('restaurant').classList.add('active');
-  }
 
   goToRouterManageProductMenu(): void {
     this.router.navigate(['/manage', 'product', 'menu']);
     document.getElementById('home').classList.remove('active');
     document.getElementById('restaurant').classList.remove('active');
-    document.getElementById('product').classList.add('active');
+    document.getElementById('table').classList.remove('active');
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('customer').classList.remove('active');
+    document.getElementById('employee').classList.remove('active');
+    document.getElementById('menu').classList.add('active');
+  }
+
+  goToRouterManageRestaurantCustomer(): void {
+    this.router.navigate(['/manage', 'restaurant', 'customer']);
+    document.getElementById('home').classList.remove('active');
+    document.getElementById('restaurant').classList.remove('active');
+    document.getElementById('table').classList.remove('active');
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('employee').classList.remove('active');
+    document.getElementById('customer').classList.add('active');
+  }
+
+  goToRouterManageEmployee(): void {
+    this.router.navigate(['/manage', 'employee']);
+    document.getElementById('home').classList.remove('active');
+    document.getElementById('restaurant').classList.remove('active');
+    document.getElementById('table').classList.remove('active');
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('customer').classList.remove('active');
+    document.getElementById('employee').classList.add('active');
   }
 
   goToRouterLogin(): void {
@@ -105,5 +136,32 @@ export class ManageComponent implements OnInit {
     // localStorage.removeItem('token');
     // this.router.navigate(['/login']);
     // return routers;
+  }
+
+  public setIsHiddenPass(){
+    this.isHiddenPass = !this.isHiddenPass;
+    if (this.isHiddenPass)
+      document.getElementById('button-hiden').innerHTML = '<i class="fa fa-eye-slash" style="font-size: 20px"></i>';
+    else
+      document.getElementById('button-hiden').innerHTML = '<i class="fa fa-eye" style="font-size: 20px"></i>';
+
+    // this.functions_login.logout();
+  }
+
+  public getTypePass(): string{
+    if (this.isHiddenPass)
+      return 'password';
+    else return 'text';
+  }
+
+  public onOpenModal(): void {
+    const container = document.getElementById('main-container-home');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#thongTinTaiKhoanModal');
+    container.appendChild(button);
+    button.click();
   }
 }

@@ -13,6 +13,8 @@ import { PrintComponent } from './manage/restaurant/cashier/print/print.componen
 import { PrintProvisionalInvoiceComponent } from './manage/restaurant/cashier/print/print-provisional-invoice/print-provisional-invoice.component';
 import { KitchenComponent } from './manage/restaurant/kitchen/kitchen.component';
 import { CustomerComponent } from './manage/restaurant/customer/customer.component';
+import { Employee } from './model/employee.model';
+import { EmployeeComponent } from './manage/employee/employee.component';
 
 
 const routes: Routes = [
@@ -69,6 +71,11 @@ const routes: Routes = [
             pathMatch: 'full'
           }
         ]
+      },
+
+      {
+        path: 'employee',
+        component: EmployeeComponent,
       },
       {
         path: '',

@@ -20,6 +20,7 @@ import { PrintComponent } from './manage/restaurant/cashier/print/print.componen
 import { PrintProvisionalInvoiceComponent } from './manage/restaurant/cashier/print/print-provisional-invoice/print-provisional-invoice.component';
 import { KitchenComponent } from './manage/restaurant/kitchen/kitchen.component';
 import { CustomerComponent } from './manage/restaurant/customer/customer.component';
+import { EmployeeComponent } from './manage/employee/employee.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { CustomerComponent } from './manage/restaurant/customer/customer.compone
     PrintComponent,
     PrintProvisionalInvoiceComponent,
     KitchenComponent,
-    CustomerComponent
+    CustomerComponent,
+    EmployeeComponent
   ],
   imports: [
     BrowserModule,

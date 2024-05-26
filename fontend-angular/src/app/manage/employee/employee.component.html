@@ -9,7 +9,7 @@
   "
 >
   <h3 style="text-align: start; font-weight: bold">
-    Quản Lý Danh Sách Khách Hàng
+    Quản Lý Danh Sách Nhân Viên
   </h3>
 </div>
 
@@ -25,7 +25,7 @@
   >
     <div class="row align-items-center" style="margin: 0px">
       <div
-        class="col-12 col-lg-4 align-self-center"
+        class="col-12 col-lg-6 align-self-center"
         style="margin: 0px; padding: 0px"
       >
         <div class="container">
@@ -42,48 +42,9 @@
         </div>
       </div>
       <div
-        class="col-12 col-lg-4 align-self-center"
+        class="col-12 col-lg-6 align-self-center"
         style="margin: 0px; padding: 0px"
       >
-        <div class="container">
-          <h3 style="margin-bottom: 0px; padding-top: 10px; font-weight: bold">
-            Tổng Chi Tiêu
-          </h3>
-          <div class="row container-fuid" >
-            <div class="col-6" >
-              <mat-form-field
-                appearance="outline"
-                style="margin-right: 10px; width: 100%"
-              >
-                <mat-label>Thấp Nhất</mat-label>
-                <input matInput (keyup)="applyFilter($event)" />
-              </mat-form-field>
-            </div>
-            <div class="col-6" >
-              <mat-form-field
-                appearance="outline"
-                style="margin-right: 10px; width: 100%"
-              >
-                <mat-label>Cao Nhất</mat-label>
-                <input matInput (keyup)="applyFilter($event)" />
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="col-12 col-lg-4 align-self-center"
-        style="margin: 0px; padding: 0px"
-      >
-        <a
-          (click)="onOpenModal(null,'add')"
-          class="btn btn-info tooltips"
-          data-placement="top"
-          data-original-title="Add"
-          style="width: 100%;margin-bottom: 5px;"
-        >
-          <i class="fa fa-search" style="font-size: 20px"></i> Lọc Danh Sách
-        </a>
         <a
           (click)="onOpenModal(null,'add')"
           class="btn btn-success tooltips"
@@ -91,7 +52,7 @@
           data-original-title="Add"
           style="width: 100%;margin-bottom: 5px;"
         >
-          <i class="fa fa-plus-square" style="font-size: 20px"></i> Thêm Khách Hàng Mới
+          <i class="fa fa-plus-square" style="font-size: 20px"></i> Thêm Nhân Viên Mới
         </a>
       </div>
     </div>
@@ -106,21 +67,13 @@
         <tbody>
           <ng-container matColumnDef="id" >
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;">#</th>
-            <td mat-cell *matCellDef="let element" >{{ customerAll.indexOf(element) + 1 }}</td>
+            <!-- <td mat-cell *matCellDef="let element" >{{ customerAll.indexOf(element) + 1 }}</td> -->
+            <td mat-cell *matCellDef="let element" >{{ element.id }}</td>
           </ng-container>
 
-          <ng-container matColumnDef="name_customer">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 20%;" >Họ Tên</th>
-            <td mat-cell *matCellDef="let element">{{ element.name_customer }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="nickname" >
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;" >
-              Biệt Danh
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{ element.nickname}}
-            </td>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 25%;" >Họ Tên</th>
+            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="phoneNumber" >
@@ -132,7 +85,7 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="gender"  >
+          <ng-container matColumnDef="gender" >
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;" >
               Giới Tính
             </th>
@@ -141,22 +94,20 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="address"  >
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 25%;" >Địa Chỉ</th>
+          <ng-container matColumnDef="dateOfBirth"  >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;" >
+              Ngày Sinh
+            </th>
             <td mat-cell *matCellDef="let element">
-              {{
-                element.address
-              }}
+              {{ element.dateOfBirth}}
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="total_invoice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 10%;"  >
-              Tổng Chi Tiêu
-            </th>
+          <ng-container matColumnDef="note"  >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;" >Ghi Chú</th>
             <td mat-cell *matCellDef="let element">
               {{
-                ( 10000000 | currency : "VND" : "symbol" )
+                element.note
               }}
             </td>
           </ng-container>
@@ -173,15 +124,49 @@
                 >
                   <i class="fa fa-pencil" style="font-size: 20px"></i>
                 </button>
-                <!-- <button
+                <button
                   (click)="onOpenModal(element,'delete')"
                   class="btn btn-danger tooltips"
                   data-placement="top"
                   data-original-title="Delete"
-                  [disabled]="true"
                 >
                   <i class="fa fa-trash" style="font-size: 20px"></i>
-                </button> -->
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="user" >
+            <th mat-header-cell *matHeaderCellDef style="width: 10%;"  >Tài Khoản</th>
+            <td mat-cell *matCellDef="let element">
+              <div class="btn-group">
+                <button
+                  *ngIf="!element.isUser"
+                  (click)="onOpenModal(element,'edit')"
+                  class="btn btn-success tooltips"
+                  data-placement="top"
+                  data-original-title="edit"
+                >
+                  <i class="fa fa-user-plus" style="font-size: 20px"></i>
+                </button>
+                <button
+                  *ngIf="element.isUser"
+                  (click)="onOpenModal(element,'edit')"
+                  class="btn btn-info tooltips"
+                  data-placement="top"
+                  data-original-title="edit"
+                >
+                  <i class="fa fa-user" style="font-size: 20px"></i>
+                </button>
+                <button
+                  *ngIf="element.isUser"
+                  (click)="onOpenModal(element,'edit')"
+                  class="btn btn-danger tooltips"
+                  data-placement="top"
+                  data-original-title="edit"
+                >
+                  <i class="fa fa-user-times" style="font-size: 20px"></i>
+                </button>
               </div>
             </td>
           </ng-container>

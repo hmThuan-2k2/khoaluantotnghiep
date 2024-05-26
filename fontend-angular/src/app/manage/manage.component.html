@@ -1,6 +1,10 @@
-<div class="container-fluid" style="padding: 0px">
+<div class="container-fluid" style="padding: 0px" id="main-container-home" >
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="">
+    <a
+      class="navbar-brand"
+      style="cursor: pointer"
+      (click)="goToRouterManageHome()"
+    >
       <span
         class="navbar-brand mb-0 h1"
         style="
@@ -29,7 +33,12 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto navbar-nav-scroll">
         <li class="nav-item">
-          <a class="nav-link" id="home" (click)="goToRouterManageHome()">
+          <a
+            class="nav-link"
+            id="home"
+            (click)="goToRouterManageHome()"
+            style="cursor: pointer"
+          >
             Trang Chủ <span class="sr-only">(current)</span>
           </a>
         </li>
@@ -56,44 +65,44 @@
               (click)="goToRouterManageRestaurantKitchen()">
               Màn Hình Bếp
             </a>
-            <a
-              class="dropdown-item"
-              style="cursor: pointer"
-              (click)="goToRouterManageRestaurantTable()"
-              >Danh Sách Bàn</a
-            >
-            <a
-              class="dropdown-item"
-              style="cursor: pointer"
-              (click)="goToRouterManageRestaurantCustomer()"
-            >Khách Hàng</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-toggle="dropdown"
-            aria-expanded="false"
-            id="product"
-          >
-            Hàng Hoá
-          </a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Nhập Hàng</a>
-            <a class="dropdown-item" href="#">Kiểm Kê</a>
-            <a class="dropdown-item"
-            (click)="goToRouterManageProductMenu()">Danh Sách Thực Đơn</a>
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Thu & Chi</a>
+          <a
+            class="nav-link"
+            style="cursor: pointer"
+            (click)="goToRouterManageRestaurantTable()"
+            id="table"
+          >
+            Bàn
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            style="cursor: pointer"
+            (click)="goToRouterManageProductMenu()"
+            id="menu"
+          >
+            Thực Đơn
+          </a>
         </li>
         <li class="nav-item dropdown">
           <a
             class="nav-link"
-            href="#"
+            style="cursor: pointer"
+            (click)="goToRouterManageRestaurantCustomer()"
+            id="customer"
+          >
+            Khách Hàng
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link"
+            style="cursor: pointer"
+            (click)="goToRouterManageEmployee()"
+            id="employee"
           >
             Nhân Viên
           </a>
@@ -111,9 +120,11 @@
             Xin Chào, {{ employeeLogin?.name }}
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="#">Thông Tin Tài Khoản</a>
+            <a class="dropdown-item" (click)="onOpenModal()">
+              Thông Tin Tài Khoản
+            </a>
             <a class="dropdown-item" (click)="goToRouterLogin()">
-              Đăng xuất ({{ userLogin?.employee.name }})
+              Đăng xuất
             </a>
           </div>
         </div>
@@ -123,3 +134,123 @@
 </div>
 
 <router-outlet></router-outlet>
+
+<!-- pattern="^(\S+)((\s{0,1}\S+){0,})$" -->
+<!-- Edit Modal -->
+<div
+  class="modal fade"
+  id="thongTinTaiKhoanModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="userThongTinModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" style="margin: 0px">
+          Thông Tin Tài Khoản
+        </h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          id="edit-table-form"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          #editTableForm="ngForm"
+          (ngSubmit)="1"
+          id="formEditProduct"
+        >
+          <div class="form-group">
+            <label for="taiKhoanEdit">
+              Tài Khoản <span style="color: red">*</span>
+            </label>
+            <input
+              id="taiKhoanEdit"
+              type="text"
+              ngModel="{{ userLogin?.username }}"
+              name="name"
+              class="form-control"
+              #taiKhoanEdit="ngModel"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="nameEdit">
+              Mật Khẩu Mới <span style="color: red">*</span>
+            </label>
+            <div class="input-group" style="padding: 0px" >
+              <input
+                type="{{ getTypePass() }}"
+                name="password"
+                id="password"
+                class="form-control"
+                required
+                pattern="^(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;'>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}$"
+              />
+              <div class="input-group-append">
+                <button
+                  (click)="setIsHiddenPass()"
+                  class="btn btn-secondary"
+                  type="button"
+                  id="button-hiden"
+                >
+                  <i class="fa fa-eye-slash" style="font-size: 20px"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nameEdit">
+              Mật Khẩu Mới <span style="color: red">*</span>
+            </label>
+            <div class="input-group" style="padding: 0px" >
+              <input
+                type="{{ getTypePass() }}"
+                name="password"
+                id="password"
+                class="form-control"
+                required
+                pattern="^(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;'>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}$"
+              />
+              <div class="input-group-append">
+                <button
+                  (click)="setIsHiddenPass()"
+                  class="btn btn-secondary"
+                  type="button"
+                  id="button-hiden"
+                >
+                  <i class="fa fa-eye-slash" style="font-size: 20px"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+        >
+          Huỷ
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          form="formEditProduct"
+        >
+          Cập nhật
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
