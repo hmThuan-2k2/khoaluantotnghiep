@@ -6,15 +6,14 @@ import { HomeComponent } from './manage/home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { RestaurantComponent } from './manage/restaurant/restaurant.component';
 import { CashierComponent } from './manage/restaurant/cashier/cashier.component';
-import { TableComponent } from './manage/restaurant/table/table.component';
-import { ProductComponent } from './manage/product/product.component';
-import { MenuComponent } from './manage/product/menu/menu.component';
+import { TableComponent } from './manage/table/table.component';
 import { PrintComponent } from './manage/restaurant/cashier/print/print.component';
 import { PrintProvisionalInvoiceComponent } from './manage/restaurant/cashier/print/print-provisional-invoice/print-provisional-invoice.component';
 import { KitchenComponent } from './manage/restaurant/kitchen/kitchen.component';
-import { CustomerComponent } from './manage/restaurant/customer/customer.component';
+import { CustomerComponent } from './manage/customer/customer.component';
 import { Employee } from './model/employee.model';
 import { EmployeeComponent } from './manage/employee/employee.component';
+import { MenuComponent } from './manage/menu/menu.component';
 
 
 const routes: Routes = [
@@ -43,14 +42,6 @@ const routes: Routes = [
             component: KitchenComponent,
           },
           {
-            path: 'table',
-            component: TableComponent,
-          },
-          {
-            path: 'customer',
-            component: CustomerComponent,
-          },
-          {
             path: '',
             redirectTo: '/manage/restaurant/cashier',
             pathMatch: 'full'
@@ -58,21 +49,17 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'product',
-        component: ProductComponent,
-        children: [
-          {
-            path: 'menu',
-            component: MenuComponent,
-          },
-          {
-            path: '',
-            redirectTo: '/manage/product/menu',
-            pathMatch: 'full'
-          }
-        ]
+        path: 'table',
+        component: TableComponent,
       },
-
+      {
+        path: 'menu',
+        component: MenuComponent,
+      },
+      {
+        path: 'customer',
+        component: CustomerComponent,
+      },
       {
         path: 'employee',
         component: EmployeeComponent,

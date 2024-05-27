@@ -38,9 +38,11 @@ export class KitchenComponent implements OnInit {
 
   public dateNow: string = null;
   public dateTimeNow: string = null;
+  public dataDateTime: string[] = [];
   public dataRow1: ProcessingNewspaper[] = null;
   public dataRow2: ProcessingNewspaper[] = null;
   public dataRow3: ProcessingNewspaper[] = null;
+  public selectDate: string = null;
 
   ngOnInit(): void {
     this.getDateNow();
@@ -48,6 +50,11 @@ export class KitchenComponent implements OnInit {
     this.getDataRow1();
     this.getDataRow2();
     this.getDataRow3();
+  }
+
+  public onChangeSelectDate(newValue: string) {
+    console.log(newValue);
+    this.selectDate = newValue;
   }
 
   public getDateTimeNow(): void {
@@ -94,7 +101,7 @@ export class KitchenComponent implements OnInit {
     this.functions_login.getUserProfile();
     this.ProcessingNewspaperService.getAllProcessingNewspaperToDateCreateAndConfirmIsNot(data).subscribe(
       (response: HttpResponse<any>) => {
-        console.log(response);
+        // console.log(response);
         this.dataRow1 = response.body;
       },
       (error: HttpErrorResponse) => {
@@ -116,7 +123,7 @@ export class KitchenComponent implements OnInit {
     this.functions_login.getUserProfile();
     this.ProcessingNewspaperService.getAllProcessingNewspaperToDateCreateAndConfirmAndNotCooking(data).subscribe(
       (response: HttpResponse<any>) => {
-        console.log(response);
+        // console.log(response);
         this.dataRow2 = response.body;
       },
       (error: HttpErrorResponse) => {
@@ -138,7 +145,7 @@ export class KitchenComponent implements OnInit {
     this.functions_login.getUserProfile();
     this.ProcessingNewspaperService.getAllProcessingNewspaperToDateCreateAndConfirmAndCooking(data).subscribe(
       (response: HttpResponse<any>) => {
-        console.log(response);
+        // console.log(response);
         this.dataRow3 = response.body;
       },
       (error: HttpErrorResponse) => {
@@ -155,9 +162,17 @@ export class KitchenComponent implements OnInit {
 
   public getDateNow(): void {
     var today = new Date();
+    var day = today.getDate();
     var date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
     var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-    this.dateNow = "23/05/2024";
+    // this.dateNow = "27/05/2024";
+    this.dateNow = date;
+
+    for (let index = 0; index < 7; index++) {
+      this.dataDateTime.push( (day - index - 1) + '/' + (today.getMonth() + 1) + '/' + today.getFullYear() );
+    }
+
+    console.log(this.dataDateTime);
   }
 
 

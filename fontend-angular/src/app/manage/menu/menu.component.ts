@@ -1,4 +1,3 @@
-import { MenuService } from './../../../service/menu.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,6 +7,7 @@ import { Router } from '@angular/router';
 import { Menu } from 'src/app/model/menu.model';
 import { Table } from 'src/app/model/table.model';
 import { FunctionLoginService } from 'src/app/service/function-login.service';
+import { MenuService } from 'src/app/service/menu.service';
 import { SnackBarService } from 'src/app/service/snack-bar.service';
 import { TableService } from 'src/app/service/table.service';
 

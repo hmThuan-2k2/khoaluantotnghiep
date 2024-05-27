@@ -13,14 +13,13 @@ import { HomeComponent } from './manage/home/home.component';
 import { ManageComponent } from './manage/manage.component';
 import { RestaurantComponent } from './manage/restaurant/restaurant.component';
 import { CashierComponent } from './manage/restaurant/cashier/cashier.component';
-import { TableComponent } from './manage/restaurant/table/table.component';
-import { ProductComponent } from './manage/product/product.component';
-import { MenuComponent } from './manage/product/menu/menu.component';
+import { TableComponent } from './manage/table/table.component';
 import { PrintComponent } from './manage/restaurant/cashier/print/print.component';
 import { PrintProvisionalInvoiceComponent } from './manage/restaurant/cashier/print/print-provisional-invoice/print-provisional-invoice.component';
 import { KitchenComponent } from './manage/restaurant/kitchen/kitchen.component';
-import { CustomerComponent } from './manage/restaurant/customer/customer.component';
+import { CustomerComponent } from './manage/customer/customer.component';
 import { EmployeeComponent } from './manage/employee/employee.component';
+import { MenuComponent } from './manage/menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +30,6 @@ import { EmployeeComponent } from './manage/employee/employee.component';
     RestaurantComponent,
     CashierComponent,
     TableComponent,
-    ProductComponent,
     MenuComponent,
     PrintComponent,
     PrintProvisionalInvoiceComponent,

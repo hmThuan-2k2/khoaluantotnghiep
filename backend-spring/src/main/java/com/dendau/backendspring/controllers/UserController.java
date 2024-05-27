@@ -18,6 +18,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping(value = "/save")
     public ResponseEntity<UserResponse> saveUser(@RequestBody UserRequest userRequest) {
         try {
@@ -28,7 +29,7 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'RESTAURANT_MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         try {

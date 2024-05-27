@@ -19,6 +19,19 @@
       <h3 style="text-align: end; font-weight: bold;margin-bottom: 0px;">
         <!-- {{dateTimeNow}} -->
         23:49 25/05/2024
+        <select
+          class="custom-select custom-select-sm"
+          style="color: black"
+          [ngModel]="selectDate"
+          (ngModelChange)="onChangeSelectDate($event)"
+          name="id"
+          #idMenuGroup="ngModel"
+        >
+          <option selected [value]="dateNow">{{dateNow}}</option>
+          <option *ngFor="let item of dataDateTime" [value]="item">
+            {{ item }}
+          </option>
+        </select>
       </h3>
     </div>
   </div>

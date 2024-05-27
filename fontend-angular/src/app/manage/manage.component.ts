@@ -85,8 +85,8 @@ export class ManageComponent implements OnInit {
     document.getElementById('restaurant').classList.add('active');
   }
 
-  goToRouterManageRestaurantTable(): void {
-    this.router.navigate(['/manage', 'restaurant', 'table']);
+  goToRouterManageTable(): void {
+    this.router.navigate(['/manage', 'table']);
     document.getElementById('home').classList.remove('active');
     document.getElementById('restaurant').classList.remove('active');
     document.getElementById('menu').classList.remove('active');
@@ -96,8 +96,8 @@ export class ManageComponent implements OnInit {
   }
 
 
-  goToRouterManageProductMenu(): void {
-    this.router.navigate(['/manage', 'product', 'menu']);
+  goToRouterManageMenu(): void {
+    this.router.navigate(['/manage', 'menu']);
     document.getElementById('home').classList.remove('active');
     document.getElementById('restaurant').classList.remove('active');
     document.getElementById('table').classList.remove('active');
@@ -107,8 +107,8 @@ export class ManageComponent implements OnInit {
     document.getElementById('menu').classList.add('active');
   }
 
-  goToRouterManageRestaurantCustomer(): void {
-    this.router.navigate(['/manage', 'restaurant', 'customer']);
+  goToRouterManageCustomer(): void {
+    this.router.navigate(['/manage', 'customer']);
     document.getElementById('home').classList.remove('active');
     document.getElementById('restaurant').classList.remove('active');
     document.getElementById('table').classList.remove('active');
