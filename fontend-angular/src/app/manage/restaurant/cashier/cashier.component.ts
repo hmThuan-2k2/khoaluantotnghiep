@@ -39,7 +39,42 @@ export class CashierComponent implements OnInit {
     private router: Router
   ) {}
 
+  public dateTimeNowString: string = null;
+
+  public setDateTimeNow(): void {
+    var dateNow: Date = new Date();
+    var hours = dateNow.getHours();
+    var minus = dateNow.getMinutes();
+    var seconds = dateNow.getSeconds();
+    var day = dateNow.getDate();
+    var month = dateNow.getMonth() + 1;
+    var year = dateNow.getFullYear();
+    var textDateTime: string;
+    if (hours < 10)
+      textDateTime = "0" + hours + ":";
+    else textDateTime = hours + ":";
+    if (minus < 10)
+      textDateTime += "0" + minus + ":";
+    else textDateTime += minus + ":";
+    if (seconds < 10)
+      textDateTime += "0" + seconds + ", ";
+    else textDateTime += seconds + ", ";
+    if (day < 10)
+      textDateTime += "0" + day + "/";
+    else textDateTime += day + "/";
+    if (month < 10)
+      textDateTime += "0" + month + "/"
+    else textDateTime += month + "/"
+    textDateTime += year;
+    // console.log(textDateTime);
+    this.dateTimeNowString = textDateTime;
+  }
+
   ngOnInit(): void {
+    this.setDateTimeNow();
+    setInterval(() => {
+      this.setDateTimeNow();
+    }, 1000)
     this.getAllTable();
   }
 

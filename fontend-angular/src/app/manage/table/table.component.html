@@ -108,10 +108,10 @@
 
           <ng-container matColumnDef="totalInvoice"  >
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;" >
-              Tổng Hoá Đơn
+              Tổng Hoá Đơn Tạm Tính
             </th>
             <td mat-cell *matCellDef="let element">
-              {{ element.isEmpty ? "" : (element.totalInvoice | currency : "VND" : "symbol" ) }}
+              {{ element.isEmpty ? "" : (getTotalInvoice(element) | currency : "VND" : "symbol" ) }}
             </td>
           </ng-container>
 

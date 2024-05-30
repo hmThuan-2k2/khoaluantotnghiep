@@ -44,9 +44,43 @@ export class KitchenComponent implements OnInit {
   public dataRow3: ProcessingNewspaper[] = null;
   public selectDate: string = null;
 
+  public dateTimeNowString: string = null;
+
+  public setDateTimeNow(): void {
+    var dateNow: Date = new Date();
+    var hours = dateNow.getHours();
+    var minus = dateNow.getMinutes();
+    var seconds = dateNow.getSeconds();
+    var day = dateNow.getDate();
+    var month = dateNow.getMonth() + 1;
+    var year = dateNow.getFullYear();
+    var textDateTime: string;
+    if (hours < 10)
+      textDateTime = "0" + hours + ":";
+    else textDateTime = hours + ":";
+    if (minus < 10)
+      textDateTime += "0" + minus + ":";
+    else textDateTime += minus + ":";
+    if (seconds < 10)
+      textDateTime += "0" + seconds + ", ";
+    else textDateTime += seconds + ", ";
+    if (day < 10)
+      textDateTime += "0" + day + "/";
+    else textDateTime += day + "/";
+    if (month < 10)
+      textDateTime += "0" + month + "/"
+    else textDateTime += month + "/"
+    textDateTime += year;
+    // console.log(textDateTime);
+    this.dateTimeNowString = textDateTime;
+  }
+
   ngOnInit(): void {
+    this.setDateTimeNow();
+    setInterval(() => {
+      this.setDateTimeNow();
+    }, 1000)
     this.getDateNow();
-    this.getDateTimeNow();
     this.getDataRow1();
     this.getDataRow2();
     this.getDataRow3();
@@ -55,43 +89,6 @@ export class KitchenComponent implements OnInit {
   public onChangeSelectDate(newValue: string) {
     console.log(newValue);
     this.selectDate = newValue;
-  }
-
-  public getDateTimeNow(): void {
-    var today = new Date();
-    var day = today.getDate();
-    var month = today.getMonth();
-    var year = today.getFullYear();
-    var hours = today.getHours();
-    var minutes = today.getMinutes();
-    var seconds = today.getSeconds();
-    var date: string;
-    var time: string;
-    if (day <= 9)
-      date = "0" + day + "/";
-    else date = day + "/";
-
-    if (month <= 9)
-      date = date + "0" + month + "/";
-    else date = date + month + "/";
-
-    date = date + year;
-
-    if (hours <= 9)
-      time = "0" + hours + ":";
-    else time = hours + ":";
-
-    if (minutes <= 9)
-      time = time + "0" + minutes + ":";
-    else time = time + minutes + ":";
-
-    if (seconds <= 9)
-      time = time + "0" + seconds;
-    else time = time + seconds;
-
-    this.dateTimeNow = time + ", " + date;
-    console.log(this.dateTimeNow);
-    // setTimeout(this.getDateTimeNow(), 1000);
   }
 
   public getDataRow1(): void {

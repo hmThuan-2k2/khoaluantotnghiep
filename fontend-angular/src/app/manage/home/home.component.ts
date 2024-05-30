@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { SnackBarService } from '../../service/snack-bar.service';
 import { Router } from '@angular/router';
 import { FunctionLoginService } from 'src/app/service/function-login.service';
+import { TableService } from 'src/app/service/table.service';
+import { ProvisionalInvoiceService } from 'src/app/service/provisional-invoice.service';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +14,47 @@ import { FunctionLoginService } from 'src/app/service/function-login.service';
 export class HomeComponent implements OnInit {
 
   constructor(
+    private TableService: TableService,
     private functions_login: FunctionLoginService,
+    private ProvisionalInvoiceService: ProvisionalInvoiceService,
     private _snackBar: SnackBarService,
     private router: Router
   ) { }
+
+  public lengthTableAll: number = null;
+  public lengthTableNotEmpty: number = null;
+  public tongTotalInvoice: number = null;
+
+  public dateTimeNowString: string = null;
+
+  public setDateTimeNow(): void {
+    var dateNow: Date = new Date();
+    var hours = dateNow.getHours();
+    var minus = dateNow.getMinutes();
+    var seconds = dateNow.getSeconds();
+    var day = dateNow.getDate();
+    var month = dateNow.getMonth() + 1;
+    var year = dateNow.getFullYear();
+    var textDateTime: string;
+    if (hours < 10)
+      textDateTime = "0" + hours + ":";
+    else textDateTime = hours + ":";
+    if (minus < 10)
+      textDateTime += "0" + minus + ":";
+    else textDateTime += minus + ":";
+    if (seconds < 10)
+      textDateTime += "0" + seconds + ", ";
+    else textDateTime += seconds + ", ";
+    if (day < 10)
+      textDateTime += "0" + day + "/";
+    else textDateTime += day + "/";
+    if (month < 10)
+      textDateTime += "0" + month + "/"
+    else textDateTime += month + "/"
+    textDateTime += year;
+    // console.log(textDateTime);
+    this.dateTimeNowString = textDateTime;
+  }
 
   public dataInvoice = [
     {
@@ -101,6 +141,56 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     document.getElementById('home').classList.add('active');
+    this.setDateTimeNow();
+    setInterval(() => {
+      this.setDateTimeNow();
+    }, 1000)
+    this.getAllTable();
+    this.getAllProvisional_Invoice();
+  }
+
+  public getAllTable(): void {
+    this.functions_login.getUserProfile();
+    this.TableService.getAllTable().subscribe(
+      (response: HttpResponse<any>) => {
+        this.lengthTableAll = response.body.length;
+        this.lengthTableNotEmpty = 0;
+        response.body.forEach((element) => {
+          if (element.isEmpty == false) this.lengthTableNotEmpty += 1;
+        });
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
+  }
+
+  public getAllProvisional_Invoice(): void {
+    this.functions_login.getUserProfile();
+    this.ProvisionalInvoiceService.getAllProvisionalInvoice().subscribe(
+      (response: HttpResponse<any>) => {
+        // console.log(this.tableAll);
+        this.tongTotalInvoice = 0;
+        response.body.forEach((element) => {
+          this.tongTotalInvoice += (element.totalMoney - element.totalMoney * element.discount / 100 + element.totalMoney * element.surcharge / 100) ;
+        });
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
   }
 
 }

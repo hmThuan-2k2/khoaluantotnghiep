@@ -81,11 +81,11 @@ public class Provisional_InvoiceServiceImpl implements Provisional_InvoiceServic
             List<GetTable_TableMenuDTO> responseTableMenu = modelMapper.map(tableMenus, setOfDTOsType);
             responseDTO.setTable_menu(responseTableMenu);
             if (saves.getDateTimeIn() != null)
-                response.setDateTimeIn(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                response.setDateTimeIn(new SimpleDateFormat("HH:mm:ss, dd/MM/yyyy")
                     .format(saves.getDateTimeIn()));
             else response.setDateTimeIn(null);
             if (saves.getDateTimePrintInvoice() != null)
-                response.setDateTimePrintInvoice(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                response.setDateTimePrintInvoice(new SimpleDateFormat("HH:mm:ss, dd/MM/yyyy")
                     .format(saves.getDateTimePrintInvoice()));
             else response.setDateTimePrintInvoice(null);
             response.setTables(responseDTO);
@@ -107,11 +107,11 @@ public class Provisional_InvoiceServiceImpl implements Provisional_InvoiceServic
                 List<GetTable_TableMenuDTO> responseTableMenu = modelMapper.map(tableMenus, setOfDTOsType);
                 responseDTO.setTable_menu(responseTableMenu);
                 if (provisional_invoice.getDateTimeIn() != null)
-                    response.setDateTimeIn(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                    response.setDateTimeIn(new SimpleDateFormat("HH:mm:ss, dd/MM/yyyy")
                             .format(provisional_invoice.getDateTimeIn()));
                 else response.setDateTimeIn(null);
                 if (provisional_invoice.getDateTimePrintInvoice() != null)
-                    response.setDateTimePrintInvoice(new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss")
+                    response.setDateTimePrintInvoice(new SimpleDateFormat("HH:mm:ss, dd/MM/yyyy")
                             .format(provisional_invoice.getDateTimePrintInvoice()));
                 else response.setDateTimePrintInvoice(null);
                 response.setTables(responseDTO);

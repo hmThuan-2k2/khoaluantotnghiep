@@ -1,3 +1,4 @@
+import { ProcessingNewspaperService } from './../../service/processing-newspaper.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
@@ -5,8 +6,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { element } from 'protractor';
+import { ProvisionalInvoice } from 'src/app/model/provisional_invoice.model';
 import { Table } from 'src/app/model/table.model';
 import { FunctionLoginService } from 'src/app/service/function-login.service';
+import { ProvisionalInvoiceService } from 'src/app/service/provisional-invoice.service';
 import { SnackBarService } from 'src/app/service/snack-bar.service';
 import { TableService } from 'src/app/service/table.service';
 
@@ -20,6 +24,7 @@ export class TableComponent implements OnInit {
   constructor(
     private TableService: TableService,
     private functions_login: FunctionLoginService,
+    private ProvisionalInvoiceService: ProvisionalInvoiceService,
     private _snackBar: SnackBarService,
     private router: Router
   ) { }
@@ -46,6 +51,7 @@ export class TableComponent implements OnInit {
   public editTable: Table = null;
   public tableEditDefault: Table = null;
   public deleteTable: Table = null;
+  public provisionalInvoiceAll: ProvisionalInvoice[] = null;
 
   public getAllTable(): void {
     this.functions_login.getUserProfile();
@@ -53,12 +59,36 @@ export class TableComponent implements OnInit {
       (response: HttpResponse<any>) => {
         this.tableAll = response.body;
         this.lengthTableAll = this.tableAll.length;
-        // console.log(this.tableAll);
         this.lengthTableNotEmpty = 0;
-        this.tongTotalInvoice = 0;
         this.tableAll.forEach((element) => {
           if (element.isEmpty == false) this.lengthTableNotEmpty += 1;
-          this.tongTotalInvoice += element.totalInvoice;
+        });
+        this.dataSource = new MatTableDataSource<Table>(this.tableAll);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.getAllProvisional_Invoice();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
+  }
+
+  public getAllProvisional_Invoice(): void {
+    this.functions_login.getUserProfile();
+    this.ProvisionalInvoiceService.getAllProvisionalInvoice().subscribe(
+      (response: HttpResponse<any>) => {
+        this.provisionalInvoiceAll = response.body;
+        // console.log(this.tableAll);
+        this.tongTotalInvoice = 0;
+        this.provisionalInvoiceAll.forEach((element) => {
+          this.tongTotalInvoice += (element.totalMoney - element.totalMoney * element.discount / 100 + element.totalMoney * element.surcharge / 100) ;
         });
         this.dataSource = new MatTableDataSource<Table>(this.tableAll);
         this.dataSource.paginator = this.paginator;
@@ -74,6 +104,15 @@ export class TableComponent implements OnInit {
         }
       }
     );
+  }
+
+  public getTotalInvoice(table: Table): number {
+    var value: number = 0;
+    this.provisionalInvoiceAll.forEach((element) => {
+      if (element.tables.id == table.id)
+        value = (element.totalMoney - element.totalMoney * element.discount / 100 + element.totalMoney * element.surcharge / 100);
+    })
+    return value;
   }
 
   public onOpenModal(table: Table, mode: string): void {
