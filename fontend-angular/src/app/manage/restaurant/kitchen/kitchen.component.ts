@@ -80,6 +80,12 @@ export class KitchenComponent implements OnInit {
     setInterval(() => {
       this.setDateTimeNow();
     }, 1000)
+    setInterval(() => {
+      this.getDataRow1();
+      this.getDataRow2();
+      this.getDataRow3();
+      console.log("Load Data!!!")
+    }, 5000)
     this.getDateNow();
     this.getDataRow1();
     this.getDataRow2();

@@ -220,3 +220,574 @@
     </mat-paginator>
   </div>
 </div>
+
+
+<!-- Add Product Modal -->
+
+<!--
+data-backdrop="static"
+data-keyboard="false"
+-->
+
+<div
+  class="modal fade"
+  id="addMenuModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="addMenuModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMenuModalLabel">Thêm Thực Đơn Mới</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          #addMenuForm="ngForm"
+          (ngSubmit)="addMenu(addMenuForm)"
+          id="formAdd"
+        >
+          <div class="form-group">
+            <label for="name_menuAdd">
+              Tên Thực Đơn <span style="color: red">*</span>
+            </label>
+            <input
+              id="name_menuAdd"
+              type="text"
+              ngModel
+              name="name_menu"
+              class="form-control"
+              autocomplete="off"
+              required
+              pattern="^(\S+)((\s{0,1}\S+){0,})$"
+              minlength="10"
+              #name_menu="ngModel"
+            />
+            <div
+              *ngIf="name_menu.invalid && name_menu.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="name_menu.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+              <div *ngIf="name_menu.errors.pattern || name_menu.errors.minlength">
+                Dữ liệu là một chuỗi ký tự tối thiểu 10 ký tự (không có
+                khoảng trống ở đầu và cuối dòng) và các từ cách nhau bởi dấu
+                cách.
+              </div>
+            </div>
+          </div>
+
+          <!-- Danh mục thực đơn -->
+
+          <!-- <div class="form-group">
+            <label for="chiTietAdd"> Chi Tiết Sản Phẩm </label>
+            <textarea
+              id="chiTietAdd"
+              type="text"
+              ngModel
+              name="chiTiet"
+              class="form-control"
+              rows="4"
+            >
+            </textarea>
+          </div> -->
+          <div class="form-group">
+            <label for="price_costAdd">
+              Giá Gốc Thực Đơn <span style="color: red">*</span>
+            </label>
+            <input
+              id="price_costAdd"
+              type="number"
+              ngModel
+              name="price_cost"
+              class="form-control"
+              min="1000"
+              maxlength="9"
+              required
+              pattern="^[1-9]{1}[0-9]{0,5}000$"
+              #price_cost="ngModel"
+            />
+            <div
+              *ngIf="price_cost.invalid && price_cost.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="price_cost.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+              <div *ngIf="price_cost.errors.pattern || price_cost.errors.maxlength" >
+                Giá phải lớn hơn 1000, có tối đa 9 chữ số và làm tròn giá trị ở hàng nghìn đồng.
+              </div>
+            </div>
+            <!-- <pre *ngIf="gia.errors">{{ gia.errors | json }}</pre> -->
+          </div>
+          <div class="form-group">
+            <label for="price_saleAdd">
+              Giá Bán Thực Đơn <span style="color: red">*</span>
+            </label>
+            <input
+              id="price_saleAdd"
+              type="number"
+              ngModel
+              name="price_sale"
+              class="form-control"
+              min="1000"
+              maxlength="9"
+              required
+              pattern="^[1-9]{1}[0-9]{0,5}000$"
+              #price_sale="ngModel"
+            />
+            <div
+              *ngIf="price_sale.invalid && price_sale.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="price_sale.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+              <div *ngIf="price_sale.errors.pattern || price_sale.errors.maxlength" >
+                Giá phải lớn hơn 1000, có tối đa 9 chữ số và làm tròn giá trị ở hàng nghìn đồng.
+              </div>
+            </div>
+            <!-- <pre *ngIf="gia.errors">{{ gia.errors | json }}</pre> -->
+          </div>
+          <div class="form-group">
+            <label for="unitAdd">
+              Đơn Vị Tính <span style="color: red">*</span>
+            </label>
+            <input
+              id="unitAdd"
+              type="number"
+              ngModel
+              name="unit"
+              class="form-control"
+              required
+              #unit="ngModel"
+            />
+            <div
+              *ngIf="unit.invalid && unit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="unit.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+            </div>
+            <!-- <pre *ngIf="gia.errors">{{ gia.errors | json }}</pre> -->
+          </div>
+          <div class="form-group row">
+            <div class="col-12 col-sm-4 col-md-3">
+              <img
+                [src]="
+                  imgLink == null
+                    ? 'http://res.cloudinary.com/dvdrvtda7/image/upload/v1715767449/thuan-brycen/ecaaq2yptos8hlwn4rak.jpg'
+                    : imgLink
+                "
+                style="width: 100%;"
+              />
+            </div>
+            <div class="col-12 col-sm-8 col-md-9">
+              <label for="anhAdd">
+                Tệp Ảnh Sản Phẩm <span style="color: red">*</span>
+              </label>
+              <input
+                id="file-add-btn"
+                style="padding-left: 20px;"
+                type="file"
+                class="file-upload"
+                accept="image/*"
+                (change)="onFileAdd($event)"
+              />
+              <input
+                id="anhAdd"
+                [hidden]="imgLink == null"
+                style="margin-top: 10px"
+                type="text"
+                [(ngModel)]="imgLink"
+                name="image_Url"
+                class="form-control"
+                #link="ngModel"
+                readonly
+                required
+                pattern="^(\S+)((\s{0,1}\S+){0,})$"
+              />
+              <div *ngIf="errorFile"
+                class="alert alert-danger" role="alertName">
+                <div>
+                  File chọn không phải kiểu tệp image!!!
+                </div>
+              </div>
+            </div>
+            <!-- <input type="file" class="file-input"
+                  (change)="onFileSelected($event)" #fileUpload>
+            <div class="file-upload" style="padding-left: 50px;" >
+              {{fileName || "No file uploaded yet."}}
+                <button mat-mini-fab color="primary" class="upload-btn"
+                  (click)="fileUpload.click()">
+                    <mat-icon>attach_file</mat-icon>
+                </button>
+            </div> -->
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          *ngIf="checkIsAdd(addMenuForm)"
+          type="button"
+          id="add-employee-form"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="setDefaultAddForm(addMenuForm)"
+        >
+          Huỷ
+        </button>
+        <button
+          [disabled]="addMenuForm.invalid"
+          type="submit"
+          class="btn btn-primary"
+          form="formAdd"
+        >
+          Thêm thực đơn
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div
+  class="modal fade"
+  id="updateMenuModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="menuEditModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 *ngIf="checkIsUpdate(editForm)" class="modal-title">
+          Cập nhật thực đơn {{ editMenu?.name_menu }}
+        </h5>
+        <h5 *ngIf="!checkIsUpdate(editForm)" class="modal-title">
+          Thông tin thực đơn {{ editMenu?.name_menu }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          (click)="setDefaultEditForm(editForm)"
+          id="edit-product-form"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          #editForm="ngForm"
+          (ngSubmit)="onUpdateMenu(editForm)"
+          id="formEditProduct"
+        >
+          <div class="form-group">
+            <label for="name_menuEdit">
+              Tên Thực Đơn <span style="color: red">*</span>
+            </label>
+            <input
+              id="name_menuEdit"
+              type="text"
+              ngModel="{{ editMenu?.name_menu }}"
+              name="name_menu"
+              class="form-control"
+              autocomplete="off"
+              required
+              pattern="^(\S+)((\s{0,1}\S+){0,})$"
+              minlength="10"
+              #name_menuEdit="ngModel"
+            />
+            <div
+              *ngIf="name_menuEdit.invalid && name_menuEdit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="name_menuEdit.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+              <div *ngIf="name_menuEdit.errors.pattern || name_menuEdit.errors.minlength">
+                Dữ liệu là một chuỗi ký tự tối thiểu 10 ký tự (không có
+                khoảng trống ở đầu và cuối dòng) và các từ cách nhau bởi dấu
+                cách.
+              </div>
+            </div>
+          </div>
+
+           <!-- Danh mục thực đơn -->
+
+          <!-- <div class="form-group">
+            <label for="emailEdit"> Chi Tiết Sản Phẩm </label>
+            <textarea
+              id="emailEdit"
+              type="text"
+              ngModel="{{ editProduct?.chiTiet }}"
+              name="chiTiet"
+              class="form-control"
+              rows="4"
+            >
+            </textarea>
+          </div> -->
+
+          <div class="form-group">
+            <label for="price_costEdit">
+              Giá Gốc Thực Đơn <span style="color: red">*</span>
+            </label>
+            <input
+              id="price_costEdit"
+              type="number"
+              ngModel="{{ editMenu?.price_cost }}"
+              name="price_cost"
+              class="form-control"
+              min="1000"
+              maxlength="9"
+              required
+              pattern="^[1-9]{1}[0-9]{0,5}000$"
+              #price_costEdit="ngModel"
+            />
+            <div
+              *ngIf="price_costEdit.invalid && price_costEdit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="price_costEdit.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+              <div *ngIf="price_costEdit.errors.pattern || price_costEdit.errors.maxlength" >
+                Giá phải lớn hơn 1000, có tối đa 9 chữ số và làm tròn giá trị ở hàng nghìn đồng.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="giaEdit">
+              Giá Bán Thực Đơn <span style="color: red">*</span
+                >
+            </label>
+            <input
+              id="giaEdit"
+              type="number"
+              ngModel
+              name="gia"
+              class="form-control"
+              min="1000"
+              maxlength="9"
+              required
+              pattern="^[1-9]{1}[0-9]{0,5}000$"
+              #giaEdit="ngModel"
+            />
+            <div
+              *ngIf="giaEdit.invalid && giaEdit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="giaEdit.errors.required">
+                Giá sản phẩm là giá trị bắt buộc.
+              </div>
+              <div *ngIf="giaEdit.errors.pattern || giaEdit.errors.maxlength" >
+                Giá phải lớn hơn 1000, có tối đa 9 chữ số và làm tròn giá trị ở hàng nghìn đồng.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="giaEdit">
+              Giá Sản Phẩm <span style="color: red">*</span>
+            </label>
+            <input
+              id="giaEdit"
+              type="number"
+              ngModel
+              name="gia"
+              class="form-control"
+              min="1000"
+              maxlength="9"
+              required
+              pattern="^[1-9]{1}[0-9]{0,5}000$"
+              #giaEdit="ngModel"
+            />
+            <div
+              *ngIf="giaEdit.invalid && giaEdit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="giaEdit.errors.required">
+                Giá sản phẩm là giá trị bắt buộc.
+              </div>
+              <div *ngIf="giaEdit.errors.pattern || giaEdit.errors.maxlength" >
+                Giá phải lớn hơn 1000, có tối đa 9 chữ số và làm tròn giá trị ở hàng nghìn đồng.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="soLuongTonKhoEdit"> Số Lượng Tồn Kho </label>
+            <input
+              id="soLuongTonKhoEdit"
+              type="number"
+              min="0"
+              ngModel
+              name="soLuongTonKho"
+              class="form-control"
+              required
+              pattern="^[0-9]{1,9}$"
+              #soLuongTonKhoEdit="ngModel"
+            />
+            <div
+              *ngIf="soLuongTonKhoEdit.invalid && soLuongTonKhoEdit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="soLuongTonKhoEdit.errors.required">
+                Số lượng tồn kho là giá trị bắt buộc.
+              </div>
+              <div *ngIf="soLuongTonKhoEdit.errors.pattern">
+                Số lượng tồn kho chỉ có chữ số, tối đa 9 chữ số và có giá trị lớn hơn hoặc bằng 0.
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12 col-sm-4 col-md-3">
+              <img
+                [src]="
+                  imgLinkEdit == null
+                    ? 'http://res.cloudinary.com/dvdrvtda7/image/upload/v1715767449/thuan-brycen/ecaaq2yptos8hlwn4rak.jpg'
+                    : imgLinkEdit
+                "
+                style="width: 100%;"
+              />
+            </div>
+            <div class="col-12 col-sm-8 col-md-9">
+              <label for="anhEdit">
+                URL Ảnh Sản Phẩm <span style="color: red">*</span>
+              </label>
+              <input
+                id="file-edit-btn"
+                style="padding-left: 20px"
+                type="file"
+                class="file-upload"
+                accept="image/*"
+                (change)="onFileUpdate($event)"
+              />
+              <input
+                id="anhEdit"
+                style="margin-top: 10px"
+                type="text"
+                [(ngModel)]="imgLinkEdit"
+                name="imgLink"
+                class="form-control"
+                #linkEdit="ngModel"
+                readonly
+                required
+                pattern="^(\S+)((\s{0,1}\S+){0,})$"
+              />
+              <div *ngIf="errorFileEdit"
+                class="alert alert-danger" role="alertName">
+                <div>
+                  File chọn không phải kiểu tệp image!!!
+                </div>
+              </div>
+            </div>
+            <!-- <div *ngIf="linkEdit.invalid && (linkEdit.touched)"
+              class="alert alert-danger" role="alertName">
+              <div  *ngIf="linkEdit.errors.required">
+                Ảnh sản phẩm là giá trị bắt buộc.
+              </div>
+              <div  *ngIf="linkEdit.errors.pattern" >
+                Ảnh sản phẩm không đúng định dạng cho phép.
+              </div>
+            </div> -->
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          *ngIf="checkIsUpdate(editForm)"
+          type="button"
+          (click)="setDefaultEditForm(editForm)"
+          class="btn btn-secondary"
+        >
+          Cancel
+        </button>
+        <button
+          [disabled]="editForm.invalid || !checkIsUpdate(editForm)"
+          type="submit"
+          class="btn btn-primary"
+          form="formEditProduct"
+        >
+          Cập nhật
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<!-- <div
+  class="modal fade"
+  id="deleteProductModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="deleteModelLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModelLabel">Xoá sản phẩm</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc chắn muốn xoá sản phẩm {{ deleteProduct?.name }}?</p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          id="delete-product-form"
+        >
+          Không
+        </button>
+        <button
+          (click)="onDeleteProduct(deleteProduct)"
+          class="btn btn-danger"
+          data-dismiss="modal"
+        >
+          Có
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->

@@ -544,7 +544,7 @@
                 type="button"
                 class="btn btn-primary"
                 (click)="onProcessingNewspaperTable()"
-                [disabled]="selectTable?.isProcessingNewspaper || selectTable == null "
+                [disabled]="selectTable == null || selectTable.isEmpty == true "
               >
                 <h2 style="text-align: center; margin: 0px">Báo Chế Biến</h2>
               </button>
@@ -563,7 +563,7 @@
                 type="button"
                 class="btn btn-warning"
                 (click)="onPrintProvisionalInvoice()"
-                [disabled]="selectProvisionalInvoice ==  null"
+                [disabled]="selectProvisionalInvoice ==  null || selectTable.isEmpty == true "
               >
                 <h2 style="text-align: center; margin: 0px">Tạm Tính</h2>
               </button>
@@ -582,7 +582,8 @@
               style="height: 80px; width: 100%; border-radius: 0px"
               type="button"
               class="btn btn-danger"
-              [disabled]="!selectTable?.isTemporaryInvoice"
+              (click)="onPayInvoice()"
+              [disabled]="selectProvisionalInvoice ==  null || selectTable.isEmpty == true "
             >
               <h2 style="text-align: center; margin: 0px">Thanh Toán</h2>
             </button>
@@ -661,6 +662,7 @@
                   </td>
                   <td class="align-middle" style="text-align: center">
                     <a
+                      *ngIf="item.amount != item.amount_cooking "
                       (click)="onOpenModalTableMenu(item, 'delete')"
                       style="cursor: pointer"
                     >
@@ -709,9 +711,9 @@ data-keyboard="false"
           class="close"
           data-dismiss="modal"
           aria-label="Close"
-          (click)="setDefaultModalTableMenu(editForm)"
           id="btn-close-edit-tablemenu"
         >
+          <!-- (click)="setDefaultModalTableMenu(editForm)" -->
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -775,7 +777,7 @@ data-keyboard="false"
                     [(ngModel)]="soLuongEditTableMenu"
                     name="amount"
                     class="form-control"
-                    min="1"
+                    min="{{ editTableMenu?.amount_cooking == 0 ? 1: editTableMenu?.amount_cooking }}"
                     max="999"
                     required
                     pattern="^[1-9]{1}[0-9]{0,2}$"

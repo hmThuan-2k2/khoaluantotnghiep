@@ -104,7 +104,7 @@
                 Chiết Khấu {{provisionalInvoice?.discount}}% :
               </td>
               <td scope="row" class="align-middle" style="text-align: right;font-size: 16px;">
-                {{ (provisionalInvoice?.discount * provisionalInvoice?.discount / 100 ) | currency : "VND" : "symbol" }}
+                {{ (provisionalInvoice?.totalMoney * provisionalInvoice?.discount / 100 ) | currency : "VND" : "symbol" }}
               </td>
             </tr>
             <tr>

@@ -10,4 +10,5 @@ import java.util.Set;
 public interface TableMenuRepository extends RefreshableCRUDRepository<TableMenu, Long> {
     public  TableMenu findFirstById(TableMenuKey id);
     public Set<TableMenu> findAllByTable(Tables table);
+    public void deleteAllByTable(Tables table);
 }
