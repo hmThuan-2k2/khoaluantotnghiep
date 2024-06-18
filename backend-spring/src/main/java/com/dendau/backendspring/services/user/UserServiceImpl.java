@@ -1,6 +1,8 @@
 package com.dendau.backendspring.services.user;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.user.UserRequest;
+import com.dendau.backendspring.dtos.user.UserRequestChangePassword;
 import com.dendau.backendspring.dtos.user.UserResponse;
 import com.dendau.backendspring.models.UserInfo;
 import com.dendau.backendspring.repositories.UserRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -87,6 +90,36 @@ public class UserServiceImpl implements UserService {
         Type setOfDTOsType = new TypeToken<List<UserResponse>>(){}.getType();
         List<UserResponse> userResponses = modelMapper.map(users, setOfDTOsType);
         return userResponses;
+    }
+
+    @Override
+    public MessageDTO changePassword(UserRequestChangePassword requestChangePassword) {
+        MessageDTO messageDTO;
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String rawPasswordOld = requestChangePassword.getPasswordOld();
+        String encodedPasswordOld = encoder.encode(rawPasswordOld);
+
+
+        String rawPasswordNew = requestChangePassword.getPasswordNew();
+        String encodedPasswordNew = encoder.encode(rawPasswordNew);
+
+        UserInfo userOld = userRepository.findFirstById(requestChangePassword.getId());
+        if(userOld != null){
+            if (Objects.equals(rawPasswordOld, rawPasswordNew)) {
+                userOld.setPassword(encodedPasswordNew);
+                userRepository.save(userOld);
+                messageDTO = new MessageDTO("Đổi mật khẩu thành công, vui lòng đăng nhập lại!", 1);
+
+            }
+            else {
+                messageDTO = new MessageDTO("Mật khẩu nhập lại không đúng, vui long nhập lại nếu muốn đổi mật khẩu!", 2);
+            }
+        } else {
+//            user.setCreatedBy(currentUser);
+            messageDTO = new MessageDTO("Không tìm thấy user có id = " + requestChangePassword.getId() + " !", 2);
+        }
+        return messageDTO;
     }
 
 

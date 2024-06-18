@@ -1,3 +1,7 @@
+
+import { LoginService } from 'src/app/service/login.service';
+
+import { EmployeeService } from './../../service/employee.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -10,6 +14,8 @@ import { SnackBarService } from 'src/app/service/snack-bar.service';
 import { TableService } from 'src/app/service/table.service';
 import { NgForm } from '@angular/forms';
 import { CustomerService } from 'src/app/service/customer.service';
+import { Employee } from 'src/app/model/employee.model';
+import { User } from 'src/app/model/user.model';
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
@@ -18,9 +24,10 @@ import { CustomerService } from 'src/app/service/customer.service';
 export class EmployeeComponent implements OnInit {
 
   constructor(
-    private CustomerService: CustomerService,
+    private EmployeeService: EmployeeService,
     private TableService: TableService,
     private functions_login: FunctionLoginService,
+    private LoginService: LoginService,
     private _snackBar: SnackBarService,
     private router: Router
   ) { }
@@ -36,100 +43,57 @@ export class EmployeeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getAllCustomer();
-    this.dataSource = new MatTableDataSource<any>(this.data);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.getAllUser();
   }
 
-  public customerAll: Customer[] = null;
-  public customerAddDefault = null;
-  public editCustomer: Customer = null;
-  public customerEditDefault: Customer = null;
-  public deleteCustomer: Customer = null;
+  public dataEmployeeAll: Employee[] = null;
+  public employeeAddDefault = null;
+  public editEmployee: Employee = null;
+  public employeeEditDefault: Employee = null;
+  public deleteEmployee: Employee = null;
 
-  public data = [
-    {
-      id: "1",
-      name: "Hồ Minh Thuận",
-      phoneNumber: "0827478747",
-      gender: "Nam",
-      dateOfBirth: "14/07/2002",
-      note: "Quản lý nhà hàng",
-      isUser: true
-    },
-    {
-      id: "2",
-      name: "Nguyễn Thị Ánh",
-      phoneNumber: "0830203323",
-      gender: "Nữ",
-      dateOfBirth: "20/09/2004",
-      note: "Nhân viên phục vụ",
-      isUser: false
-    },
-    {
-      id: "3",
-      name: "Lê Thị Nga",
-      phoneNumber: "0929292322",
-      gender: "Nữ",
-      dateOfBirth: "12/05/2002",
-      note: "Nhân viên thu ngân",
-      isUser: true
-    },
-    {
-      id: "4",
-      name: "Nguyễn Nhật",
-      phoneNumber: "0999394833",
-      gender: "Nam",
-      dateOfBirth: "31/03/2000",
-      note: "Nhân viên bếp",
-      isUser: true
-    },
-    {
-      id: "5",
-      name: "Nguyễn Tiến Long",
-      phoneNumber: "0928333333",
-      gender: "Nam",
-      dateOfBirth: "12/12/2001",
-      note: "Nhân viên bếp",
-      isUser: false
-    },
-    {
-      id: "6",
-      name: "Hồ Tú Tài",
-      phoneNumber: "0323232112",
-      gender: "Nam",
-      dateOfBirth: "30/11/2002",
-      note: "Nhân viên phục vụ",
-      isUser: false
-    },
-    {
-      id: "7",
-      name: "Lê Quỳnh Nga",
-      phoneNumber: "0111322322",
-      gender: "Nam",
-      dateOfBirth: "13/09/2002",
-      note: "Nhân viên thu ngân",
-      isUser: false
-    },
-    {
-      id: "8",
-      name: "Hồ Tú Tài",
-      phoneNumber: "0323232112",
-      gender: "Nam",
-      dateOfBirth: "30/11/2002",
-      note: "Nhân viên thu ngân",
-      isUser: false
-    },
+  public dataUserAll: User[] = null;
 
-  ]
+  public checkUser(Employee: Employee): boolean {
+    var check = false;
+    this.dataUserAll.forEach(element => {
+      if (element.employee != null) {
+        if (element.employee.id == Employee.id)
+          check = true;
+      }
+    });
+    return check;
+  }
 
-  public getAllCustomer(): void {
+  public getAllUser(): void {
     this.functions_login.getUserProfile();
-    this.CustomerService.getAllCustomer().subscribe(
+    if (sessionStorage.getItem('accessToken') != null ){
+      let accessToken = sessionStorage.getItem('accessToken');
+      this.LoginService.getAllUser(accessToken).subscribe(
+        (response: HttpResponse<any>) => {
+          this.dataUserAll = response.body;
+          console.log(this.dataUserAll);
+          this.getAllEmployee();
+        },
+        (error: HttpErrorResponse) => {
+          console.log(error);
+          if (error.status == 403) {
+            this._snackBar.openSnackBarWarning(
+              'Token đã hết hạn! Chờ cấp token mới!'
+            );
+            this.functions_login.refreshToken();
+          }
+        }
+      );
+    }
+  }
+
+  public getAllEmployee(): void {
+    this.functions_login.getUserProfile();
+    this.EmployeeService.getAllEmployee().subscribe(
       (response: HttpResponse<any>) => {
-        this.customerAll = response.body;
-        this.dataSource = new MatTableDataSource<Customer>(this.customerAll);
+        this.dataEmployeeAll = response.body;
+        this.dataSource = new MatTableDataSource<Employee>(this.dataEmployeeAll);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
@@ -145,46 +109,46 @@ export class EmployeeComponent implements OnInit {
     );
   }
 
-  public onOpenModal(customer: Customer, mode: string): void {
+  public onOpenModal(Employee: Employee, mode: string): void {
     const container = document.getElementById('main-container');
     const button = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';
     button.setAttribute('data-toggle', 'modal');
     if (mode === 'add') {
-      button.setAttribute('data-target', '#addCustomerModal');
-      this.customerAddDefault = {
-        name: ""
-      }
+      button.setAttribute('data-target', '#addEmployeeModal');
+      // this.employeeAddDefault = {
+      //   name: ""
+      // }
     }
     if (mode === 'edit') {
-      button.setAttribute('data-target', '#updateCustomerModal');
-      this.editCustomer = customer;
-      this.customerEditDefault = customer;
+      button.setAttribute('data-target', '#updateEmployeeModal');
+      this.editEmployee = Employee;
+      this.employeeEditDefault = Employee;
     }
     if (mode === 'delete') {
-      button.setAttribute('data-target', '#deleteCustomerModal');
-      this.deleteCustomer = customer;
+      button.setAttribute('data-target', '#deleteEmployeeModal');
+      this.deleteEmployee = Employee;
     }
     container.appendChild(button);
     button.click();
   }
 
-  public onAddCustomer(addCustomerForm: NgForm): void {
-    console.log(addCustomerForm.value);
-    var data = {
-      // "id": ,
-      name_customer: addCustomerForm.value.name_customer,
-      nickname: addCustomerForm.value.nickname,
-      phoneNumber: addCustomerForm.value.phoneNumber,
-      gender: addCustomerForm.value.gender,
-      address: addCustomerForm.value.address
-    }
-    this.CustomerService.saveCustomer(data).subscribe(
+  public onAddEmployee(addForm: NgForm): void {
+    console.log(addForm.value);
+    // var data = {
+    //   // "id": ,
+    //   name_customer: addCustomerForm.value.name_customer,
+    //   nickname: addCustomerForm.value.nickname,
+    //   phoneNumber: addCustomerForm.value.phoneNumber,
+    //   gender: addCustomerForm.value.gender,
+    //   address: addCustomerForm.value.address
+    // }
+    this.EmployeeService.saveEmployee(addForm.value).subscribe(
       (response: HttpResponse<any>) => {
         console.log(response);
-        this.getAllCustomer();
-        this._snackBar.openSnackBarSuccess("Thêm bàn mới thành công!");
+        this.getAllEmployee();
+        this._snackBar.openSnackBarSuccess("Thêm nhân viên mới thành công!");
       },
       (error: HttpErrorResponse) => {
         console.log(error);
@@ -196,15 +160,15 @@ export class EmployeeComponent implements OnInit {
         }
       }
     );
-    document.getElementById('add-customer-form').click();
+    document.getElementById('add-employee-form').click();
     // addForm.resetForm();
   }
 
-  checkIsAddCustomer(addForm: NgForm): boolean {
+  checkIsAddEmployee(addForm: NgForm): boolean {
     let check = false;
-    if (addForm.value != null && this.customerAddDefault != null) {
+    if (addForm.value != null && this.employeeAddDefault != null) {
       if (
-        addForm.value?.name != this.customerAddDefault.name &&
+        addForm.value?.name != this.employeeAddDefault.name &&
         addForm.value?.name != null
       )
         check = true;
@@ -212,26 +176,26 @@ export class EmployeeComponent implements OnInit {
     return check;
   }
 
-  setDefaultAddCustomerForm(addForm: NgForm) {
+  setDefaultAddEmployeeForm(addForm: NgForm) {
     addForm.resetForm();
   }
 
-  public onUpdateCustomer(editForm: NgForm): void {
-    // console.log(product);
-    var data = {
-      id: this.editCustomer.id,
-      name_customer: editForm.value.name_customer,
-      nickname: editForm.value.nickname,
-      phoneNumber: editForm.value.phoneNumber,
-      gender: editForm.value.gender,
-      address: editForm.value.address
-    }
-    this.CustomerService.saveCustomer(data).subscribe(
+  public onUpdateEmployee(editForm: NgForm): void {
+    console.log(editForm.value);
+    // var data = {
+    //   id: this.editCustomer.id,
+    //   name_customer: editForm.value.name_customer,
+    //   nickname: editForm.value.nickname,
+    //   phoneNumber: editForm.value.phoneNumber,
+    //   gender: editForm.value.gender,
+    //   address: editForm.value.address
+    // }
+    this.EmployeeService.saveEmployee(editForm.value).subscribe(
       (response: HttpResponse<any>) => {
         console.log(response);
-        this.getAllCustomer();
-        document.getElementById('edit-customer-form').click();
-        this._snackBar.openSnackBarSuccess("Sửa thông tin bàn thành công!");
+        this.getAllEmployee();
+        document.getElementById('edit-employee-form').click();
+        this._snackBar.openSnackBarSuccess("Sửa thông tin nhân viên thành công!");
       },
       (error: HttpErrorResponse) => {
         console.log(error);
@@ -245,46 +209,61 @@ export class EmployeeComponent implements OnInit {
     );
   }
 
-  checkIsUpdateCustomer(editForm: NgForm): boolean {
+  checkIsUpdateEmployee(editForm: NgForm): boolean {
     let check = false;
-    if (editForm.value != null && this.customerEditDefault != null) {
-      if (editForm.value?.name != this.customerEditDefault?.name_customer)
-        check = true;
-      if (editForm.value?.nickname != this.customerEditDefault?.nickname)
-        check = true;
-      if (editForm.value?.phoneNumber != this.customerEditDefault?.phoneNumber)
-        check = true;
-      if (editForm.value?.gender != this.customerEditDefault?.gender)
-        check = true;
-      if (editForm.value?.address != this.customerEditDefault?.address)
-        check = true;
+    if (editForm.value != null && this.employeeEditDefault != null) {
+      // if (editForm.value?.name != this.employeeEditDefault?.name_customer)
+      //   check = true;
+      // if (editForm.value?.nickname != this.employeeEditDefault?.nickname)
+      //   check = true;
+      // if (editForm.value?.phoneNumber != this.employeeEditDefault?.phoneNumber)
+      //   check = true;
+      // if (editForm.value?.gender != this.employeeEditDefault?.gender)
+      //   check = true;
+      // if (editForm.value?.address != this.employeeEditDefault?.address)
+      //   check = true;
     }
     return check;
   }
 
-  setDefaultEditCustomerForm(editForm: NgForm) {
-    editForm.resetForm({
-      name_customer: this.customerEditDefault.name_customer,
-      nickname: this.customerEditDefault.nickname,
-      phoneNumber: this.customerEditDefault.phoneNumber,
-      gender: this.customerEditDefault.gender,
-      address: this.customerEditDefault.address
-    });
+  setDefaultEditEmployeeForm(editForm: NgForm) {
+    // editForm.resetForm({
+    //   name_customer: this.employeeEditDefault.name_customer,
+    //   nickname: this.employeeEditDefault.nickname,
+    //   phoneNumber: this.employeeEditDefault.phoneNumber,
+    //   gender: this.employeeEditDefault.gender,
+    //   address: this.employeeEditDefault.address
+    // });
   }
 
-  public onDeleteCustomer(customer: Customer): void {
-    // console.log(Customer);
-    // this.CustomerService.deleteCustomer(customer.id).subscribe(
-    //   (response: HttpResponse<any>) => {
-    //     // console.log(response);
-    //     this.getAllCustomer();
-    //     this._snackBar.openSnackBarSuccess(response.body.message);
-    //   },
-    //   (error: HttpErrorResponse) => {
-    //     this._snackBar.openSnackBarDanger('Lỗi hệ thống!!!');
-    //     console.log(error.message);
-    //   }
-    // );
+  public onDeleteEmployee(Employee: Employee): void {
+    console.log(Employee);
+    this.EmployeeService.deleteEmployee(Employee.id).subscribe(
+      (response: HttpResponse<any>) => {
+        // console.log(response);
+        this.getAllEmployee();
+        this._snackBar.openSnackBarSuccess(response.body.message);
+      },
+      (error: HttpErrorResponse) => {
+        this._snackBar.openSnackBarDanger('Lỗi hệ thống!!!');
+        console.log(error.message);
+      }
+    );
   }
+
+  public dataRoles = [
+    {
+      id: 1,
+      name: "ADMIN"
+    },
+    {
+      id: 2,
+      name: "CASHIER"
+    },
+    {
+      id: 3,
+      name: "CHEF"
+    }
+  ]
 
 }

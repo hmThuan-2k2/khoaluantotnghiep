@@ -1,10 +1,10 @@
 export class Employee {
   id: number;
   name: string;
-  dateOfBirth: string;
   gender: string;
-  address: string;
   phoneNumber: string;
+  dateOfBirth: string;
+  address: string;
   idCard: string;
   note: string;
   constructor(

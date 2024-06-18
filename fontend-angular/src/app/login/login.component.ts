@@ -15,9 +15,9 @@ import { FunctionLoginService } from '../service/function-login.service';
 export class LoginComponent implements OnInit {
 
   public isHiddenPass: boolean = true;
-  public isGhiNho: boolean = true;
-  public username: string;
-  public password: string;
+  public isGhiNho: boolean = false;
+  public username: string = null;
+  public password: string = null;
 
   constructor(
     private loginService: LoginService,
@@ -27,14 +27,14 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if (localStorage.getItem('username') != null) {
-      this.username = localStorage.getItem('username');
-    }
-    else this.username = 'admin';
-    if (localStorage.getItem('password') != null) {
-      this.password = localStorage.getItem('password');
-    }
-    else this.password = '123456';
+    // if (localStorage.getItem('username') != null) {
+    //   this.username = localStorage.getItem('username');
+    // }
+    // else this.username = null;
+    // if (localStorage.getItem('password') != null) {
+    //   this.password = localStorage.getItem('password');
+    // }
+    // else this.password = null;
   }
 
   public onLogin(loginForm: NgForm): void {
@@ -67,6 +67,16 @@ export class LoginComponent implements OnInit {
           sessionStorage.removeItem('accessToken');
         }
         sessionStorage.setItem('accessToken', accessToken);
+        // if (this.isGhiNho) {
+        //   if (localStorage.getItem('account') != null) {
+        //     localStorage.removeItem('account');
+        //   }
+        //   localStorage.setItem('account', this.username);
+        //   if (localStorage.getItem('password') != null) {
+        //     localStorage.removeItem('password');
+        //   }
+        //   localStorage.setItem('password', this.password);
+        // }
         this.router.navigate(['/manage']);
         // this.userLogin = response;
         // if (this.userLogin.idUser != null){

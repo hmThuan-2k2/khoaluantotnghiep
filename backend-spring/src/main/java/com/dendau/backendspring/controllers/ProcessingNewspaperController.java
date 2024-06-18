@@ -78,4 +78,14 @@ public class ProcessingNewspaperController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping(value = "/cancel/{id}")
+    public ResponseEntity<MessageDTO> cancelProcessingNewspaper(@PathVariable String id) {
+        try {
+            MessageDTO response = processingNewspaperService.cancelProcessingNewspaper(Long.valueOf(id));
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

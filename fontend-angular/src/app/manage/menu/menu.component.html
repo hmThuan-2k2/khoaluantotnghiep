@@ -12,7 +12,7 @@
   </h3>
 </div>
 
-<div class="container-fuid ">
+<div class="container-fuid " id="main-container" >
   <div
     class="container"
     style="
@@ -55,7 +55,7 @@
                 style="margin-right: 10px; width: 100%"
               >
                 <mat-label>Thấp Nhất</mat-label>
-                <input matInput (keyup)="applyFilter($event)" />
+                <input matInput type="number" min="1000" max="999999999" [(ngModel)]="giaMin" />
               </mat-form-field>
             </div>
             <div class="col-6" >
@@ -64,7 +64,7 @@
                 style="margin-right: 10px; width: 100%"
               >
                 <mat-label>Cao Nhất</mat-label>
-                <input matInput (keyup)="applyFilter($event)" />
+                <input matInput type="number" min="1000" max="999999999" [(ngModel)]="giaMax"  />
               </mat-form-field>
             </div>
           </div>
@@ -74,17 +74,25 @@
         class="col-12 col-lg-4 align-self-center"
         style="margin: 0px; padding: 0px"
       >
-        <a
-          (click)="1"
-          class="btn btn-info tooltips"
-          data-placement="top"
-          data-original-title="Add"
+        <div
+          class="btn-group"
           style="width: 100%;margin-bottom: 5px;"
         >
-          <i class="fa fa-search" style="font-size: 20px"></i> Lọc Danh Sách
-        </a>
+          <a
+            (click)="onSearchGia()"
+            class="btn btn-info tooltips"
+            data-placement="top"
+            data-original-title="Add"
+            style="width: 80%;"
+          >
+            <i class="fa fa-search" style="font-size: 20px"></i> Lọc Danh Sách
+          </a>
+          <a class="btn btn-success tooltips" (click)="onRefresh()" style="width: 20%;">
+            <i class="fa fa-refresh" style="font-size: 20px"></i>
+          </a>
+        </div>
         <a
-          (click)="1"
+          (click)="onOpenModal(null, 'add')"
           class="btn btn-success tooltips"
           data-placement="top"
           data-original-title="Add"
@@ -161,13 +169,13 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="menu_group">
+          <ng-container matColumnDef="name_menu_group">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;" >
               Loại Danh Mục
             </th>
             <td mat-cell *matCellDef="let element">
               {{
-                element.menu_group.name_menu_group
+                element.menu_group != null ? element.menu_group.name_menu_group : "Không có"
               }}
             </td>
           </ng-container>
@@ -177,7 +185,7 @@
             <td mat-cell *matCellDef="let element">
               <div class="btn-group">
                 <a
-                  (click)="(1)"
+                  (click)="onOpenModal(element, 'edit')"
                   class="btn btn-primary tooltips"
                   data-placement="top"
                   data-original-title="edit"
@@ -185,7 +193,7 @@
                   <i class="fa fa-pencil" style="font-size: 20px"></i>
                 </a>
                 <a
-                  (click)="(1)"
+                  (click)="onOpenModal(element, 'delete')"
                   class="btn btn-danger tooltips"
                   data-placement="top"
                   data-original-title="Delete"
@@ -222,7 +230,7 @@
 </div>
 
 
-<!-- Add Product Modal -->
+<!-- Add Menu Modal -->
 
 <!--
 data-backdrop="static"
@@ -243,12 +251,14 @@ data-keyboard="false"
   >
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addMenuModalLabel">Thêm Thực Đơn Mới</h5>
+        <h2 class="modal-title" style="margin: 0px" id="addMenuModalLabel">Thêm Thực Đơn Mới</h2>
         <button
           type="button"
           class="close"
           data-dismiss="modal"
           aria-label="Close"
+          id="add-menu-form"
+          (click)="setDefaultAddForm(addMenuForm)"
         >
           <span aria-hidden="true">&times;</span>
         </button>
@@ -272,7 +282,7 @@ data-keyboard="false"
               autocomplete="off"
               required
               pattern="^(\S+)((\s{0,1}\S+){0,})$"
-              minlength="10"
+              minlength="3"
               #name_menu="ngModel"
             />
             <div
@@ -284,11 +294,90 @@ data-keyboard="false"
                 Dữ liệu là giá trị bắt buộc.
               </div>
               <div *ngIf="name_menu.errors.pattern || name_menu.errors.minlength">
-                Dữ liệu là một chuỗi ký tự tối thiểu 10 ký tự (không có
+                Dữ liệu là một chuỗi ký tự tối thiểu 3 ký tự (không có
                 khoảng trống ở đầu và cuối dòng) và các từ cách nhau bởi dấu
                 cách.
               </div>
             </div>
+          </div>
+
+          <div *ngIf="plusMenuGroupAdd == false" class="form-group">
+            <label for="menu_groupAdd">
+              Danh Mục Thực Đơn
+              <div class="btn-group">
+                <a
+                  (click)="onTruePlusMenuGroupAdd()"
+                  class="btn btn-success tooltips"
+                  data-placement="top"
+                  data-original-title="edit"
+                >
+                  <i class="fa fa-plus-square" style="font-size: 20px"></i> Thêm Mới Danh Mục
+                </a>
+              </div>
+            </label>
+            <!-- <input
+              id="name_menuAdd"
+              type="text"
+              ngModel
+              name="name_menu"
+              class="form-control"
+              autocomplete="off"
+              required
+              pattern="^(\S+)((\s{0,1}\S+){0,})$"
+              minlength="3"
+              #name_menu="ngModel"
+            /> -->
+            <select
+              id="menu_groupAdd"
+              class="form-control custom-select"
+              [ngModel]="selectMenuGroup"
+              (ngModelChange)="onChangeSelectMenuGroup($event)"
+              name="id_menu_group"
+              #idMenuGroup="ngModel"
+            >
+              <option *ngFor="let item of menuGroupAll" [value]="item.id">
+                {{ item.name_menu_group }}
+              </option>
+            </select>
+          </div>
+
+          <div *ngIf="plusMenuGroupAdd == true" class="form-group">
+            <label for="menu_groupAdd">
+              Tên Danh Mục Thực Đơn Mới
+              <div class="btn-group">
+                <a
+                  (click)="onFalsePlusMenuGroupAdd()"
+                  class="btn btn-warning tooltips"
+                  data-placement="top"
+                  data-original-title="edit"
+                >
+                  <i class="fa fa-undo" style="font-size: 20px"></i> Huỷ Thêm Mới Danh Mục
+                </a>
+              </div>
+            </label>
+            <input
+              id="menu_groupAdd"
+              type="text"
+              ngModel
+              name="name_menu_group"
+              class="form-control"
+              autocomplete="off"
+              pattern="^(\S+)((\s{0,1}\S+){0,})$"
+              minlength="3"
+              required
+            />
+            <!-- <select
+              id="menu_groupAdd"
+              class="form-control custom-select"
+              [ngModel]="selectMenuGroup"
+              (ngModelChange)="onChangeSelectMenuGroup($event)"
+              name="id_menu_group"
+              #idMenuGroup="ngModel"
+            >
+              <option *ngFor="let item of menuGroupAll" [value]="item.id">
+                {{ item.name_menu_group }}
+              </option>
+            </select> -->
           </div>
 
           <!-- Danh mục thực đơn -->
@@ -371,7 +460,7 @@ data-keyboard="false"
             </label>
             <input
               id="unitAdd"
-              type="number"
+              type="text"
               ngModel
               name="unit"
               class="form-control"
@@ -385,6 +474,36 @@ data-keyboard="false"
             >
               <div *ngIf="unit.errors.required">
                 Dữ liệu là giá trị bắt buộc.
+              </div>
+            </div>
+            <!-- <pre *ngIf="gia.errors">{{ gia.errors | json }}</pre> -->
+          </div>
+          <div class="form-group">
+            <label for="inventoryAdd">
+              Số Lượng tồn kho <span style="color: red">*</span>
+            </label>
+            <input
+              id="inventoryAdd"
+              type="number"
+              ngModel
+              name="inventory"
+              class="form-control"
+              min="0"
+              maxlength="9999"
+              required
+              pattern="^[0-9]{1}[0-9]{0,3}$"
+              #inventory="ngModel"
+            />
+            <div
+              *ngIf="inventory.invalid && inventory.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="inventory.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+              <div *ngIf="inventory.errors.pattern || inventory.errors.maxlength" >
+                Số lượng tồn kho tối thiểu là 0 và tối da 9999.
               </div>
             </div>
             <!-- <pre *ngIf="gia.errors">{{ gia.errors | json }}</pre> -->
@@ -448,7 +567,6 @@ data-keyboard="false"
         <button
           *ngIf="checkIsAdd(addMenuForm)"
           type="button"
-          id="add-employee-form"
           class="btn btn-secondary"
           data-dismiss="modal"
           (click)="setDefaultAddForm(addMenuForm)"
@@ -483,18 +601,17 @@ data-keyboard="false"
   >
     <div class="modal-content">
       <div class="modal-header">
-        <h5 *ngIf="checkIsUpdate(editForm)" class="modal-title">
+        <h2 *ngIf="checkIsUpdate(editForm)" style="margin: 0px" class="modal-title" id="menuEditModalLabel">
           Cập nhật thực đơn {{ editMenu?.name_menu }}
-        </h5>
-        <h5 *ngIf="!checkIsUpdate(editForm)" class="modal-title">
+        </h2>
+        <h2 *ngIf="!checkIsUpdate(editForm)" style="margin: 0px" class="modal-title" id="menuEditModalLabel" >
           Thông tin thực đơn {{ editMenu?.name_menu }}
-        </h5>
+        </h2>
         <button
           type="button"
           class="close"
           data-dismiss="modal"
-          (click)="setDefaultEditForm(editForm)"
-          id="edit-product-form"
+          id="edit-menu-form"
           aria-label="Close"
         >
           <span aria-hidden="true">&times;</span>
@@ -504,8 +621,14 @@ data-keyboard="false"
         <form
           #editForm="ngForm"
           (ngSubmit)="onUpdateMenu(editForm)"
-          id="formEditProduct"
+          id="formEditMenu"
         >
+          <input
+            id="idEdit"
+            type="hidden"
+            ngModel="{{ editMenu?.id }}"
+            name="id"
+          />
           <div class="form-group">
             <label for="name_menuEdit">
               Tên Thực Đơn <span style="color: red">*</span>
@@ -519,7 +642,7 @@ data-keyboard="false"
               autocomplete="off"
               required
               pattern="^(\S+)((\s{0,1}\S+){0,})$"
-              minlength="10"
+              minlength="3"
               #name_menuEdit="ngModel"
             />
             <div
@@ -531,14 +654,81 @@ data-keyboard="false"
                 Dữ liệu là giá trị bắt buộc.
               </div>
               <div *ngIf="name_menuEdit.errors.pattern || name_menuEdit.errors.minlength">
-                Dữ liệu là một chuỗi ký tự tối thiểu 10 ký tự (không có
+                Dữ liệu là một chuỗi ký tự tối thiểu 3 ký tự (không có
                 khoảng trống ở đầu và cuối dòng) và các từ cách nhau bởi dấu
                 cách.
               </div>
             </div>
           </div>
 
-           <!-- Danh mục thực đơn -->
+          <!-- Danh mục thực đơn -->
+
+          <div *ngIf="plusMenuGroupEdit == false" class="form-group">
+            <label for="menu_groupEdit">
+              Danh Mục Thực Đơn
+              <div class="btn-group">
+                <a
+                  (click)="onTruePlusMenuGroupEdit()"
+                  class="btn btn-success tooltips"
+                  data-placement="top"
+                  data-original-title="edit"
+                >
+                  <i class="fa fa-plus-square" style="font-size: 20px"></i> Thêm Mới Danh Mục
+                </a>
+              </div>
+            </label>
+            <select
+              id="menu_groupEdit"
+              class="form-control custom-select"
+              [ngModel]="selectEditMenuGroup"
+              (ngModelChange)="onChangeSelectEditMenuGroup($event)"
+              name="id_menu_group"
+              #idMenuGroupEdit="ngModel"
+            >
+              <option *ngFor="let item of menuGroupAll" [value]="item.id">
+                {{ item.name_menu_group }}
+              </option>
+            </select>
+          </div>
+
+          <div *ngIf="plusMenuGroupEdit == true" class="form-group">
+            <label for="menu_groupEdit">
+              Tên Danh Mục Thực Đơn Mới
+              <div class="btn-group">
+                <a
+                  (click)="onFalsePlusMenuGroupEdit()"
+                  class="btn btn-warning tooltips"
+                  data-placement="top"
+                  data-original-title="edit"
+                >
+                  <i class="fa fa-undo" style="font-size: 20px"></i> Huỷ Thêm Mới Danh Mục
+                </a>
+              </div>
+            </label>
+            <input
+              id="menu_groupEdit"
+              type="text"
+              ngModel
+              name="name_menu_group"
+              class="form-control"
+              autocomplete="off"
+              pattern="^(\S+)((\s{0,1}\S+){0,})$"
+              minlength="3"
+              required
+            />
+            <!-- <select
+              id="menu_groupAdd"
+              class="form-control custom-select"
+              [ngModel]="selectMenuGroup"
+              (ngModelChange)="onChangeSelectMenuGroup($event)"
+              name="id_menu_group"
+              #idMenuGroup="ngModel"
+            >
+              <option *ngFor="let item of menuGroupAll" [value]="item.id">
+                {{ item.name_menu_group }}
+              </option>
+            </select> -->
+          </div>
 
           <!-- <div class="form-group">
             <label for="emailEdit"> Chi Tiết Sản Phẩm </label>
@@ -584,91 +774,90 @@ data-keyboard="false"
           </div>
 
           <div class="form-group">
-            <label for="giaEdit">
+            <label for="price_saleEdit">
               Giá Bán Thực Đơn <span style="color: red">*</span
                 >
             </label>
             <input
-              id="giaEdit"
+              id="price_saleEdit"
               type="number"
-              ngModel
-              name="gia"
+              ngModel="{{ editMenu?.price_sale }}"
+              name="price_sale"
               class="form-control"
               min="1000"
               maxlength="9"
               required
               pattern="^[1-9]{1}[0-9]{0,5}000$"
-              #giaEdit="ngModel"
+              #price_saleEdit="ngModel"
             />
             <div
-              *ngIf="giaEdit.invalid && giaEdit.touched"
+              *ngIf="price_saleEdit.invalid && price_saleEdit.touched"
               class="alert alert-danger"
               role="alertName"
             >
-              <div *ngIf="giaEdit.errors.required">
+              <div *ngIf="price_saleEdit.errors.required">
                 Giá sản phẩm là giá trị bắt buộc.
               </div>
-              <div *ngIf="giaEdit.errors.pattern || giaEdit.errors.maxlength" >
+              <div *ngIf="price_saleEdit.errors.pattern || price_saleEdit.errors.maxlength" >
                 Giá phải lớn hơn 1000, có tối đa 9 chữ số và làm tròn giá trị ở hàng nghìn đồng.
               </div>
             </div>
           </div>
 
           <div class="form-group">
-            <label for="giaEdit">
-              Giá Sản Phẩm <span style="color: red">*</span>
+            <label for="unitEdit">
+              Đơn Vị Tính <span style="color: red">*</span>
             </label>
             <input
-              id="giaEdit"
-              type="number"
-              ngModel
-              name="gia"
+              id="unitEdit"
+              type="text"
+              ngModel="{{ editMenu?.unit }}"
+              name="unit"
               class="form-control"
-              min="1000"
-              maxlength="9"
               required
-              pattern="^[1-9]{1}[0-9]{0,5}000$"
-              #giaEdit="ngModel"
+              #unitEdit="ngModel"
             />
             <div
-              *ngIf="giaEdit.invalid && giaEdit.touched"
+              *ngIf="unitEdit.invalid && unitEdit.touched"
               class="alert alert-danger"
               role="alertName"
             >
-              <div *ngIf="giaEdit.errors.required">
-                Giá sản phẩm là giá trị bắt buộc.
-              </div>
-              <div *ngIf="giaEdit.errors.pattern || giaEdit.errors.maxlength" >
-                Giá phải lớn hơn 1000, có tối đa 9 chữ số và làm tròn giá trị ở hàng nghìn đồng.
+              <div *ngIf="unitEdit.errors.required">
+                Dữ liệu là giá trị bắt buộc.
               </div>
             </div>
+            <!-- <pre *ngIf="gia.errors">{{ gia.errors | json }}</pre> -->
           </div>
 
           <div class="form-group">
-            <label for="soLuongTonKhoEdit"> Số Lượng Tồn Kho </label>
+            <label for="inventoryEdit">
+              Số Lượng tồn kho <span style="color: red">*</span>
+            </label>
             <input
-              id="soLuongTonKhoEdit"
+              id="inventoryEdit"
               type="number"
-              min="0"
-              ngModel
-              name="soLuongTonKho"
+              ngModel="{{ editMenu?.inventory }}"
+              name="inventory"
               class="form-control"
+              min="0"
+              maxlength="9999"
               required
-              pattern="^[0-9]{1,9}$"
-              #soLuongTonKhoEdit="ngModel"
+              pattern="^[0-9]{1}[0-9]{0,3}$"
+              #inventoryEdit="ngModel"
             />
             <div
-              *ngIf="soLuongTonKhoEdit.invalid && soLuongTonKhoEdit.touched"
+              *ngIf="inventoryEdit.invalid && inventoryEdit.touched"
               class="alert alert-danger"
               role="alertName"
             >
-              <div *ngIf="soLuongTonKhoEdit.errors.required">
-                Số lượng tồn kho là giá trị bắt buộc.
+              <div *ngIf="inventoryEdit.errors.required">
+                Dữ liệu là giá trị bắt buộc.
               </div>
-              <div *ngIf="soLuongTonKhoEdit.errors.pattern">
-                Số lượng tồn kho chỉ có chữ số, tối đa 9 chữ số và có giá trị lớn hơn hoặc bằng 0.
+              <div *ngIf="inventoryEdit.errors.pattern || inventoryEdit.errors.maxlength" >
+                Số lượng tồn kho tối thiểu là 0 và tối da 9999.
               </div>
             </div>
+            <!-- <pre *ngIf="gia.errors">{{ gia.errors | json }}</pre> -->
           </div>
           <div class="form-group row">
             <div class="col-12 col-sm-4 col-md-3">
@@ -698,7 +887,7 @@ data-keyboard="false"
                 style="margin-top: 10px"
                 type="text"
                 [(ngModel)]="imgLinkEdit"
-                name="imgLink"
+                name="image_Url"
                 class="form-control"
                 #linkEdit="ngModel"
                 readonly
@@ -725,19 +914,19 @@ data-keyboard="false"
         </form>
       </div>
       <div class="modal-footer">
-        <button
+        <!-- <button
           *ngIf="checkIsUpdate(editForm)"
           type="button"
           (click)="setDefaultEditForm(editForm)"
           class="btn btn-secondary"
         >
           Cancel
-        </button>
+        </button> -->
         <button
           [disabled]="editForm.invalid || !checkIsUpdate(editForm)"
           type="submit"
           class="btn btn-primary"
-          form="formEditProduct"
+          form="formEditMenu"
         >
           Cập nhật
         </button>
@@ -747,9 +936,9 @@ data-keyboard="false"
 </div>
 
 <!-- Delete Modal -->
-<!-- <div
+<div
   class="modal fade"
-  id="deleteProductModal"
+  id="deleteMenuModal"
   tabindex="-1"
   role="dialog"
   aria-labelledby="deleteModelLabel"
@@ -758,7 +947,7 @@ data-keyboard="false"
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleteModelLabel">Xoá sản phẩm</h5>
+        <h2 class="modal-title" style="margin: 0px" id="deleteModelLabel">Xoá Thực Đơn</h2>
         <button
           type="button"
           class="close"
@@ -769,19 +958,19 @@ data-keyboard="false"
         </button>
       </div>
       <div class="modal-body">
-        <p>Bạn có chắc chắn muốn xoá sản phẩm {{ deleteProduct?.name }}?</p>
+        <p>Bạn có chắc chắn muốn xoá thực đơn {{ deleteMenu?.name_menu }}?</p>
       </div>
       <div class="modal-footer">
         <button
           type="button"
           class="btn btn-secondary"
           data-dismiss="modal"
-          id="delete-product-form"
+          id="delete-menu-form"
         >
           Không
         </button>
         <button
-          (click)="onDeleteProduct(deleteProduct)"
+          (click)="onDeleteMenu(deleteMenu)"
           class="btn btn-danger"
           data-dismiss="modal"
         >
@@ -790,4 +979,4 @@ data-keyboard="false"
       </div>
     </div>
   </div>
-</div> -->
+</div>

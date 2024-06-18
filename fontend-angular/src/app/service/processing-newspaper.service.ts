@@ -67,7 +67,7 @@ export class ProcessingNewspaperService {
     );
   }
 
-  public confirmProcessingNewspaper(id: string): Observable<HttpResponse<any>> {
+  public confirmProcessingNewspaper(id: number): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
@@ -80,12 +80,25 @@ export class ProcessingNewspaperService {
     );
   }
 
-  public cookingProcessingNewspaper(id: string): Observable<HttpResponse<any>> {
+  public cookingProcessingNewspaper(id: number): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.get<HttpResponse<any>>(
       `${this.url}/processing_newspaper/cooking/${id}`,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
+  public cancelProcessingNewspaper(id: number): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.get<HttpResponse<any>>(
+      `${this.url}/processing_newspaper/cancel/${id}`,
       {
         headers: header,
         observe: "response",

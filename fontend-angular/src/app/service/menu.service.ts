@@ -11,6 +11,20 @@ export class MenuService {
 
   constructor(private http: HttpClient) { }
 
+  public saveMenu(data: any): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.post<HttpResponse<any>>(
+      `${this.url}/menus/save`,
+      data,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
   public getAllMenu(): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
     let accessToken: string = sessionStorage.getItem("accessToken");
@@ -51,8 +65,22 @@ export class MenuService {
     );
   }
 
+  public deleteMenu(id: number): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    let accessToken: string = sessionStorage.getItem("accessToken");
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.delete<HttpResponse<any>>(
+      `${this.url}/menus/delete/${id}`,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
   uploadSignature(value: any): Observable<any>{
+    console.log(value);
     let data = value;
-    return this.http.post('https://api.cloudinary.com/v1_1/dvdrvtda7/image/upload',data)
+    return this.http.post('https://api.cloudinary.com/v1_1/dvdrvtda7/image/upload',data);
   }
 }

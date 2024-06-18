@@ -199,7 +199,7 @@ public class TableMenuServiceImpl implements TableMenuService {
                 menusRepository.refresh(menu);
 
                 tableMenuRepository.delete(oldTableMenu);
-                MessageDTO response = new MessageDTO("Deleted data successfully!");
+                MessageDTO response = new MessageDTO("Deleted data successfully!", 1);
                 return response;
             }
             else throw new RuntimeException("Can't find record table and menu with identifier: " + request.getId());

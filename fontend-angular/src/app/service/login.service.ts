@@ -56,4 +56,29 @@ export class LoginService {
       }
     );
   }
+
+  public getAllUser(accessToken: string): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.get<HttpResponse<any>>(
+      `${this.url}/user/all`,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
+
+  public changePasswordUser(accessToken: string, data: any): Observable<HttpResponse<any>> {
+    let header: HttpHeaders = new HttpHeaders();
+    header = header.set('Authorization', 'Bearer ' + accessToken);
+    return this.http.put<HttpResponse<any>>(
+      `${this.url}/user/change_password`,
+      data,
+      {
+        headers: header,
+        observe: "response",
+      }
+    );
+  }
 }

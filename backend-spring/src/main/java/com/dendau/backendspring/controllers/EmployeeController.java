@@ -1,5 +1,6 @@
 package com.dendau.backendspring.controllers;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.employee.EmployeeRequest;
 import com.dendau.backendspring.dtos.employee.EmployeeResponse;
 import com.dendau.backendspring.services.employee.EmployeeService;
@@ -30,6 +31,16 @@ public class EmployeeController {
     public ResponseEntity<EmployeeResponse> saveUser(@RequestBody EmployeeRequest employeeRequest) {
         try {
             EmployeeResponse employeeResponse = employeeService.saveEmployee(employeeRequest);
+            return ResponseEntity.ok(employeeResponse);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping(value = "/delete/{employeeId}")
+    public ResponseEntity<MessageDTO> saveUser(@PathVariable String employeeId) {
+        try {
+            MessageDTO employeeResponse = employeeService.deleteEmployee(Integer.parseInt(employeeId));
             return ResponseEntity.ok(employeeResponse);
         } catch (Exception e) {
             throw new RuntimeException(e);

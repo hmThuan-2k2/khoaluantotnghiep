@@ -17,4 +17,5 @@ public class EmployeeRequest {
     private String address;
     private String phoneNumber;
     private String idCard;
+    private String note;
 }

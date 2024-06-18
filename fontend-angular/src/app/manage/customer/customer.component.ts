@@ -153,7 +153,7 @@ export class CustomerComponent implements OnInit {
         console.log(response);
         this.getAllCustomer();
         document.getElementById('edit-customer-form').click();
-        this._snackBar.openSnackBarSuccess("Sửa thông tin bàn thành công!");
+        // this._snackBar.openSnackBarSuccess("Sửa thông tin bàn thành công!");
       },
       (error: HttpErrorResponse) => {
         console.log(error);

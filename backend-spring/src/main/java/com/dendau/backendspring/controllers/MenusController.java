@@ -1,7 +1,9 @@
 package com.dendau.backendspring.controllers;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.menus.GetFindMenusGroupDTO;
 import com.dendau.backendspring.dtos.menus.GetMenusDTO;
+import com.dendau.backendspring.dtos.menus.GetRequestAddMenusDTO;
 import com.dendau.backendspring.dtos.menus.IdMenusDTO;
 import com.dendau.backendspring.dtos.menus_group.GetMenusGroupDTO;
 import com.dendau.backendspring.dtos.tables.GetTablesRequestDTO;
@@ -24,7 +26,7 @@ public class MenusController {
     private MenusService menusService;
 
     @PostMapping(value = "/save")
-    public ResponseEntity<GetMenusDTO> saveMenus(@RequestBody GetMenusDTO request) {
+    public ResponseEntity<GetMenusDTO> saveMenus(@RequestBody GetRequestAddMenusDTO request) {
         try {
             GetMenusDTO response = menusService.saveMenus(request);
             return ResponseEntity.ok(response);
@@ -59,6 +61,16 @@ public class MenusController {
         try {
             GetMenusDTO response = menusService.getMenusId(request);
             return ResponseEntity.ok().body(response);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/delete/{menuId}")
+    public ResponseEntity<MessageDTO> deleteTable(@PathVariable String menuId) {
+        try {
+            MessageDTO responseDTO = menusService.deleteMenu(Long.parseLong(menuId));
+            return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e){
             throw new RuntimeException(e);
         }

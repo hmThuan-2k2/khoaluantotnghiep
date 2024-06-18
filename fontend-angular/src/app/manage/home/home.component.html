@@ -30,7 +30,7 @@
             <div mat-card-avatar >
               <i class="fa fa-edit" style="font-size:36px"></i>
             </div>
-            <mat-card-title>6</mat-card-title>
+            <mat-card-title>{{ lengthInvoice != null ? lengthInvoice : 0 }}</mat-card-title>
             <mat-card-subtitle style="font-weight: bold;font-size: 16px;" >
               Tổng Đơn Hàng
             </mat-card-subtitle>
@@ -44,7 +44,7 @@
             <div mat-card-avatar >
               <i class="fa fa-cart-arrow-down" style="font-size:36px"></i>
             </div>
-            <mat-card-title>{{1713000 | currency : "VND" : "symbol" }}</mat-card-title>
+            <mat-card-title>{{tongTotalInvoice | currency : "VND" : "symbol" }}</mat-card-title>
             <mat-card-subtitle style="font-weight: bold;font-size: 16px;" >
               Doanh Thu
             </mat-card-subtitle>
@@ -60,7 +60,7 @@
             <div mat-card-avatar >
               <i class="fa fa-money" style="font-size:36px"></i>
             </div>
-            <mat-card-title>{{tongTotalInvoice | currency : "VND" : "symbol" }}</mat-card-title>
+            <mat-card-title>{{tongTotalProvisional_Invoice | currency : "VND" : "symbol" }}</mat-card-title>
             <mat-card-subtitle style="font-weight: bold;font-size: 16px;"  >
               Tổng Tạm Tính
             </mat-card-subtitle>
@@ -89,15 +89,28 @@
   <div class="container row" style="width: 100%;height: 400px;margin: 0px;" >
 
     <div class="col-12" style="width: 100%;height: 50px;" >
-      <select class="custom-select custom-select-sm"
-        style="width: 200px;"
-      >
-        <option selected value="0">25/05/2024</option>
-        <option value="0" >24/05/2024</option>
-        <option value="0" >23/05/2024</option>
-        <option value="0" >22/05/2024</option>
-        <option value="0" >21/05/2024</option>
-      </select>
+      <mat-form-field>
+        <mat-label>Bộ Lọc Ngày</mat-label>
+
+        <!-- [value]="dateFilter" -->
+        <input
+          matInput
+          readonly
+          [matDatepicker]="picker"
+          [min]="minDate"
+          [max]="maxDate"
+          (dateChange)="onDateChange($event)"
+          [(ngModel)]="dateFilter"
+          #input_date="ngModel"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker
+          #picker
+          startView="month"
+          [startAt]="dateFilter"
+          touchUi
+        ></mat-datepicker>
+      </mat-form-field>
     </div>
     <div class="col-12 row " style="margin: 0px;width: 100%;" >
       <div class="col-7" >
@@ -123,16 +136,16 @@
           <tbody>
             <tr *ngFor="let item of dataInvoice">
               <td class="align-middle" style="text-align: center;" >
-                {{ item.a }}
+                {{ dataInvoice.indexOf(item) + 1 }}
               </td>
               <td class="align-middle" style="text-align: center">
-                {{ item?.b }}
+                {{ item.dateTimeCreate }}
               </td>
               <td class="align-middle" style="text-align: right">
-                {{ item?.c | currency : "VND" : "symbol" }}
+                {{ item.totalMoney | currency : "VND" : "symbol" }}
               </td>
               <td class="align-middle" style="text-align: right">
-                {{item?.d}}
+                {{ item.customer != null ? item.customer?.nickname : "Khách Lẻ" }}
               </td>
             </tr>
           </tbody>
@@ -150,15 +163,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of dataMenu">
+            <tr *ngFor="let item of dataMenuSelling">
               <td class="align-middle" style="text-align: center;" >
-                {{ item.a }}
+                {{ dataMenuSelling.indexOf(item) + 1 }}
               </td>
               <td class="align-middle" style="text-align: left">
-                {{ item?.b }}
+                {{ item.name_menu }}
               </td>
               <td class="align-middle" style="text-align: right">
-                {{ item?.c }}
+                {{ item.sell_number }}
               </td>
             </tr>
           </tbody>

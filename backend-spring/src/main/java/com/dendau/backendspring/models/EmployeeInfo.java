@@ -25,6 +25,7 @@ public class EmployeeInfo {
     private String address;
     private String phoneNumber;
     private String idCard;
+    private String note;
 
 
 }

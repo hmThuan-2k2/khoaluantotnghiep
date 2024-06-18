@@ -46,6 +46,87 @@ export class KitchenComponent implements OnInit {
 
   public dateTimeNowString: string = null;
 
+  ngOnInit(): void {
+    this.setDateTimeNow();
+    setInterval(() => {
+      this.setDateTimeNow();
+    }, 1000)
+    setInterval(() => {
+      this.getDataRow1();
+      this.getDataRow2();
+      this.getDataRow3();
+      console.log("Load Data!!!")
+    }, 5000)
+    this.getDateNow();
+    this.getDataRow1();
+    this.getDataRow2();
+    this.getDataRow3();
+  }
+
+  public onConfirm(processingNewspaper: ProcessingNewspaper): void {
+    this.functions_login.getUserProfile();
+    this.ProcessingNewspaperService.confirmProcessingNewspaper(processingNewspaper.id).subscribe(
+      (response: HttpResponse<any>) => {
+        console.log(response);
+        this._snackBar.openSnackBarSuccess(response.body.message);
+        this.getDataRow1();
+        this.getDataRow2();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
+  }
+
+  public onCooking(processingNewspaper: ProcessingNewspaper): void {
+    this.functions_login.getUserProfile();
+    this.ProcessingNewspaperService.cookingProcessingNewspaper(processingNewspaper.id).subscribe(
+      (response: HttpResponse<any>) => {
+        console.log(response);
+        this._snackBar.openSnackBarSuccess(response.body.message);
+        this.getDataRow2();
+        this.getDataRow3();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
+  }
+
+  public onCancel(processingNewspaper: ProcessingNewspaper): void {
+    this.functions_login.getUserProfile();
+    this.ProcessingNewspaperService.cancelProcessingNewspaper(processingNewspaper.id).subscribe(
+      (response: HttpResponse<any>) => {
+        console.log(response);
+        this._snackBar.openSnackBarSuccess(response.body.message);
+        this.getDataRow1();
+        this.getDataRow2();
+        this.getDataRow3();
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        if (error.status == 403) {
+          this._snackBar.openSnackBarWarning(
+            'Token đã hết hạn! Chờ cấp token mới!'
+          );
+          this.functions_login.refreshToken();
+        }
+      }
+    );
+  }
+
   public setDateTimeNow(): void {
     var dateNow: Date = new Date();
     var hours = dateNow.getHours();
@@ -73,23 +154,6 @@ export class KitchenComponent implements OnInit {
     textDateTime += year;
     // console.log(textDateTime);
     this.dateTimeNowString = textDateTime;
-  }
-
-  ngOnInit(): void {
-    this.setDateTimeNow();
-    setInterval(() => {
-      this.setDateTimeNow();
-    }, 1000)
-    setInterval(() => {
-      this.getDataRow1();
-      this.getDataRow2();
-      this.getDataRow3();
-      console.log("Load Data!!!")
-    }, 5000)
-    this.getDateNow();
-    this.getDataRow1();
-    this.getDataRow2();
-    this.getDataRow3();
   }
 
   public onChangeSelectDate(newValue: string) {

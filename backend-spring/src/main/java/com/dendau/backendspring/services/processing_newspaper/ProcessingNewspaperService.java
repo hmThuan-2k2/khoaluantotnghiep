@@ -20,4 +20,7 @@ public interface ProcessingNewspaperService {
     MessageDTO confirmProcessingNewspaper(Long id);
 
     MessageDTO cookingProcessingNewspaper(Long id);
+
+    MessageDTO cancelProcessingNewspaper(Long id);
+
 }

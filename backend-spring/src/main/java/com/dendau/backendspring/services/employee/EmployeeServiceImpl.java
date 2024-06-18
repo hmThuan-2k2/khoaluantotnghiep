@@ -1,9 +1,14 @@
 package com.dendau.backendspring.services.employee;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.employee.EmployeeRequest;
 import com.dendau.backendspring.dtos.employee.EmployeeResponse;
 import com.dendau.backendspring.models.EmployeeInfo;
+import com.dendau.backendspring.models.RefreshToken;
+import com.dendau.backendspring.models.UserInfo;
 import com.dendau.backendspring.repositories.EmployeeRepository;
+import com.dendau.backendspring.repositories.RefreshTokenRepository;
+import com.dendau.backendspring.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,12 @@ public class EmployeeServiceImpl implements  EmployeeService{
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -36,6 +47,7 @@ public class EmployeeServiceImpl implements  EmployeeService{
                 oldEmployee.setAddress(employee.getAddress());
                 oldEmployee.setPhoneNumber(employee.getPhoneNumber());
                 oldEmployee.setIdCard(employee.getIdCard());
+                oldEmployee.setNote(employee.getNote());
                 savedEmployee = employeeRepository.save(oldEmployee);
                 employeeRepository.refresh(savedEmployee);
             } else {
@@ -63,5 +75,22 @@ public class EmployeeServiceImpl implements  EmployeeService{
         Type setOfDTOsType = new TypeToken<List<EmployeeResponse>>(){}.getType();
         List<EmployeeResponse> employeeDTO = modelMapper.map(employeeDTOList, setOfDTOsType);
         return employeeDTO;
+    }
+
+    @Override
+    public MessageDTO deleteEmployee(int id) {
+        MessageDTO messageDTO;
+        EmployeeInfo employeeInfo = employeeRepository.findFirstById(id);
+        UserInfo userInfo = userRepository.findFirstByEmployee(employeeInfo);
+        if (userInfo != null) {
+            RefreshToken refreshToken = refreshTokenRepository.findFirstByUserInfo(userInfo);
+            if (refreshToken != null) {
+                refreshTokenRepository.delete(refreshToken);
+            }
+            userRepository.delete(userInfo);
+        }
+        employeeRepository.delete(employeeInfo);
+        messageDTO = new MessageDTO("Xoá nhân viên thành công!", 1);
+        return messageDTO;
     }
 }

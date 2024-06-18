@@ -109,7 +109,7 @@ public class TablesServiceImpl implements TablesService {
         Tables table = tablesRepository.findFirstById(idTable);
         if (table != null) {
             tablesRepository.delete(table);
-            MessageDTO response = new MessageDTO("Xoá thông tin bàn thành công!");
+            MessageDTO response = new MessageDTO("Xoá thông tin bàn thành công!", 1);
             return response;
         }
         else throw new RuntimeException("Can't find record table and menu with identifier: " + id);
@@ -151,7 +151,7 @@ public class TablesServiceImpl implements TablesService {
                 tableMenuRepository.refresh(tableMenu);
             }
         });
-        MessageDTO response = new MessageDTO("Báo chế biến thành công!");
+        MessageDTO response = new MessageDTO("Báo chế biến thành công!", 1);
         return response;
     }
 }

@@ -1,6 +1,7 @@
 package com.dendau.backendspring.services.employee;
 
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.employee.EmployeeRequest;
 import com.dendau.backendspring.dtos.employee.EmployeeResponse;
 
@@ -14,4 +15,5 @@ public interface EmployeeService {
 
     List<EmployeeResponse> getAllEmployee();
 
+    MessageDTO deleteEmployee(int id);
 }

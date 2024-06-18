@@ -20,6 +20,7 @@ import { KitchenComponent } from './manage/restaurant/kitchen/kitchen.component'
 import { CustomerComponent } from './manage/customer/customer.component';
 import { EmployeeComponent } from './manage/employee/employee.component';
 import { MenuComponent } from './manage/menu/menu.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,9 @@ import { MenuComponent } from './manage/menu/menu.component';
     CommonModule,
     MaterialModule,
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

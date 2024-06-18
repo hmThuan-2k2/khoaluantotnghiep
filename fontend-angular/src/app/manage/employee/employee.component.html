@@ -68,7 +68,7 @@
           <ng-container matColumnDef="id" >
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 5%;">#</th>
             <!-- <td mat-cell *matCellDef="let element" >{{ customerAll.indexOf(element) + 1 }}</td> -->
-            <td mat-cell *matCellDef="let element" >{{ element.id }}</td>
+            <td mat-cell *matCellDef="let element" >{{ dataEmployeeAll.indexOf(element) + 1 }}</td>
           </ng-container>
 
           <ng-container matColumnDef="name">
@@ -141,7 +141,7 @@
             <td mat-cell *matCellDef="let element">
               <div class="btn-group">
                 <button
-                  *ngIf="!element.isUser"
+                  *ngIf="!checkUser(element)"
                   (click)="onOpenModal(element,'edit')"
                   class="btn btn-success tooltips"
                   data-placement="top"
@@ -150,7 +150,7 @@
                   <i class="fa fa-user-plus" style="font-size: 20px"></i>
                 </button>
                 <button
-                  *ngIf="element.isUser"
+                  *ngIf="checkUser(element)"
                   (click)="onOpenModal(element,'edit')"
                   class="btn btn-info tooltips"
                   data-placement="top"
@@ -159,7 +159,7 @@
                   <i class="fa fa-user" style="font-size: 20px"></i>
                 </button>
                 <button
-                  *ngIf="element.isUser"
+                  *ngIf="checkUser(element)"
                   (click)="onOpenModal(element,'edit')"
                   class="btn btn-danger tooltips"
                   data-placement="top"
@@ -206,7 +206,7 @@ data-keyboard="false"
 
 <div
   class="modal fade"
-  id="addCustomerModal"
+  id="addEmployeeModal"
   tabindex="-1"
   role="dialog"
   aria-labelledby="addCustomerModalLabel"
@@ -218,43 +218,42 @@ data-keyboard="false"
   >
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" style="margin: 0px" id="addUserModalLabel">Thêm Khách Hàng Mới</h2>
+        <h2 class="modal-title" style="margin: 0px" id="addUserModalLabel">Thêm Nhân Viên Mới</h2>
         <button
           type="button"
           class="close"
           data-dismiss="modal"
-          id="add-table-form"
+          id="add-employee-form"
           aria-label="Close"
-          (click)="setDefaultAddCustomerForm(addCustomerForm)"
         >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form
-          #addCustomerForm="ngForm"
-          (ngSubmit)="onAddCustomer(addCustomerForm)"
+          #addEmployeeForm="ngForm"
+          (ngSubmit)="onAddEmployee(addEmployeeForm)"
           id="formAdd"
         >
           <div class="form-group">
             <label for="nameAdd">
-              Họ Tên Khách Hàng <span style="color: red">*</span>
+              Họ Tên Nhân Viên <span style="color: red">*</span>
             </label>
             <input
               id="nameAdd"
               type="text"
               ngModel
-              name="name_customer"
+              name="name"
               class="form-control"
               required
-              #name_customer="ngModel"
+              #name="ngModel"
             />
             <div
-              *ngIf="name_customer.invalid && name_customer.touched"
+              *ngIf="name.invalid && name.touched"
               class="alert alert-danger"
               role="alertName"
             >
-              <div *ngIf="name_customer.errors.required">
+              <div *ngIf="name.errors.required">
                 Họ Tên là giá trị bắt buộc.
               </div>
               <!-- <div *ngIf="name.errors.pattern || name.errors.minlength">
@@ -263,37 +262,38 @@ data-keyboard="false"
             </div>
           </div>
           <div class="form-group">
-            <label for="nameAdd">
-              Biệt Danh <span style="color: red">*</span>
+            <label for="genderAdd">
+              Giới Tính
             </label>
             <input
-              id="nameAdd"
+              id="genderAdd"
               type="text"
               ngModel
-              name="nickname"
+              name="gender"
               class="form-control"
+              #gender="ngModel"
               required
-              #nickname="ngModel"
             />
             <div
-              *ngIf="nickname.invalid && nickname.touched"
+              *ngIf="gender.invalid && gender.touched"
               class="alert alert-danger"
               role="alertName"
             >
-              <div *ngIf="nickname.errors.required">
-                Biệt Danh là giá trị bắt buộc.
+              <div *ngIf="gender.errors.required">
+                Giới tính là giá trị bắt buộc.
               </div>
               <!-- <div *ngIf="name.errors.pattern || name.errors.minlength">
                 Tên sản phẩm không đúng định dạng.
               </div> -->
             </div>
           </div>
+
           <div class="form-group">
-            <label for="nameAdd">
+            <label for="phoneNumberAdd">
               Số Điện Thoại <span style="color: red">*</span>
             </label>
             <input
-              id="nameAdd"
+              id="phoneNumberAdd"
               type="text"
               ngModel
               name="phoneNumber"
@@ -315,68 +315,69 @@ data-keyboard="false"
             </div>
           </div>
           <div class="form-group">
-            <label for="nameAdd">
-              Giới Tính
+            <label for="dateOfBirthAdd">
+              Ngày Sinh
             </label>
             <input
-              id="nameAdd"
+              id="dateOfBirthAdd"
               type="text"
               ngModel
-              name="gender"
+              name="dateOfBirth"
               class="form-control"
-              #gender="ngModel"
             />
-            <!-- <div
-              *ngIf="gender.invalid && gender.touched"
-              class="alert alert-danger"
-              role="alertName"
-            >
-              <div *ngIf="gender.errors.required">
-                Họ Tên là giá trị bắt buộc.
-              </div>
-              <div *ngIf="name.errors.pattern || name.errors.minlength">
-                Tên sản phẩm không đúng định dạng.
-              </div>
-            </div> -->
           </div>
           <div class="form-group">
-            <label for="nameAdd">
+            <label for="addressAdd">
               Địa Chỉ
             </label>
             <input
-              id="nameAdd"
+              id="addressAdd"
               type="text"
               ngModel
               name="address"
               class="form-control"
               #address="ngModel"
             />
-            <!-- <div
-              *ngIf="address.invalid && address.touched"
-              class="alert alert-danger"
-              role="alertName"
-            >
-              <div *ngIf="address.errors.required">
-                Họ Tên là giá trị bắt buộc.
-              </div>
-              <div *ngIf="name.errors.pattern || name.errors.minlength">
-                Tên sản phẩm không đúng định dạng.
-              </div>
-            </div> -->
+          </div>
+          <div class="form-group">
+            <label for="idCardAdd">
+              Căn Cước Công Dân
+            </label>
+            <input
+              id="idCardAdd"
+              type="text"
+              ngModel
+              name="idCard"
+              class="form-control"
+              #idCard="ngModel"
+            />
+          </div>
+          <div class="form-group">
+            <label for="noteAdd">
+              Ghi Chú
+            </label>
+            <input
+              id="noteAdd"
+              type="text"
+              ngModel
+              name="note"
+              class="form-control"
+              #note="ngModel"
+            />
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          *ngIf="checkIsAddCustomer(addCustomerForm)"
+        <!-- <button
+          *ngIf="checkIsAddEmployee(addEmployeeForm)"
           type="button"
           class="btn btn-secondary"
-          (click)="setDefaultAddCustomerForm(addCustomerForm)"
+          (click)="setDefaultAddEmployeeForm(addEmployeeForm)"
         >
           Huỷ
-        </button>
+        </button> -->
         <button
-          [disabled]="addCustomerForm.invalid"
+          [disabled]="addEmployeeForm.invalid"
           type="submit"
           class="btn btn-primary"
           form="formAdd"
@@ -394,10 +395,10 @@ data-keyboard="false"
 <!-- Edit Modal -->
 <div
   class="modal fade"
-  id="updateCustomerModal"
+  id="updateEmployeeModal"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="userEditModalLabel"
+  aria-labelledby="employeeEditModalLabel"
   aria-hidden="true"
 >
   <div
@@ -407,13 +408,13 @@ data-keyboard="false"
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title" style="margin: 0px">
-          Cập nhật thông tin khách hàng
+          Cập nhật thông tin nhân viên
         </h2>
         <button
           type="button"
           class="close"
           data-dismiss="modal"
-          id="edit-customer-form"
+          id="edit-employee-form"
           aria-label="Close"
         >
           <span aria-hidden="true">&times;</span>
@@ -421,53 +422,159 @@ data-keyboard="false"
       </div>
       <div class="modal-body">
         <form
-          #editCustomerForm="ngForm"
-          (ngSubmit)="onUpdateCustomer(editCustomerForm)"
-          id="formEditCustomer"
+          #editEmployeeForm="ngForm"
+          (ngSubmit)="onUpdateEmployee(editEmployeeForm)"
+          id="formEditEmployee"
         >
+          <input
+            type="text"
+            ngModel="{{ editEmployee?.id }}"
+            name="id"
+            [hidden]="true"
+          >
           <div class="form-group">
             <label for="nameEdit">
-              Họ Và Tên <span style="color: red">*</span>
+              Họ Tên Nhân Viên <span style="color: red">*</span>
             </label>
             <input
               id="nameEdit"
               type="text"
-              ngModel="{{ editCustomer?.name_customer }}"
-              name="name_customer"
+              ngModel="{{ editEmployee?.name }}"
+              name="name"
               class="form-control"
               autocomplete="off"
               required
-              #name_customerEdit="ngModel"
+              #nameEdit="ngModel"
             />
             <div
-              *ngIf="name_customerEdit.invalid && name_customerEdit.touched"
+              *ngIf="nameEdit.invalid && nameEdit.touched"
               class="alert alert-danger"
               role="alertName"
             >
-              <div *ngIf="name_customerEdit.errors.required">
-                Tên Bàn là giá trị bắt buộc.
+              <div *ngIf="nameEdit.errors.required">
+                Họ Tên là giá trị bắt buộc.
               </div>
               <!-- <div *ngIf="nameEdit.errors.pattern || nameEdit.errors.minlength">
                 Tên Bàn không đúng định dạng.
               </div> -->
             </div>
           </div>
+          <div class="form-group">
+            <label for="genderEdit">
+              Giới Tính
+            </label>
+            <input
+              id="genderEdit"
+              type="text"
+              ngModel="{{ editEmployee?.gender }}"
+              name="gender"
+              class="form-control"
+              #genderEdit="ngModel"
+              required
+            />
+            <div
+              *ngIf="genderEdit.invalid && genderEdit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="genderEdit.errors.required">
+                Giới tính là giá trị bắt buộc.
+              </div>
+              <!-- <div *ngIf="name.errors.pattern || name.errors.minlength">
+                Tên sản phẩm không đúng định dạng.
+              </div> -->
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="phoneNumberEdit">
+              Số Điện Thoại <span style="color: red">*</span>
+            </label>
+            <input
+              id="phoneNumberEdit"
+              type="text"
+              ngModel="{{ editEmployee?.phoneNumber }}"
+              name="phoneNumber"
+              class="form-control"
+              required
+              #phoneNumberEdit="ngModel"
+            />
+            <div
+              *ngIf="phoneNumberEdit.invalid && phoneNumberEdit.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="phoneNumberEdit.errors.required">
+                Số Điện Thoại là giá trị bắt buộc.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="dateOfBirthEdit">
+              Ngày Sinh
+            </label>
+            <input
+              id="dateOfBirthEdit"
+              type="text"
+              ngModel="{{ editEmployee?.dateOfBirth }}"
+              name="dateOfBirth"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="addressEdit">
+              Địa Chỉ
+            </label>
+            <input
+              id="addressEdit"
+              type="text"
+              ngModel="{{ editEmployee?.address }}"
+              name="address"
+              class="form-control"
+              #address="ngModel"
+            />
+          </div>
+          <div class="form-group">
+            <label for="idCardEdit">
+              Căn Cước Công Dân
+            </label>
+            <input
+              id="idCardEdit"
+              type="text"
+              ngModel="{{editEmployee?.idCard}}"
+              name="idCard"
+              class="form-control"
+              #idCard="ngModel"
+            />
+          </div>
+          <div class="form-group">
+            <label for="noteEdit">
+              Ghi Chú
+            </label>
+            <input
+              id="noteEdit"
+              type="text"
+              ngModel="{{ editEmployee?.note }}"
+              name="note"
+              class="form-control"
+              #note="ngModel"
+            />
+          </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          *ngIf="checkIsUpdateCustomer(editCustomerForm)"
+        <!-- <button
+          *ngIf="checkIsUpdateEmployee(editEmployeeForm)"
           type="button"
-          (click)="setDefaultEditCustomerForm(editCustomerForm)"
+          (click)="setDefaultEditEmployeeForm(editEmployeeForm)"
           class="btn btn-secondary"
         >
-          Huỷ
-        </button>
+          Huỷ || !checkIsUpdateEmployee(editEmployeeForm)
+        </button> -->
         <button
-          [disabled]="editCustomerForm.invalid || !checkIsUpdateCustomer(editCustomerForm)"
+          [disabled]="editEmployeeForm.invalid"
           type="submit"
           class="btn btn-primary"
-          form="formEditProduct"
+          form="formEditEmployee"
         >
           Cập nhật
         </button>
@@ -479,7 +586,7 @@ data-keyboard="false"
 <!-- Delete Modal -->
 <div
   class="modal fade"
-  id="deleteCustomerModal"
+  id="deleteEmployeeModal"
   tabindex="-1"
   role="dialog"
   aria-labelledby="deleteModelLabel"
@@ -488,7 +595,7 @@ data-keyboard="false"
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" style="margin: 0px" id="deleteModelLabel">Xoá Bàn</h2>
+        <h2 class="modal-title" style="margin: 0px" id="deleteModelLabel">Xoá Thông Tin Nhân Viên</h2>
         <button
           type="button"
           class="close"
@@ -499,7 +606,7 @@ data-keyboard="false"
         </button>
       </div>
       <div class="modal-body">
-        <p>Bạn có chắc chắn muốn xoá khách hàng {{ deleteCustomer?.name_customer }}?</p>
+        <p>Bạn có chắc chắn muốn xoá nhân viên {{ deleteEmployee?.name }}?</p>
       </div>
       <div class="modal-footer">
         <button
@@ -511,7 +618,7 @@ data-keyboard="false"
           Không
         </button>
         <button
-          (click)="onDeleteCustomer(deleteCustomer)"
+          (click)="onDeleteEmployee(deleteEmployee)"
           class="btn btn-danger"
           data-dismiss="modal"
         >
@@ -521,3 +628,156 @@ data-keyboard="false"
     </div>
   </div>
 </div>
+
+<!-- pattern="^(\S+)((\s{0,1}\S+){0,})$" -->
+<!-- Edit Modal -->
+<!-- <div
+  class="modal fade"
+  id="editUserModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+    role="document"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" style="margin: 0px">
+          Thông Tin Tài Khoản
+        </h2>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          id="edit-user-form"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          #editUserForm="ngForm"
+          (ngSubmit)="onEditUser(editUserForm)"
+          id="formEditUser"
+        >
+          <input
+            type="text"
+            ngModel="{{userLogin?.id}}"
+            [hidden]="true"
+            name="id"
+          >
+          <div class="form-group">
+            <label for="username">
+              Tài Khoản <span style="color: red">*</span>
+            </label>
+            <input
+              id="username"
+              type="text"
+              ngModel="{{ userLogin?.username }}"
+              name="username"
+              class="form-control"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="passwoedOld">
+              Mật Khẩu Mới <span style="color: red">*</span>
+            </label>
+            <div class="input-group" style="padding: 0px" >
+              <input
+                type="{{ getTypePass() }}"
+                ngModel
+                name="passwordOld"
+                id="passwoedOld"
+                class="form-control"
+                required
+                pattern="(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;'>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}"
+                #passwordOld="ngModel"
+              />
+              <div class="input-group-append">
+                <button
+                  (click)="setIsHiddenPass()"
+                  class="btn btn-secondary"
+                  type="button"
+                  id="button-hiden-old"
+                >
+                  <i class="fa fa-eye-slash" style="font-size: 20px"></i>
+                </button>
+              </div>
+            </div>
+            <div
+              *ngIf="passwordOld.invalid && passwordOld.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="passwordOld.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+              <div *ngIf="passwordOld.errors.pattern || passwordOld.errors.maxlength" >
+                Mật Khẩu bao gồm cả chữ hoa, chữ thường, số, ký tự đặc biệt và ít nhất 8 ký tự.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="passwoedNew">
+              Nhập Lại Mật Khẩu <span style="color: red">*</span>
+            </label>
+            <div class="input-group" style="padding: 0px" >
+              <input
+                type="{{ getTypePass() }}"
+                ngModel
+                name="passwordNew"
+                id="passwoedNew"
+                class="form-control"
+                required
+                pattern="(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;'>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}"
+                #passwordNew="ngModel"
+              />
+              <div class="input-group-append">
+                <button
+                  (click)="setIsHiddenPass()"
+                  class="btn btn-secondary"
+                  type="button"
+                  id="button-hiden-new"
+                >
+                  <i class="fa fa-eye-slash" style="font-size: 20px"></i>
+                </button>
+              </div>
+            </div>
+            <div
+              *ngIf="passwordNew.invalid && passwordNew.touched"
+              class="alert alert-danger"
+              role="alertName"
+            >
+              <div *ngIf="passwordNew.errors.required">
+                Dữ liệu là giá trị bắt buộc.
+              </div>
+              <div *ngIf="passwordNew.errors.pattern || passwordNew.errors.maxlength" >
+                Mật Khẩu bao gồm cả chữ hoa, chữ thường, số, ký tự đặc biệt và ít nhất 8 ký tự.
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+        >
+          Huỷ
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          form="formChangePassword"
+          [disabled]="changePasswordForm.invalid"
+        >
+          Đổi Mật Khẩu
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->

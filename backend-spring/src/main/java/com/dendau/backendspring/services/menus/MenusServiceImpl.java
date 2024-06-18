@@ -1,12 +1,17 @@
 package com.dendau.backendspring.services.menus;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.menus.GetFindMenusGroupDTO;
 import com.dendau.backendspring.dtos.menus.GetMenusDTO;
+import com.dendau.backendspring.dtos.menus.GetRequestAddMenusDTO;
 import com.dendau.backendspring.dtos.menus.IdMenusDTO;
 import com.dendau.backendspring.dtos.menus_group.GetMenusGroupDTO;
 import com.dendau.backendspring.models.MenuGroup;
 import com.dendau.backendspring.models.Menus;
+import com.dendau.backendspring.models.TableMenu;
+import com.dendau.backendspring.repositories.MenuGroupRepository;
 import com.dendau.backendspring.repositories.MenusRepository;
+import com.dendau.backendspring.repositories.TableMenuRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +27,22 @@ public class MenusServiceImpl implements  MenusService{
     @Autowired
     private MenusRepository menusRepository;
 
+    @Autowired
+    private MenuGroupRepository menuGroupRepository;
+
+    @Autowired
+    private TableMenuRepository tableMenuRepository;
+
     ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public GetMenusDTO saveMenus(GetMenusDTO request) {
+    public GetMenusDTO saveMenus(GetRequestAddMenusDTO request) {
         if(request.getName_menu() == null){
             throw new RuntimeException("Parameter name is not found in request..!!");
         }
         Menus savesMenus = null;
         Menus menus = modelMapper.map(request, Menus.class);
+        MenuGroup menuGroup = menuGroupRepository.findFirstById(request.getId_menu_group());
         if(request.getId() != null) {
             Menus oldMenus = menusRepository.findFirstById(request.getId());
             if(oldMenus != null){
@@ -41,7 +53,7 @@ public class MenusServiceImpl implements  MenusService{
                 oldMenus.setUnit(menus.getUnit());
                 oldMenus.setImage_Url(menus.getImage_Url());
                 oldMenus.setInventory(menus.getInventory());
-                oldMenus.setMenu_group(menus.getMenu_group());
+                oldMenus.setMenu_group(menuGroup);
                 savesMenus = menusRepository.save(oldMenus);
                 menusRepository.refresh(savesMenus);
             } else {
@@ -49,6 +61,7 @@ public class MenusServiceImpl implements  MenusService{
             }
         } else {
 //            user.setCreatedBy(currentUser);
+            menus.setMenu_group(menuGroup);
             savesMenus = menusRepository.save(menus);
         }
         menusRepository.refresh(savesMenus);
@@ -83,11 +96,31 @@ public class MenusServiceImpl implements  MenusService{
         List<Menus> menusAll = (List<Menus>) menusRepository.findAll();
         List<Menus> menus = new ArrayList<Menus>(){};
         menusAll.forEach(menu -> {
-            if (menu.getMenu_group().getId() == idMenuGroup)
-                menus.add(menu);
+            if (menu.getMenu_group() != null)
+                if (menu.getMenu_group().getId() == idMenuGroup)
+                    menus.add(menu);
         });
         Type setOfDTOsType = new TypeToken<List<GetMenusDTO>>(){}.getType();
         List<GetMenusDTO> response = modelMapper.map(menus, setOfDTOsType);
         return response;
+    }
+
+    @Override
+    public MessageDTO deleteMenu(Long id) {
+        MessageDTO request;
+        Menus menus = menusRepository.findFirstById(id);
+        if (menus != null) {
+            List<TableMenu> tableMenuList = tableMenuRepository.findAllByMenu(menus);
+            if (tableMenuList.isEmpty()) {
+                menusRepository.delete(menus);
+                request = new MessageDTO("Xoá thông tin thực đơn thành công!", 1);
+            }
+            else
+                request = new MessageDTO("Thực đơn đang được sử dụng không thể xoá!", 2);
+        }
+        else {
+            request = new MessageDTO("Không tìm thấy thực đơn để xoá!", 2);
+        }
+        return request;
     }
 }

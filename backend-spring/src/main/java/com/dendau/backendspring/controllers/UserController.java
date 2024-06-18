@@ -1,6 +1,8 @@
 package com.dendau.backendspring.controllers;
 
+import com.dendau.backendspring.dtos.MessageDTO;
 import com.dendau.backendspring.dtos.user.UserRequest;
+import com.dendau.backendspring.dtos.user.UserRequestChangePassword;
 import com.dendau.backendspring.dtos.user.UserResponse;
 import com.dendau.backendspring.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,16 @@ public class UserController {
         try {
         UserResponse userResponse = userService.getUser();
         return ResponseEntity.ok().body(userResponse);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PutMapping("/change_password")
+    public ResponseEntity<MessageDTO> changePasswordUser(@RequestBody UserRequestChangePassword userRequest) {
+        try {
+            MessageDTO Response = userService.changePassword(userRequest);
+            return ResponseEntity.ok().body(Response);
         } catch (Exception e){
             throw new RuntimeException(e);
         }

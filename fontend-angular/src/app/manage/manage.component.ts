@@ -7,6 +7,7 @@ import { FunctionLoginService } from '../service/function-login.service';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { User } from '../model/user.model';
 import { style } from '@angular/animations';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-manage',
@@ -140,10 +141,14 @@ export class ManageComponent implements OnInit {
 
   public setIsHiddenPass(){
     this.isHiddenPass = !this.isHiddenPass;
-    if (this.isHiddenPass)
-      document.getElementById('button-hiden').innerHTML = '<i class="fa fa-eye-slash" style="font-size: 20px"></i>';
-    else
-      document.getElementById('button-hiden').innerHTML = '<i class="fa fa-eye" style="font-size: 20px"></i>';
+    if (this.isHiddenPass){
+      document.getElementById('button-hiden-old').innerHTML = '<i class="fa fa-eye-slash" style="font-size: 20px"></i>';
+      document.getElementById('button-hiden-new').innerHTML = '<i class="fa fa-eye-slash" style="font-size: 20px"></i>';
+    }
+    else {
+      document.getElementById('button-hiden-old').innerHTML = '<i class="fa fa-eye" style="font-size: 20px"></i>';
+      document.getElementById('button-hiden-new').innerHTML = '<i class="fa fa-eye" style="font-size: 20px"></i>';
+    }
 
     // this.functions_login.logout();
   }
@@ -163,5 +168,34 @@ export class ManageComponent implements OnInit {
     button.setAttribute('data-target', '#thongTinTaiKhoanModal');
     container.appendChild(button);
     button.click();
+  }
+
+  public onChangePassword(form: NgForm): void {
+    console.log(form.value);
+    var data = {
+      id : form.value.id,
+      username: form.value.username,
+      passwordOld: form.value.passwordOld,
+      passwordNew: form.value.passwordNew
+    }
+    if (sessionStorage.getItem('accessToken') != null ){
+      let accessToken = sessionStorage.getItem('accessToken');
+      this.loginService.changePasswordUser(accessToken, data).subscribe(
+        (response: HttpResponse<any>) => {
+          var value = response.body;
+          if (value.trangThai == 1)
+            this._snackBar.openSnackBarSuccess(value.message)
+          else if (value.trangThai == 2)
+            this._snackBar.openSnackBarWarning(value.message)
+        },
+        (error: HttpErrorResponse) => {
+          console.log(error);
+          if (error.status == 403) {
+            this._snackBar.openSnackBarWarning("Token đã hết hạn! Chờ cấp token mới!");
+            this.functions_login.refreshToken();
+          }
+        }
+      );
+    }
   }
 }
