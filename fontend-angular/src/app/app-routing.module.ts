@@ -24,7 +24,7 @@ const routes: Routes = [
   {
     path: 'manage',
     component: ManageComponent,
-    children:[
+    children: [
       {
         path: 'home',
         component: HomeComponent

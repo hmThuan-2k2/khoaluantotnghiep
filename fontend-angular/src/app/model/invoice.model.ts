@@ -1,5 +1,4 @@
-import { Customer } from "./customer.model";
-import { Table } from "./table.model";
+import { Customer } from './customer.model';
 
 export class Invoice {
   id: number;
