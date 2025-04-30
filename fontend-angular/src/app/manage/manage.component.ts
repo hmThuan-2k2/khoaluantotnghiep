@@ -18,7 +18,7 @@ export class ManageComponent implements OnInit {
   public employeeLogin: Employee;
   public userLogin: User = null;
   public roles: Array<String> = [];
-  public isHiddenPass: boolean = true;
+  public isHiddenPass = true;
 
   constructor(
     private loginService: LoginService,
@@ -33,7 +33,7 @@ export class ManageComponent implements OnInit {
 
   public getEmployeeLogin(): void {
     if (sessionStorage.getItem('accessToken') != null ){
-      let accessToken = sessionStorage.getItem('accessToken');
+      const accessToken = sessionStorage.getItem('accessToken');
       this.loginService.getUserProfile(accessToken).subscribe(
         (response: HttpResponse<any>) => {
           // console.log(response);
@@ -48,7 +48,7 @@ export class ManageComponent implements OnInit {
         (error: HttpErrorResponse) => {
           console.log(error);
           if (error.status == 403) {
-            this._snackBar.openSnackBarWarning("Token đã hết hạn! Chờ cấp token mới!");
+            this._snackBar.openSnackBarWarning('Token đã hết hạn! Chờ cấp token mới!');
             this.functions_login.refreshToken();
           }
         }
@@ -154,9 +154,10 @@ export class ManageComponent implements OnInit {
   }
 
   public getTypePass(): string{
-    if (this.isHiddenPass)
+    if (this.isHiddenPass) {
       return 'password';
-    else return 'text';
+    }
+    else { return 'text'; }
   }
 
   public onOpenModal(): void {
@@ -172,26 +173,28 @@ export class ManageComponent implements OnInit {
 
   public onChangePassword(form: NgForm): void {
     console.log(form.value);
-    var data = {
+    const data = {
       id : form.value.id,
       username: form.value.username,
       passwordOld: form.value.passwordOld,
       passwordNew: form.value.passwordNew
-    }
+    };
     if (sessionStorage.getItem('accessToken') != null ){
-      let accessToken = sessionStorage.getItem('accessToken');
+      const accessToken = sessionStorage.getItem('accessToken');
       this.loginService.changePasswordUser(accessToken, data).subscribe(
         (response: HttpResponse<any>) => {
-          var value = response.body;
-          if (value.trangThai == 1)
-            this._snackBar.openSnackBarSuccess(value.message)
-          else if (value.trangThai == 2)
-            this._snackBar.openSnackBarWarning(value.message)
+          const value = response.body;
+          if (value.trangThai == 1) {
+            this._snackBar.openSnackBarSuccess(value.message);
+          }
+          else if (value.trangThai == 2) {
+            this._snackBar.openSnackBarWarning(value.message);
+ }
         },
         (error: HttpErrorResponse) => {
           console.log(error);
           if (error.status == 403) {
-            this._snackBar.openSnackBarWarning("Token đã hết hạn! Chờ cấp token mới!");
+            this._snackBar.openSnackBarWarning('Token đã hết hạn! Chờ cấp token mới!');
             this.functions_login.refreshToken();
           }
         }

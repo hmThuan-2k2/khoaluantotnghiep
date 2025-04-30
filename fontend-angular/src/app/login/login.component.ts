@@ -14,8 +14,8 @@ import { FunctionLoginService } from '../service/function-login.service';
 })
 export class LoginComponent implements OnInit {
 
-  public isHiddenPass: boolean = true;
-  public isGhiNho: boolean = false;
+  public isHiddenPass = true;
+  public isGhiNho = false;
   public username: string = null;
   public password: string = null;
 
@@ -44,19 +44,19 @@ export class LoginComponent implements OnInit {
     // console.log(dataLogin.password);
     // console.log(this.username);
     // console.log(this.password);
-    let dataLogin1 = {
+    const dataLogin1 = {
       username: this.username,
       password: this.password
-    }
+    };
     console.log(dataLogin1);
     this.loginService.login(loginForm.value).subscribe(
       (response: HttpResponse<any>) => {
         console.log(response);
         if (response.status == 200) {
-          this._snackBar.openSnackBarSuccess("Đăng nhập thành công!")
+          this._snackBar.openSnackBarSuccess('Đăng nhập thành công!');
         }
-        let accessToken = response.body.accessToken;
-        let token = response.body.token;
+        const accessToken = response.body.accessToken;
+        const token = response.body.token;
         console.log(accessToken);
         console.log(token);
         if (localStorage.getItem('token') != null ){
@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit {
       (error: HttpErrorResponse) => {
         console.log(error);
         if (error.status == 403) {
-          this._snackBar.openSnackBarWarning("Đăng nhập không thành công!!!");
+          this._snackBar.openSnackBarWarning('Đăng nhập không thành công!!!');
         }
       }
     );
@@ -111,17 +111,20 @@ export class LoginComponent implements OnInit {
 
   public setIsHiddenPass(){
     this.isHiddenPass = !this.isHiddenPass;
-    if (this.isHiddenPass)
+    if (this.isHiddenPass) {
       document.getElementById('button-hiden').innerHTML = '<i class="fa fa-eye-slash" style="font-size: 20px"></i>';
-    else
+    }
+    else {
       document.getElementById('button-hiden').innerHTML = '<i class="fa fa-eye" style="font-size: 20px"></i>';
+    }
 
     // this.functions_login.logout();
   }
 
   public getTypePass(): string{
-    if (this.isHiddenPass)
+    if (this.isHiddenPass) {
       return 'password';
-    else return 'text';
+    }
+    else { return 'text'; }
   }
 }

@@ -20,16 +20,22 @@ export class CustomerComponent implements OnInit {
 
   constructor(
     private CustomerService: CustomerService,
-    private TableService: TableService,
+    // private TableService: TableService,
     private functions_login: FunctionLoginService,
-    private _snackBar: SnackBarService,
-    private router: Router
+    private _snackBar: SnackBarService
+    // private router: Router
   ) { }
 
-  displayedColumns: string[] = ['id','name_customer', 'nickname', 'phoneNumber', 'gender', 'address', 'total_invoice', 'action'];
+  displayedColumns: string[] = ['id', 'name_customer', 'nickname', 'phoneNumber', 'gender', 'address', 'total_invoice', 'action'];
   dataSource  = new MatTableDataSource<Customer>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
+
+  public customerAll: Customer[] = null;
+  public customerAddDefault = null;
+  public editCustomer: Customer = null;
+  public customerEditDefault: Customer = null;
+  public deleteCustomer: Customer = null;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -39,12 +45,6 @@ export class CustomerComponent implements OnInit {
   ngOnInit(): void {
     this.getAllCustomer();
   }
-
-  public customerAll: Customer[] = null;
-  public customerAddDefault = null;
-  public editCustomer: Customer = null;
-  public customerEditDefault: Customer = null;
-  public deleteCustomer: Customer = null;
 
   public getAllCustomer(): void {
     this.functions_login.getUserProfile();
@@ -76,8 +76,8 @@ export class CustomerComponent implements OnInit {
     if (mode === 'add') {
       button.setAttribute('data-target', '#addCustomerModal');
       this.customerAddDefault = {
-        name: ""
-      }
+        name: ''
+      };
     }
     if (mode === 'edit') {
       button.setAttribute('data-target', '#updateCustomerModal');
@@ -94,19 +94,19 @@ export class CustomerComponent implements OnInit {
 
   public onAddCustomer(addCustomerForm: NgForm): void {
     console.log(addCustomerForm.value);
-    var data = {
+    const data = {
       // "id": ,
       name_customer: addCustomerForm.value.name_customer,
       nickname: addCustomerForm.value.nickname,
       phoneNumber: addCustomerForm.value.phoneNumber,
       gender: addCustomerForm.value.gender,
       address: addCustomerForm.value.address
-    }
+    };
     this.CustomerService.saveCustomer(data).subscribe(
       (response: HttpResponse<any>) => {
         console.log(response);
         this.getAllCustomer();
-        this._snackBar.openSnackBarSuccess("Thêm bàn mới thành công!");
+        this._snackBar.openSnackBarSuccess('Thêm bàn mới thành công!');
       },
       (error: HttpErrorResponse) => {
         console.log(error);
@@ -128,8 +128,9 @@ export class CustomerComponent implements OnInit {
       if (
         addForm.value?.name != this.customerAddDefault.name &&
         addForm.value?.name != null
-      )
+      ) {
         check = true;
+      }
     }
     return check;
   }
@@ -140,14 +141,14 @@ export class CustomerComponent implements OnInit {
 
   public onUpdateCustomer(editForm: NgForm): void {
     // console.log(product);
-    var data = {
+    const data = {
       id: this.editCustomer.id,
       name_customer: editForm.value.name_customer,
       nickname: editForm.value.nickname,
       phoneNumber: editForm.value.phoneNumber,
       gender: editForm.value.gender,
       address: editForm.value.address
-    }
+    };
     this.CustomerService.saveCustomer(data).subscribe(
       (response: HttpResponse<any>) => {
         console.log(response);
@@ -170,16 +171,21 @@ export class CustomerComponent implements OnInit {
   checkIsUpdateCustomer(editForm: NgForm): boolean {
     let check = false;
     if (editForm.value != null && this.customerEditDefault != null) {
-      if (editForm.value?.name != this.customerEditDefault?.name_customer)
+      if (editForm.value?.name != this.customerEditDefault?.name_customer) {
         check = true;
-      if (editForm.value?.nickname != this.customerEditDefault?.nickname)
+      }
+      if (editForm.value?.nickname != this.customerEditDefault?.nickname) {
         check = true;
-      if (editForm.value?.phoneNumber != this.customerEditDefault?.phoneNumber)
+      }
+      if (editForm.value?.phoneNumber != this.customerEditDefault?.phoneNumber) {
         check = true;
-      if (editForm.value?.gender != this.customerEditDefault?.gender)
+      }
+      if (editForm.value?.gender != this.customerEditDefault?.gender) {
         check = true;
-      if (editForm.value?.address != this.customerEditDefault?.address)
+      }
+      if (editForm.value?.address != this.customerEditDefault?.address) {
         check = true;
+      }
     }
     return check;
   }

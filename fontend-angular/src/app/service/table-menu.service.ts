@@ -13,69 +13,69 @@ export class TableMenuService {
 
   public selectTableMenuId(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
-    let accessToken: string = sessionStorage.getItem("accessToken");
+    const accessToken: string = sessionStorage.getItem('accessToken');
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.post<HttpResponse<any>>(
       `${this.url}/table_menu/select`,
       data,
       {
         headers: header,
-        observe: "response",
+        observe: 'response',
       }
     );
   }
 
   public saveTableMenu(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
-    let accessToken: string = sessionStorage.getItem("accessToken");
+    const accessToken: string = sessionStorage.getItem('accessToken');
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.put<HttpResponse<any>>(
       `${this.url}/table_menu/save`,
       data,
       {
         headers: header,
-        observe: "response",
+        observe: 'response',
       }
     );
   }
 
   public deleteTableMenu(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
-    let accessToken: string = sessionStorage.getItem("accessToken");
+    const accessToken: string = sessionStorage.getItem('accessToken');
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.put<HttpResponse<any>>(
       `${this.url}/table_menu/delete`,
       data,
       {
         headers: header,
-        observe: "response",
+        observe: 'response',
       }
     );
   }
 
   public getAllTable(): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
-    let accessToken: string = sessionStorage.getItem("accessToken");
+    const accessToken: string = sessionStorage.getItem('accessToken');
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.get<HttpResponse<any>>(
       `${this.url}/table/all`,
       {
         headers: header,
-        observe: "response",
+        observe: 'response',
       }
     );
   }
 
   public getTableId(data: any): Observable<HttpResponse<any>> {
     let header: HttpHeaders = new HttpHeaders();
-    let accessToken: string = sessionStorage.getItem("accessToken");
+    const accessToken: string = sessionStorage.getItem('accessToken');
     header = header.set('Authorization', 'Bearer ' + accessToken);
     return this.http.post<HttpResponse<any>>(
       `${this.url}/table/detail`,
       data,
       {
         headers: header,
-        observe: "response",
+        observe: 'response',
       }
     );
   }
